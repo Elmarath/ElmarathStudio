@@ -1,0 +1,9 @@
+{
+  "label": "Modular Action System",
+  "position": 2,
+  "className": "red",
+  "link": {
+    "type": "generated-index",
+    "description": "Plug-in for handling various types of gameplay montage-related actions in a easy to manage and flexable mannger."
+  }
+}

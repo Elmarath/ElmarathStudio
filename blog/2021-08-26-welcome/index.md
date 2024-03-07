@@ -1,25 +1,12 @@
 ---
-slug: welcome
-title: Welcome
-authors: [slorber, yangshun]
-tags: [facebook, hello, docusaurus]
+slug: Welcome to Elmarath Studio
+title: Welcome to Elmarath Studio
+authors: [Denizhan]
+tags: [Hermod's Ride, Game Development, Indie Game Dev]
 ---
 
-[Docusaurus blogging features](https://docusaurus.io/docs/blog) are powered by the [blog plugin](https://docusaurus.io/docs/api/plugins/@docusaurus/plugin-content-blog).
+Even tought it's called *Studio* Elmarath is a solo game development project which the only game it is currently developing is *Hermod's Ride*. 
 
-Simply add Markdown files (or folders) to the `blog` directory.
+![ModularActionSystem](./T_HermodsRideImage.jpeg)
 
-Regular blog authors can be added to `authors.yml`.
-
-The blog post date can be extracted from filenames, such as:
-
-- `2019-05-30-welcome.md`
-- `2019-05-30-welcome/index.md`
-
-A blog post folder can be convenient to co-locate blog post images:
-
-![Docusaurus Plushie](./docusaurus-plushie-banner.jpeg)
-
-The blog supports tags as well!
-
-**And if you don't want a blog**: just delete this directory, and use `blog: false` in your Docusaurus config.
+Hermod's Ride is a topdown, medieval slasher, multiplayer arena game. 

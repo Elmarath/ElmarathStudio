@@ -2,46 +2,33 @@
 sidebar_position: 1
 ---
 
-# Tutorial Intro
+# About Tutorials
 
-Let's discover **Docusaurus in less than 5 minutes**.
+All the tutorials will be updated whenever a feature changes in the related Plug-In.
 
-## Getting Started
+My Personal request from you is to leave a **review** or **question** about this plug-in in the Epic Marketplace. 
 
-Get started by **creating a new site**.
+![Docs Version Dropdown](./img/T_MarketplaceExample.png)
 
-Or **try Docusaurus immediately** with **[docusaurus.new](https://docusaurus.new)**.
 
-### What you'll need
+## Feedback
 
-- [Node.js](https://nodejs.org/en/download/) version 18.0 or above:
-  - When installing Node.js, you are recommended to check all checkboxes related to dependencies.
+You can always hop on the  **[Discord](https://discord.gg/HghXuWHJJx)** to ask questions. 
 
-## Generate a new site
 
-Generate a new Docusaurus site using the **classic template**.
+### All The Plug-ins Aim:
 
-The classic template will automatically be added to your project after you run the command:
+- Creating **modular pieces** to be used in every project. To do so, your reviews are really important for this process.
+- **Optimization** is always a high priority considiration while designing.
+- **Blueprints** are always the places where the main logic is handled. C++ is used for only exposing some of the functionalities that blurpints don't have. This way you can always look at the plug-in file's to see what is being handled how.
+- **Readablility** is always considered for the end user and for the development.
 
-```bash
-npm init docusaurus@latest my-website classic
-```
+## What We Expect From You
 
-You can type this command into Command Prompt, Powershell, Terminal, or any other integrated terminal of your code editor.
+Plug-ins are not *Started Packs* that you can use from the get go. You should always implement your own logic to create your own system.
+For example you need to create child of blueprint classes, or orginize data assets to what your game needs.
+So systems needs some work in order to be integreted to your project. *So you need to be familiar with the Engine Default Assets*.
 
-The command also installs all necessary dependencies you need to run Docusaurus.
+Also if you find any bugs or features missing, you can let us know in the discord.
 
-## Start your site
-
-Run the development server:
-
-```bash
-cd my-website
-npm run start
-```
-
-The `cd` command changes the directory you're working with. In order to work with your newly created Docusaurus site, you'll need to navigate the terminal there.
-
-The `npm run start` command builds your website locally and serves it through a development server, ready for you to view at http://localhost:3000/.
-
-Open `docs/intro.md` (this page) and edit some lines: the site **reloads automatically** and displays your changes.
+That's said, Good Luck with your Game!

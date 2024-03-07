@@ -4,32 +4,30 @@ import styles from './styles.module.css';
 
 const FeatureList = [
   {
-    title: 'Easy to Use',
-    Svg: require('@site/static/img/undraw_docusaurus_mountain.svg').default,
+    title: 'Unreal Marketplace',
+    Svg: require('@site/static/img/undraw_web_shopping_re_owap.svg').default,
     description: (
       <>
-        Docusaurus was designed from the ground up to be easily installed and
-        used to get your website up and running quickly.
+        Creating <a href="https://www.unrealengine.com/marketplace/en-US/profile/Elmarath?count=20&sortBy=effectiveDate&sortDir=DESC&start=0">Unreal Engine Marketplace</a> plug-ins with modularity in mind. For making games easier!
       </>
     ),
   },
   {
-    title: 'Focus on What Matters',
-    Svg: require('@site/static/img/undraw_docusaurus_tree.svg').default,
+    title: "Hermod's Ride",
+    Svg: require('@site/static/img/undraw_gaming_re_cma2 (1).svg').default,
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        A topdown arena medieval slasher game currently in development.
       </>
     ),
   },
   {
-    title: 'Powered by React',
-    Svg: require('@site/static/img/undraw_docusaurus_react.svg').default,
+    title: 'Social',
+    Svg: require('@site/static/img/undraw_community_re_cyrm.svg').default,
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Check out our <a href="https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ">Youtube Channel</a>, <a href="https://twitter.com/denizhan_toprak">Twitter</a> to see what we have been doing!
+        Also join our comminty with joining our <a href="https://discord.gg/HghXuWHJJx">Discord</a>!
       </>
     ),
   },
