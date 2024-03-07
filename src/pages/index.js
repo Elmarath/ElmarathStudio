@@ -33,7 +33,7 @@ export default function Home() {
   return (
     <Layout
       title={`${siteConfig.title}`}
-      description="Elmarath Docs Description <head />">
+      description="Game and Game Tools Development">
       <HomepageHeader />
       <main>
         <HomepageFeatures />
