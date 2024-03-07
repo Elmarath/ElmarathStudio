@@ -17,4 +17,4 @@ sidebar_position: 1
 - **Looping Actions** can also be done by creating looping montage. As long as the montage is looping action and its phase remains the same. (For example: Blocking, DrawingBow, Falling, Aiming).
 - **Online Replicated Actions** is integrated with the system. Montages will be played, action phases will be updated in both client and the server.
 - **Combo** systems for your combat can be easly achived.
-- **Gameplay Events** can be triggered inside actions. (For example: *StartInteraction*, StartWeaponTrail* etc.)
+- **Gameplay Events** can be triggered inside actions. (For example: *StartInteraction*, *StartWeaponTrail* etc.)
