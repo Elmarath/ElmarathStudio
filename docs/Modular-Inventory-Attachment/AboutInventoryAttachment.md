@@ -29,7 +29,6 @@ flowchart TD
             Thumbnail
             InventorySize
             StackSize
-            ItemStaticInfo
             ItemMesh
             ComponentsToAddWhenSpawned
             )

@@ -17,7 +17,22 @@
 }
 
 .buttons {
-  display: flex;
+  display:inherit;
   align-items: center;
   justify-content: center;
+  font-size: 24px;
+}
+
+.customButton {
+  display:flex;
+  align-items: center;
+  justify-content: center;
+  margin: auto;
+  border-radius: 15px;
+}
+
+.customButtonContainer {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px; /* Add margin to separate button container from existing buttons */
 }

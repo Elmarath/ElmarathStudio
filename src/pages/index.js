@@ -37,6 +37,30 @@ export default function Home() {
       <HomepageHeader />
       <main>
         <HomepageFeatures />
+
+
+
+
+        
+        <div className={styles.buttons}>
+          <Link
+            className={`button button--secondary button--lg ${styles.customButton}`}
+            to="/docs/intro">
+            Go To Plug-In Documentations 📖
+          </Link>
+        </div>
+        <div className={styles.customButtonContainer}>
+          <Link
+            className={`button button--primary button--lg ${styles.customButton}`}
+            to="/docs/category/modular-action-system">
+            Modular Action System
+          </Link>
+          <Link
+            className={`button button--primary button--lg ${styles.customButton}`}
+            to="/docs/category/modular-inventory-attachment-mia">
+            Modular Inventory Attachment
+          </Link>
+        </div>
       </main>
     </Layout>
   );
