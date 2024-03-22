@@ -4,7 +4,7 @@ sidebar_position: 5
 
 # How To Use MAS?
 
-After you have created [Action](/docs/Modular-Action-System/Actions/) and [Decide Montage](/docs/Modular-Action-System/Decide%20Montages/) assets, you are ready to use MAS!
+After you have created [Action](/docs/Modular-Action-System/Actions/) and [Decide Montage](/docs/Modular-Action-System/Decide%20Montages/WhatAreDecideMontages) assets, you are ready to use MAS!
 
 You could create a child of **MAS_ModularActionSystemBase** [Actor Component](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/ProgrammingWithCPP/UnrealArchitecture/Actors/Components/) or use the actor component directly.
 
