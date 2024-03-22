@@ -14,6 +14,8 @@ As you can see, goal is the same for the action, but animations differ to the ci
 
 ## Action Data Asset Responsibilities
 
+![DecideMontageImage](../img/T_Action.png) 
+
 In every created child of **MAS-Action-Base** there are 2 functions that gives us the changes we need in order to update relevant attributes or call events. These are called **OnActionPhaseUpdated** and **OnActionGetsOverriden**.
 
 For example they are good for: *Updating Warp Targets*, *Stamina Consumption*, *Movement State Updates*, *Weapon Trails* etc.

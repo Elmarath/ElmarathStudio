@@ -1,0 +1,9 @@
+{
+  "label": "Decide Montages",
+  "position": 2,
+  "className": "red",
+  "link": {
+    "type": "generated-index",
+    "description": "Learn how to use Decide Montages in MAS!"
+  }
+}

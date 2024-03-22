@@ -7,6 +7,9 @@ sidebar_position: 2
 This tutorial will include *Data Assets*. Which you don' t know already you can check out from [Unreal Engine Documentation About Data Assets](https://dev.epicgames.com/documentation/en-us/unreal-engine/data-assets-in-unreal-engine?application_version=5.2).
 
 ## Creating the First Action
+
+![DecideMontageImage](../img/T_Action.png)
+
 Every Action Blueprint Data Asset we create is from **MAS-Action-Base**. Start by creating a child of this blueprint. 
 The blueprint you created should broadly define the Action it is representing. 
 
@@ -50,10 +53,11 @@ The combat section is created by *Action_Attack* so your custom variables will l
 
 ![ActionDataAssetPreviewImage](../img/ActionDataAssetPreview.png)
 
-### Default Action Variables
+### Default Action Data Asset Variables
 
 - **Can Not Be Canceled Duration**: The duration that, when this action gets started to play, it wont get canceled even if more prior actions are in the queue.
-- **Priority**: You can define priority per phase. The Action System Component will look for the most prior action in the queue from newly added to latter added. And if the queue has a prior action (in this case system will look for its *Initial* priority) than the current action's phase priority, queued action will be played.
-- **Gameplay Attributes** This is just a empty Data Asset. Which you may want to hold some of your global variables regarding to the Action. To use in the functions: "On Action Phase Updated" and "On Action Gets Overriden".
-- **Montage Decider** This will decide the montage of the action. We will go in detail about this data asset in the next part.
+- **Priority**: You can define priority per phase. The Action System Component will look for the most prior action in the queue from newly added to latter added. And if the queue has a prior action (in this case system will look for its *Initial* priority) than the current action's phase priority, queued action will be played. *Higer in the list prior it is*.
+- **Gameplay Attributes**: This is just a empty Data Asset. Which you may want to hold some of your global variables regarding to the Action. To use in the functions: "On Action Phase Updated" and "On Action Gets Overriden".
+- **Action Tag**: A [gameplay tag](https://docs.unrealengine.com/4.26/en-US/ProgrammingAndScripting/Tags/) for holding a relavent data for the action. Useful for detection of AI's actions, or creating basic state Action system (eg: If previous action has a tag do this action etc.).
+- **Montage Decider**: This will decide the montage of the action. We will go in detail about this data asset in the next part.
 
