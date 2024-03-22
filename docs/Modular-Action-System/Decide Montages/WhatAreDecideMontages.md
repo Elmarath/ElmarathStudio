@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 1
 ---
 
 # What Are Decide Montages In MAS?
@@ -9,7 +9,7 @@ As the name explains, this assets will determine the action's montages. Every ac
 
 ## Decide Montage Asset Responsibilities 
 
-![DecideMontageImage](../img/T_DecideMOntage.png) 
+![DecideMontageImage](../img/T_DecideMontage.png) 
 
 Main responsibility is *obvious enough* proivde the correct montage according to the character.
 

@@ -2,9 +2,9 @@
 sidebar_position: 2
 ---
 
-# How To Create And Use Decide Montages?
+# How To Create And Use Decide Montages? 
 
-![DecideMontageImage](../img/T_DecideMOntage.png) 
+![DecideMontageImage](../img/T_DecideMontage.png) 
 
 As actions they have a parent blueprint too. All the Decide Montage Assets should be be a child of **MAS_DecideMontage_Base**.
 
