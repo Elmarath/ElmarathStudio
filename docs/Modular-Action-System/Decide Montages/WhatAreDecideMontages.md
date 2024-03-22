@@ -7,9 +7,9 @@ sidebar_position: 1
 As the name explains, this assets will determine the action's montages. Every action has a variable called `Montage Decider`. The variable needs to be populated by this Blueprint Data Asset's Instances. Your action will try to get the montage by calling this asset's **GetMontage** function. If no montage is provided, action will be invalid. If a montage is provided action will play that montage. By using this logic can have a basic *Ability System*. 
 
 
-## Decide Montage Asset Responsibilities 
+## Decide Montage Asset Responsibilities ![DecideMontageImage](../img/T_DecideMontage.png) 
 
-![DecideMontageImage](../img/T_DecideMontage.png) 
+
 
 Main responsibility is *obvious enough* proivde the correct montage according to the character.
 
