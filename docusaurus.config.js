@@ -8,8 +8,8 @@ import {themes as prismThemes} from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
-  title: 'Elmarath Studios',
-  tagline: 'Making Games Are Cool',
+  title: 'Elmarath Studio',
+  tagline: 'Game and Game Tools Development',
   favicon: 'img/favicon.ico',
 
 

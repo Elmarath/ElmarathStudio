@@ -1,0 +1,25 @@
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureSvg {
+  height: 200px;
+  width: 200px;
+}
+
+.centeredRow {
+  display: flex;
+  justify-content: center;
+}
+
+.documentImg {
+  width: 200px;
+  /* Adjust as needed */
+  height: 200px;
+  /* Adjust as needed */
+  object-fit: cover;
+  /* This will ensure the aspect ratio of the image is maintained */
+}

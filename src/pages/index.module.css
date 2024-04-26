@@ -36,3 +36,12 @@
   justify-content: center;
   margin-top: 20px; /* Add margin to separate button container from existing buttons */
 }
+
+.documentsTitle {
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 20px;
+  color: var(--ifm-color-primary-dark);
+  margin-bottom: 20px;
+}
