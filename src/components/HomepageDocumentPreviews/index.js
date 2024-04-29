@@ -4,6 +4,15 @@ import styles from './styles.module.css';
 
 const DocumentList = [
   {
+    title: <a href="/docs/category/nested-inventory-architecture-nia">Nested Inventory Architecture (NIA)</a>,
+    Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
+    description: (
+      <>
+        Allow players to have intuitive and easy to use inventory systems, using nested inventories.
+      </>
+    ),
+  },
+  {
     title: <a href="/docs/category/modular-action-system">Modular Action System (MAS)</a>,
     Img: require('@site/static/img/T_ModularActionSystemLogo.png').default,
     description: (
@@ -12,10 +21,10 @@ const DocumentList = [
         Network ready, and can be used for any type of game uses animation.
       </>
     ),
-  },
+  }
 ];
 
-function Document({Img, title, description}) {
+function Document({ Img, title, description }) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
