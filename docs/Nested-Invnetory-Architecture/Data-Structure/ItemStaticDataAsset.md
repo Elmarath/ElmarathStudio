@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Item Static Data Asset 
 
-![ItemStaticDataImage](./img/T_ItemStaticData.png)
+![ItemStaticDataImage](./../img/T_ItemStaticData.png)
 
 Every item are constructed from a [data asset](https://dev.epicgames.com/documentation/en-us/unreal-engine/data-assets-in-unreal-engine), it's appearence (both in inventory and in game) and all relevant attributes which are static, is holded here. Such as: Mesh, weight, base price etc.
 
@@ -16,7 +16,7 @@ This way you can create a clean the data structre by only showing items relevant
 ## Default NIA Item Data Asset
 By default NIA only provides the attributes that are nececarry for the inventory system to work. Giving developers the maximum flexibility to work with. 
 
-![Example Item Data Asset Image](./img/T_ExampleItemDataAsset.png)
+![Example Item Data Asset Image](./../img/T_ExampleItemDataAsset.png)
 ```mermaid
 classDiagram
     class ItemStaticData {
@@ -52,8 +52,8 @@ classDiagram
 | Property | Type | Description |
 | --- | --- | --- |
 | Name | Text | The name of the item. By default it is used for showing tooltips when mouse hovers around items at template inventory. |
-| Type | GameplayTag | The type of the item. Used for checking if the item could enter a section. For example Sections are A: Item B:Item.Armor C: Item.Weapon, Item Type is: Item.Armor.Helmet: Item can enter A and B but not C. For more info check [Gameplay Tags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/) |
-| Icon | `SoftObjPointer<Texture>` | The icon of the item. Used in template inventory icons. |
+| Type | GameplayTag | The type of the item. Used for checking if the item could enter a section. For example Sections are A: Item B:Item.Armor C: Item.Weapon, Item Type is: Item.Armor.Helmet: Item can enter A and B but not C. For more info check [Gameplay Tags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/). |
+| Icon | `SoftObjPointer<Texture>` | The icon of the item. Used in template inventory icons. Grid size and resulation of the image should match to avoid straching. *Eg: GridSize: 1x2 -> Res: 256x512*|
 | IsStackable | bool | Whether the item is stackable. |
 | MaxStackSize | Int32 | The maximum stack size of the item.|
 | GridSize | IntPoint | The grid size of the item. For the size of it takes in the inventory.|
