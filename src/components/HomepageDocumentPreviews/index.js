@@ -8,7 +8,7 @@ const DocumentList = [
     Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
     description: (
       <>
-        Allow players to have intuitive and easy to use inventory systems, using nested inventories.
+        Allow players to have intuitive and easy to use inventory systems! By allowing you to create customizable, nested, section based, object oriented architecture.
       </>
     ),
   },
