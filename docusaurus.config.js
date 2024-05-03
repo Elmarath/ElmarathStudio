@@ -4,7 +4,7 @@
 // There are various equivalent ways to declare your Docusaurus config.
 // See: https://docusaurus.io/docs/api/docusaurus-config
 
-import {themes as prismThemes} from 'prism-react-renderer';
+import { themes as prismThemes } from 'prism-react-renderer';
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -68,86 +68,87 @@ const config = {
   ],
 
   themeConfig:
-  /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
-  ({
-    // Replace with your project's social card
-    image: 'img/T_ElmarathLogo.png',
-    navbar: {
-      title: 'Elmarath Studio',
-      logo: {
-        alt: 'Elmarath Logo',
-        src: 'img/T_ElmarathLogo.png',
+    /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
+    ({
+      // Replace with your project's social card
+      image: 'img/T_ElmarathLogo.png',
+      navbar: {
+        title: 'Elmarath Studio',
+        logo: {
+          alt: 'Elmarath Logo',
+          src: 'img/T_ElmarathLogo.png',
+        },
+        items: [
+          {
+            type: 'docSidebar',
+            sidebarId: 'tutorialSidebar',
+            position: 'left',
+            label: 'Plug-in Tutorials',
+          },
+          { to: '/blog', label: 'About Us', position: 'left' },
+          {
+            href: 'https://github.com/Elmarath',
+            label: 'GitHub',
+            position: 'right',
+          },
+        ],
       },
-      items: [
-        {
-          type: 'docSidebar',
-          sidebarId: 'tutorialSidebar',
-          position: 'left',
-          label: 'Plug-in Tutorials',
-        },
-        {to: '/blog', label: 'About Us', position: 'left'},
-        {
-          href: 'https://github.com/Elmarath',
-          label: 'GitHub',
-          position: 'right',
-        },
-      ],
-    },
-    footer: {
-      style: 'dark',
-      links: [
-        {
-          title: 'Docs',
-          items: [
-            {
-              label: 'Plug-in Tutorials',
-              to: '/docs/intro',
-            },
-          ],
-        },
-        {
-          title: 'Community',
-          items: [
-            {
-              label: 'Youtube',
-              href: 'https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ',
-            },
-            {
-              label: 'Discord',
-              href: 'https://discord.gg/HghXuWHJJx',
-            },
-            {
-              label: 'Twitter',
-              href: 'https://twitter.com/denizhan_toprak',
-            },
-          ],
-        },
-        {
-          title: 'More',
-          items: [
-            {
-              label: 'Blog',
-              to: '/blog',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/facebook/docusaurus',
-            },
-          ],
-        },
-      ],
-      copyright: `Copyright © ${new Date().getFullYear()} Elmarath Studio, Inc.`,
-    },
-    prism: {
-      theme: prismThemes.github,
-      darkTheme: prismThemes.dracula,
-    },
-    themeConfig: {
-      colorMode: {
-        defaultMode: 'dark',
+      footer: {
+        style: 'dark',
+        links: [
+          {
+            title: 'Docs',
+            items: [
+              {
+                label: 'Plug-in Tutorials',
+                to: '/docs/intro',
+              },
+            ],
+          },
+          {
+            title: 'Community',
+            items: [
+              {
+                label: 'Youtube',
+                href: 'https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ',
+              },
+              {
+                label: 'Discord',
+                href: 'https://discord.gg/HghXuWHJJx',
+              },
+              {
+                label: 'Twitter',
+                href: 'https://twitter.com/denizhan_toprak',
+              },
+            ],
+          },
+          {
+            title: 'More',
+            items: [
+              {
+                label: 'Blog',
+                to: '/blog',
+              },
+              {
+                label: 'GitHub',
+                href: 'https://github.com/facebook/docusaurus',
+              },
+            ],
+          },
+        ],
+        copyright: `Copyright © ${new Date().getFullYear()} Elmarath Studio, Inc.`,
       },
-    },
-  }),
+      prism: {
+        theme: prismThemes.github,
+        darkTheme: prismThemes.dracula,
+      },
+      themeConfig: {
+        colorMode: {
+          defaultMode: 'dark',
+          respectPrefersColorScheme: true,
+        },
+      },
+    }),
 };
 
 export default config;
