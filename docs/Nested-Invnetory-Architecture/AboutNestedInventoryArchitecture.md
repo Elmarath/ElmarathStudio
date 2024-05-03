@@ -8,19 +8,19 @@ sidebar_position: 1
 
 **Docs: [Documentation](https://elmarathstudio.netlify.app/)**
 :::note
-    NIA -as the name suggest- is an architecture, it allows you to build your inventory based on a well designed structre but **it doesn't restrict the way you edit them**. There are some basic functions such as: *Add*, *TransformSlots*, *Discard*, *SetSlot*" etc. But you can **override** them, or **create new editing methods from scratch**!
+    **NIA** *-as the name suggests-* is an architecture, it allows you to build your inventory based on a well designed structre and **it doesn't restrict the way you edit them**. There are already defined some basic functions such as: *Add*, *TransformSlots*, *Discard*, *SetSlot*" etc. But you can **override** them, or **create new editing methods from scratch**!
 :::
 
 ## This System Gives You:
 
  - **Nested Inventory System** will allow items to hold other inventories! Backpacks within packpacks, weapon attachments inside weapons... Everything is possible!
 
- - **Object Based Architecture** makes possible to make use of inheritance for primitive item types and hold runtime variables for items. Everthing a object can do.
+ - **Object Based Architecture** makes possible to make use of inheritance for primitive item types and hold runtime variables for items. Everything an object can do.
 
  - **[Data Asset](https://dev.epicgames.com/documentation/en-us/unreal-engine/data-assets-in-unreal-engine) Use For Base Info** allows items to hold customized variables types per class with the help of inheritance and many other advantages of using data assets.
 
- - **Sections as [GameplayTags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)** used for Inventories the hold sections with different types. Allowing item transform in a much more intiuative manner. Allowing logics like: *If item tag and section tag matches* etc.
-- **Customizable Inventory Editing** is always avalible by overriding the releted methods, blueprint or c++!
+ - **Sections as [GameplayTags](https://docs.unrealengine.com/4.27/en-US/ProgrammingAndScripting/Tags/)** used for Inventories that hold sections with different types. Allowing item transform in a much more intuitive manner. Allowing logics like: *If item tag and section tag matches* etc.
+- **Customizable Inventory Editing** is always available by *overriding* the related methods or *create* new ones for your project, **Blueprints** or **C++**!
 
 
 ![NIA_Gallery](./img/T_NIA_Gallery1.png)
