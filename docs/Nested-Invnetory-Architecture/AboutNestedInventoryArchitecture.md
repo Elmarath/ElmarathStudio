@@ -6,7 +6,10 @@ sidebar_position: 1
 
 **Nested Inventory Architecture** (abbreviated as **NIA**) will allow your players to create and interact with inventories intuitively and easily with the help of *Nested Inventory*, *Object Based*, *Section Based* approach with customizable architecture!
 
-**Docs: [Documentation](https://elmarathstudio.netlify.app/)**
+**Explore the Documentation: [Here](https://elmarathstudio.netlify.app/)**
+
+**Access the test build: [Here](https://drive.google.com/drive/folders/1xf5CE0BjK476kyd_Dy-Yawh19Dgx8Qao?usp=sharing)**
+
 :::note
     **NIA** *-as the name suggests-* is an architecture, it allows you to build your inventory based on a well designed structre and **it doesn't restrict the way you edit them**. There are already defined some basic functions such as: *Add*, *TransformSlots*, *Discard*, *SetSlot*" etc. But you can **override** them, or **create new editing methods from scratch**!
 :::
