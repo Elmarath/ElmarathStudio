@@ -4,6 +4,6 @@
   "className": "red",
   "link": {
     "type": "generated-index",
-    "description": "Plug-in for handling various types of gameplay montage-related actions in a easy to manage and flexable mannger."
+    "description": "A solution for creating action systems. Data driven, modular, and easy to use and edit. Network ready, and can be used for any type of game uses animation."
   }
 }
