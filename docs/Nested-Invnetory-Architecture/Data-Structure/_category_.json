@@ -2,7 +2,6 @@
   "label": "Data Structure",
   "position": 2,
   "link": {
-    "type": "generated-index",
-    "description": "Allow players to have intuitive and easy to use inventory systems! By allowing you to create customizable, nested, section based, object oriented architecture."
+    "type": "generated-index"
   }
 }

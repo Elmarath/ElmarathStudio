@@ -2,6 +2,7 @@
   "label": "Nested Inventory Architecture (NIA)",
   "position": 3,
   "link": {
-    "type": "generated-index"
+    "type": "generated-index",
+    "description": "Allow players to have intuitive and easy to use inventory systems! By allowing you to create customizable, nested, section based, object oriented architecture."
   }
 }
