@@ -39,7 +39,7 @@ Replication logic is not different for creating new objects. You have to use a s
 :::
 
 
-## Create Your Inventory Template
+## Create Your Inventory Template and Items
 
 To create your own Inventory Template Instance, Right click on the *Content Browser*, Go to *Miscellaneous* than *Data Asset*. Search for *Inventory Template* and select.
 
@@ -59,9 +59,15 @@ This tags are used in both the items and the sections. You should populate your 
 To copy this gameplay tags architecture, add *NIA_GameplayTagSource* to the Gameplay Tag Table List.
 :::
 
-### 2) Organize Your Template
+### 2) Create Your items
 
-Populate your inventory template for your character as you wish.
+Create another *Data Asset Instance* based of *Item Static Data*. You can always create a BP' of this Data Asset and create your own variables. This is just a basic item. It doesn't even have a mesh.
+
+![Example Item Static Data](./img/T_ExampleItemDataAsset.png)
+
+### 3) Organize Your Template
+
+Populate your inventory template for your character as you wish. Or even add default items that will spawn when the component initializes at *Items* array.
 
 An Example:
 
@@ -72,7 +78,7 @@ Example's In World view:
 ![Example In World View](./img/T_ExamplePayloadTemplateView.png)
 
 
-After this you are ready to Use NIA! To determine if your inventory is working you could call the *GetDebugStringFromInventory* and provide your inventory, than print it.
+After this you are ready to Use NIA! To determine if your inventory is working, you can call the *GetDebugStringFromInventory* and provide your inventory, than print it.
 
 ![Debug String Invnetory](./img/T_DebugStringInventory.png)
 
