@@ -23,3 +23,7 @@
   object-fit: cover;
   /* This will ensure the aspect ratio of the image is maintained */
 }
+
+.centered {
+  text-align: center;
+}

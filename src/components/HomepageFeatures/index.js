@@ -1,6 +1,8 @@
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
 import styles from './styles.module.css';
+import React from 'react'
+import HireBoxStyles from '../HireBox/HireBox.module.css'
 
 const FeatureList = [
   {
@@ -33,7 +35,7 @@ const FeatureList = [
   },
 ];
 
-function Feature({Svg, title, description}) {
+function Feature({ Svg, title, description }) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -43,6 +45,15 @@ function Feature({Svg, title, description}) {
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
       </div>
+    </div>
+  );
+}
+
+function HireBox() {
+  return (
+    <div className={HireBoxStyles.hireBox}>
+      <img src="profile-pic-url.jpg" alt="Profile" className={styles.profilePic} />
+      {/* Other elements */}
     </div>
   );
 }

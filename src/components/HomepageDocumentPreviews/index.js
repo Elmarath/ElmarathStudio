@@ -4,6 +4,15 @@ import styles from './styles.module.css';
 
 const DocumentList = [
   {
+    title: <a href="/docs/category/ability-queue-system">Ability Queue System (AQS)</a>,
+    Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
+    description: (
+      <>
+        Extention Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities.
+      </>
+    ),
+  },
+  {
     title: <a href="/docs/category/nested-inventory-architecture-nia">Nested Inventory Architecture (NIA)</a>,
     Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
     description: (
@@ -42,6 +51,7 @@ export default function HomepageDocumentPreviews() {
   return (
     <section className={styles.documents}>
       <div className="container">
+        <h1 style={{ textAlign: 'center' }}>Documents</h1>
         <div className={clsx('row', styles.centeredRow)}>
           {DocumentList.map((props, idx) => (
             <Document key={idx} {...props} />
