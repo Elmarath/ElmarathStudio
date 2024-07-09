@@ -31,7 +31,7 @@ If your Phases should start with the tag **AbilityPhase.**, only child of this t
 :::
 
 :::note
-Your ability phases doesn't need to be strict except "start phase tag" and "end phase tag", they can be defines per action. For example: Drawing bow could have a "Start, TakeBow, DrawBow, Loop, ReleaseArrow, Recovery, End" phases. Because AQS only tracks the "CurrentPhase's Priority" it doesn' t need to know what is the exact phase. This way in the event from Queueable Ability; **OnPhaseChanged** you can get the new phase and perform new actions, events etc. 
+Your ability phases doesn't need to be strict except "start phase tag" and "end phase tag", they can be defined per action. For example: Drawing bow could have a "Start, TakeBow, DrawBow, Loop, ReleaseArrow, Recovery, End" phases. Because AQS only tracks the "CurrentPhase's Priority" it doesn' t need to know what is the exact phase. This way in the event from Queueable Ability; **OnPhaseChanged** you can get the new phase and perform new actions, events etc. 
 ![UnlimitedPhaseNamesExample](./img/T_UnlimitedPhaseNamesExample.png)
 :::
 
