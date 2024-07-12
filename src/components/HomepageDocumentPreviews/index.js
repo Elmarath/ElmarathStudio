@@ -8,7 +8,7 @@ const DocumentList = [
     Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
     description: (
       <>
-        Extention Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities. Allowing developers to create queueable abilities with ease.
+        Extension Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities. Allowing developers to create queueable abilities with ease.
       </>
     ),
     link: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
