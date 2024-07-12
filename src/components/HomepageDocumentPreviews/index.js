@@ -8,9 +8,10 @@ const DocumentList = [
     Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
     description: (
       <>
-        Extention Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities.
+        Extention Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities. Allowing developers to create queueable abilities with ease.
       </>
     ),
+    link: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
     title: <a href="/docs/category/nested-inventory-architecture-nia">Nested Inventory Architecture (NIA)</a>,
@@ -20,6 +21,7 @@ const DocumentList = [
         Allow players to have intuitive and easy to use inventory systems! By allowing you to create customizable, nested, section based, object oriented architecture.
       </>
     ),
+    link: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
   },
   {
     title: <a href="/docs/category/modular-action-system">Modular Action System (MAS)</a>,
@@ -30,10 +32,11 @@ const DocumentList = [
         Network ready, and can be used for any type of game uses animation.
       </>
     ),
+    link: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
   }
 ];
 
-function Document({ Img, title, description }) {
+function Document({ Img, title, link, description }) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
@@ -42,6 +45,9 @@ function Document({ Img, title, description }) {
       <div className="text--center padding-horiz--md">
         <Heading as="h3">{title}</Heading>
         <p>{description}</p>
+        <p>
+          <a href={link}>Marketplace</a>
+        </p>
       </div>
     </div>
   );
