@@ -4,7 +4,17 @@ import styles from './styles.module.css';
 
 const DocumentList = [
   {
-    title: <a href="/docs/category/ability-queue-system">Ability Queue System (AQS)</a>,
+    title: <a href="/docs/AdvancedHitTrailer">Advanved Hit Trailer (AHT)</a>,
+    Img: require('@site/static/img/T_AHT.png').default,
+    description: (
+      <>
+        A modular, optimized solution for easily controlling and extending hit results from continuous hit trails.
+      </>
+    ),
+    link: 'https://www.unrealengine.com/marketplace/en-US/profile/Elmarath?count=20&sortBy=effectiveDate&sortDir=DESC&start=0',
+  },
+  {
+    title: <a href="/docs/Ability-Queue-System/AbilityQueueSystem">Ability Queue System (AQS)</a>,
     Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
     description: (
       <>
@@ -14,7 +24,7 @@ const DocumentList = [
     link: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
-    title: <a href="/docs/category/nested-inventory-architecture-nia">Nested Inventory Architecture (NIA)</a>,
+    title: <a href="/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture">Nested Inventory Architecture (NIA)</a>,
     Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
     description: (
       <>
@@ -24,7 +34,7 @@ const DocumentList = [
     link: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
   },
   {
-    title: <a href="/docs/category/modular-action-system">Modular Action System (MAS)</a>,
+    title: <a href="/docs/Modular-Action-System/About-Modular-Action-System">Modular Action System (MAS)</a>,
     Img: require('@site/static/img/T_ModularActionSystemLogo.png').default,
     description: (
       <>
