@@ -4,28 +4,30 @@ sidebar_position: 1
 
 # Advanced Hit Trailer Overview
 
-The plugin aims to have a modular way to get multiple hit results from the given skeletal mesh sockets in a time period that can be activated or deactivated with handles.
-
-## Main Features 
+The Advanced Hit Trailer plugin offers a robust and modular system designed to generate multiple hit results from selected skeletal mesh sockets over time. This tool provides the flexibility to activate or deactivate trails using handles, simplifying complex tracing operations for your projects.
 
 
- * Multiple tracing system with a handle the control it.
- * Additional hit results from the trail. Such as hit type, speed, hit socket, trail payload UObject etc.
- * Customizable trace source data assets. To have appropiate hit sockets and hit types per trail.
- * Project settings for making using default data assets when trailing.
- * Debugging visualisation.
+## Key Features
+
+ * Dynamic Tracing System: Seamlessly manage multiple traces with a dedicated handle, offering fine control over your hit detection.
+ * Rich Hit Data: Gather detailed hit information, including hit type, speed, socket location, and custom trail payloads.
+ * Customizable Trace Sources: Use data assets to define specific hit sockets and types for each trail, ensuring accuracy and precision.
+ * Streamlined Project Settings: Easily set default data assets for trailing within your project settings, reducing setup time.
+ * Enhanced Debugging: Visualize and troubleshoot trails with built-in debugging tools, making development smoother and more efficient.
 
 
 ![Advanced Hit Trailer Example](./img/T_AdvancedHitTrailerExample.png)
 
-:::note
-    The Hit Results of the Trail is the same as `MultiBoxTracingByChannel` from the Default Unreal Engine Blueprint Node.
+:::info
+    Hit Results of the Trail: Similar to Unreal Engine's `MultiBoxTracingByChannel` Blueprint Node.
     This means:
     * A Trail can hit an actor once.
     * Trace channel must overlap with the actors (not block).
     * A trail can hit multiple Actors at once.
 
     But you can always stop the trail when a actor gets hit. So you have the best of the both worlds.
+
+    ![OverviewImage](./img/T_OverviewImage.png)
 :::
 
-Though it is a very simple tool to use, there are few subjects we need to cover to use this tool fully.
+Though this plugin is easy to use, there are a few key concepts to understand to make the most of its powerful features.
