@@ -4,7 +4,7 @@ import styles from './styles.module.css';
 
 const DocumentList = [
   {
-    title: <a href="/docs/AdvancedHitTrailer">Advanved Hit Trailer (AHT)</a>,
+    title: <a href="/docs/AdvancedHitTrailer">Advanced Hit Trailer (AHT)</a>,
     Img: require('@site/static/img/T_AHT.png').default,
     description: (
       <>
