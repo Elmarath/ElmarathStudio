@@ -3,6 +3,9 @@ sidebar_position: 1
 ---
 
 # About Ability Queue System
+
+[Marketplace](https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system)
+
 Ability System is a very well-structured official solution for creating gameplay interaction events. Though it is very modular, it lacks fluid transitions between actions. This plugin solves this by giving each action (in its phases) priorities and activating them accordingly, without interfering with Epic's Ability System.
 
 ![DecideMontageImage](./img/T_AbilityQueuesSystemFeatured.png) 

@@ -4,6 +4,8 @@ sidebar_position: 1
 
 # Advanced Hit Trailer Overview
 
+[Marketplace](https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system)
+
 The Advanced Hit Trailer plugin offers a robust and modular system designed to generate multiple hit results from selected skeletal mesh sockets over time. This tool provides the flexibility to activate or deactivate trails using handles, simplifying complex tracing operations for your projects.
 
 

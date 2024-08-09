@@ -4,37 +4,40 @@ import styles from './styles.module.css';
 
 const DocumentList = [
   {
-    title: <a href="/docs/AdvancedHitTrailer">Advanced Hit Trailer (AHT)</a>,
+    title: "Advanced Hit Trailer (AHT)",
     Img: require('@site/static/img/T_AHT.png').default,
     description: (
       <>
         A modular, optimized solution for easily controlling and extending hit results from continuous hit trails.
       </>
     ),
-    link: 'https://www.unrealengine.com/marketplace/en-US/profile/Elmarath?count=20&sortBy=effectiveDate&sortDir=DESC&start=0',
+    DocLink: '/docs/AdvancedHitTrailer',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
-    title: <a href="/docs/Ability-Queue-System/AbilityQueueSystem">Ability Queue System (AQS)</a>,
+    title: "Ability Queue System (AQS)",
     Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
     description: (
       <>
-        Extension Of Gameplay Ability System from Epic. This system uses queue to activate abilities accourding to the priority of ability phase priorities. Allowing developers to create queueable abilities with ease.
+        Extension Of Gameplay Ability System from Epic. This system uses queue to activate abilities according to the priority of ability phase priorities. Allowing developers to create queueable abilities with ease.
       </>
     ),
-    link: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
+    DocLink: '/docs/Ability-Queue-System/AbilityQueueSystem',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
-    title: <a href="/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture">Nested Inventory Architecture (NIA)</a>,
+    title: "Nested Inventory Architecture (NIA)",
     Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
     description: (
       <>
         Allow players to have intuitive and easy to use inventory systems! By allowing you to create customizable, nested, section based, object oriented architecture.
       </>
     ),
-    link: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
+    DocLink: '/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
   },
   {
-    title: <a href="/docs/Modular-Action-System/About-Modular-Action-System">Modular Action System (MAS)</a>,
+    title: "Modular Action System (MAS)",
     Img: require('@site/static/img/T_ModularActionSystemLogo.png').default,
     description: (
       <>
@@ -42,21 +45,26 @@ const DocumentList = [
         Network ready, and can be used for any type of game uses animation.
       </>
     ),
-    link: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
+    DocLink: '/docs/Modular-Action-System/About-Modular-Action-System',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
   }
 ];
 
-function Document({ Img, title, link, description }) {
+function Document({ Img, title, DocLink, MarketplaceLink, description }) {
   return (
     <div className={clsx('col col--4')}>
       <div className="text--center">
-        <img src={Img} className={styles.documentImg} alt={title} />
+        <a href={DocLink}>
+          <img src={Img} className={styles.documentImg} alt={title} />
+        </a>
       </div>
       <div className="text--center padding-horiz--md">
-        <Heading as="h3">{title}</Heading>
+        <a href={DocLink}>
+          <Heading as="h3">{title}</Heading>
+        </a>
         <p>{description}</p>
         <p>
-          <a href={link}>Marketplace</a>
+          <a href={MarketplaceLink}>Marketplace</a>
         </p>
       </div>
     </div>

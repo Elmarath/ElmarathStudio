@@ -4,6 +4,8 @@ sidebar_position: 1
 
 # About Modular Action System (MAS)
 
+[Marketplace](https://www.unrealengine.com/marketplace/en-US/product/modular-action-system)
+
 **Modular Action System** (in short **MAS**) will allow you to create actions inside **[Data Assets](https://docs.unrealengine.com/5.2/en-US/data-assets-in-unreal-engine/)**. Default Data Asset can be overriden to add your logic inside it. After you populate the instances of your created actions, you can input these actions to your **Characters** in your  **[Controllers](https://docs.unrealengine.com/5.2/en-US/data-assets-in-unreal-engine/)** and the actor component **Action Manager** will handle the rest.
 
 ### Youtube Video Tutorial
