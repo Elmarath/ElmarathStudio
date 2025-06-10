@@ -20,6 +20,8 @@ This is a **local-only interaction system**, meaning it runs entirely on the [Lo
 
 On the actor when you add the interaction system
 
+![Add Staged Interaction Component](./img/T_AddInteractionStageComponent.jpeg)
+
 ### [Interaction Stages](InteractionStageLink)
 
 Interaction **Stages** are [Gameplay Tags](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine) that can be defined per project. They let you categorize interaction states however you like. You can then use `Gameplay Tag Queries` to determine which **Interaction Executions** should run—automatically managed by the plugin.

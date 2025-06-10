@@ -13,6 +13,8 @@ As a designer, your role is to define:
 - The **conditions** under which those stages apply
 - The **executions** that run when a stage is triggered
 
+![Staged Interaction System Preview](../img/T_StagedInteractionComponentPreview.jpeg)
+
 ---
 
 ## Key Events
@@ -34,8 +36,15 @@ Virtual Executions provide an easy way to trigger logic without writing custom `
 2. Set a custom `FName` identifier.
 3. Respond to the following events in your actor:
 
-- `On Virtual Execution Started`
-- `On Virtual Execution End`
+- `On Virtual Stage Interaction Execution Start`
+- `On Virtual Stage Interaction Execution End`
+
+:::tip
+To utilize this functionality define a `virtual execution` under the `Conditioned Executions`. And if the component's stage tags matches the querry of the execution said events will trigger with the given `Execution ID`. 
+
+![Virtual Stage Interaction Executions Showcase](../img/T_VirtualInteractionExecutionShowcase.jpeg)
+![Virtual Stage Interaction Events Showcase](../img/T_VirtualInteractionEventsShowcase.jpeg)
+:::
 
 These events allow you to execute custom logic directly in the owning actor, based on the Virtual Execution name.
 
