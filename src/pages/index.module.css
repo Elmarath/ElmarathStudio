@@ -4,10 +4,8 @@
  */
 
 .heroBanner {
-  padding: 4rem 0;
+  padding: 1rem 0; /* Keep the section size compact */
   text-align: center;
-  position: relative;
-  overflow: hidden;
 }
 
 @media screen and (max-width: 996px) {
@@ -44,4 +42,11 @@
   margin-bottom: 20px;
   color: var(--ifm-color-primary-dark);
   margin-bottom: 20px;
+}
+
+.logo {
+  max-width: 300px; /* Increase the logo size slightly */
+  width: 100%;
+  height: auto;
+  margin: 0 auto 0.01rem; /* Center the logo and add spacing below */
 }

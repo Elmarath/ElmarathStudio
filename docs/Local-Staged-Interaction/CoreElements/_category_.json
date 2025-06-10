@@ -1,0 +1,9 @@
+{
+  "label": "Core Elements",
+  "position": 2,
+  "className": "red",
+  "link": {
+    "type": "generated-index",
+    "description": "The Core elements of Local Staged Interaction framework provide the fundamental building blocks for creating interactive applications. These elements are designed to be reusable and customizable, allowing developers to create complex interactions with ease."
+  }
+}

@@ -10,12 +10,14 @@ import React from 'react';
 import HireBox from '../components/HireBox';
 
 function HomepageHeader() {
-  const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
-        <Heading as="h1" className="hero__title">{siteConfig.title}</Heading>
-        <p className="hero__subtitle">{siteConfig.tagline}</p>
+        <img
+          src={require('@site/static/img/ElmarathStudioText_Logo.png').default}
+          alt="Elmarath Studio Logo"
+          className={styles.logo}
+        />
       </div>
     </header>
   );
@@ -29,9 +31,6 @@ export default function Home() {
       description="Game and Game Tools Development">
       <HomepageHeader />
       <main>
-        <hr />
-        <HireBox />
-        <hr />
         <HomepageDocumentPreviews />
         <hr />
         <HomepageFeatures />

@@ -27,3 +27,36 @@
 .centered {
   text-align: center;
 }
+
+.searchBar {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem 1rem;
+  width: 80%;
+  max-width: 400px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  outline: none;
+}
+
+.searchBar:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+}
+
+.sectionHeader {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.sectionTitleLink {
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-decoration: none;
+  color: inherit; /* Inherit the color from the theme */
+}
+
+.sectionTitleLink:hover {
+  text-decoration: underline;
+}
