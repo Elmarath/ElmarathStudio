@@ -22,13 +22,13 @@ On the actor when you add the interaction system
 
 ![Add Staged Interaction Component](./img/T_AddInteractionStageComponent.jpeg)
 
-### [Interaction Stages](InteractionStageLink)
+### [Interaction Stage](/docs/Local-Staged-Interaction/CoreElements/InteractionStage.md)
 
 Interaction **Stages** are [Gameplay Tags](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine) that can be defined per project. They let you categorize interaction states however you like. You can then use `Gameplay Tag Queries` to determine which **Interaction Executions** should run—automatically managed by the plugin.
 
-### [Interaction Executions](InteractionExecutionLink)
+### [Interaction Execution](/docs/Local-Staged-Interaction/CoreElements/InteractionExecution.md)
 
-**Interaction Executions** are cosmetic, `Instanced UObjects` that run on the interacted actor. They act as visual or sensory feedback systems for the player. For example, they can apply particle effects, overlay materials, or other visual cues when an actor is hovered, overlapped, or interacted with—based on the interaction stage.
+**Interaction Executions** are generally cosmetic, `Instanced UObjects` that run on the interacted actor. They act as visual or sensory feedback systems for the player. For example, they can apply particle effects, overlay materials, or other visual cues when an actor is hovered, overlapped, or interacted with—based on the interaction stage. But you can use them for gameplay purposes also.
 
 ---
 
