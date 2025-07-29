@@ -44,9 +44,40 @@
   margin-bottom: 20px;
 }
 
+.headerBox {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ifm-background-surface, #ffc480);
+  border-radius: 16px;
+  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
+  padding: 1.5rem 2rem;
+  max-width: 700px;
+  margin: 2rem auto;
+}
+
 .logo {
-  max-width: 300px; /* Increase the logo size slightly */
+  max-width: 100px;
   width: 100%;
   height: auto;
-  margin: 0 auto 0.01rem; /* Center the logo and add spacing below */
+  margin-right: 2rem;
+}
+
+.headerText {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.siteTitle {
+  font-size: 2rem;
+  font-weight: bold;
+  margin: 0 0 0.5rem 0;
+  color: var(--ifm-heading-color, #222);
+}
+
+.siteDescription {
+  font-size: 1.1rem;
+  color: var(--ifm-font-color-base, #444);
+  margin: 0;
 }

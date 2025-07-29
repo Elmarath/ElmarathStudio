@@ -146,6 +146,15 @@ const config = {
         defaultMode: 'dark'
       },
     }),
+  plugins: [
+    [
+      '@docusaurus/plugin-google-gtag',
+      {
+        trackingID: 'G-CRZ373MY93',
+        anonymizeIP: true,
+      },
+    ],
+  ],
 };
 
 export default config;
