@@ -39,6 +39,13 @@ const DocumentList = [
     DocLink: '/docs/Modular-Action-System/About-Modular-Action-System',
     MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
   },
+  {
+    title: "Easy Skeletal Mesh Merge Async",
+    Img: require('@site/static/img/EasySkeletalMeshMergeAsync.png').default,
+    description: "A simple and optimized workflow to create modular characters via skele merging.",
+    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/Startup',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
+  }
 ];
 
 function Document({ Img, title, DocLink, MarketplaceLink, description }) {
