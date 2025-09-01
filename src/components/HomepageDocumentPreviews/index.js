@@ -43,7 +43,14 @@ const DocumentList = [
     title: "Easy Skeletal Mesh Merge Async",
     Img: require('@site/static/img/EasySkeletalMeshMergeAsync.png').default,
     description: "A simple and optimized workflow to create modular characters via skele merging.",
-    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/Startup',
+    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/EasySkeletalMeshMergeAsync',
+    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
+  },
+  {
+    title: "Easy Ability Set System",
+    Img: require('@site/static/img/T_EasyAbilitySetSystem_Logo.png').default,
+    description: "Ability Set Management System that handles both granting and input binding for Gameplay Ability System.",
+    DocLink: '/docs/Easy-Ability-Set-System/EasyAbilitySetSystemStartup',
     MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
   }
 ];
