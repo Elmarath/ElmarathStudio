@@ -1,44 +1,54 @@
-/* Shared Header Card Base Styling */
+/* Modern card design following industry standards */
 .headerCard {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  border: 2px solid var(--ifm-color-primary);
-  padding: 30px;
-  border-radius: 15px;
-  background-color: var(--ifm-background-color);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  max-width: 350px;
-  height: 350px;
-  margin: 20px auto;
-  transition: all 0.3s ease-in-out;
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  padding: 24px;
   text-align: center;
   position: relative;
   cursor: pointer;
-  overflow: hidden;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 320px;
+  min-height: 200px;
 }
 
 .headerCard:hover {
-  transform: translateY(-10px);
-  border-color: var(--ifm-color-primary-dark);
-  background-color: var(--ifm-color-emphasis-100);
+  transform: translateY(-2px);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* Responsive Design - Consistent sizing across devices */
-@media screen and (max-width: 768px) {
+/* Mobile: Stack vertically with full width */
+@media screen and (max-width: 767px) {
   .headerCard {
-    max-width: 280px;
-    height: 280px;
+    width: 100%;
+    max-width: 400px;
+    min-height: 160px;
     padding: 20px;
+    margin: 0 auto;
   }
 }
 
-@media screen and (max-width: 480px) {
+/* Tablet: Medium size */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
   .headerCard {
-    max-width: 250px;
-    height: 250px;
-    padding: 15px;
+    max-width: 280px;
+    min-height: 180px;
+  }
+}
+
+/* Desktop: Full size */
+@media screen and (min-width: 1024px) {
+  .headerCard {
+    max-width: 320px;
+    min-height: 200px;
+    padding: 32px;
   }
 }Card {
   display: flex;

@@ -1,57 +1,61 @@
-/* HeaderBox specific styles - base card styles are in HeaderCard */
+/* Modern HeaderBox with industry-standard typography */
 .logo {
-    width: 120px;
-    height: 120px;
-    border-radius: 15px;
-    margin-bottom: 20px;
-    border: 4px solid var(--ifm-color-primary-light);
-    object-fit: contain;
+  width: 80px;
+  height: 80px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  object-fit: contain;
 }
 
 .siteTitle {
-    font-size: 1.8rem;
-    font-weight: bold;
-    margin: 0 0 15px 0;
-    color: var(--ifm-font-color-base);
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin: 0 0 8px 0;
+  color: var(--ifm-font-color-base);
+  line-height: 1.2;
 }
 
 .description {
-    font-size: 1.1rem;
-    color: var(--ifm-color-content-secondary);
-    margin: 0;
-    opacity: 0.9;
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary);
+  margin: 0;
+  opacity: 0.8;
+  line-height: 1.4;
 }
 
-/* Responsive Design - Content specific scaling */
-@media screen and (max-width: 768px) {
+/* Mobile: Smaller but readable */
+@media screen and (max-width: 767px) {
   .logo {
-    width: 80px;
-    height: 80px;
+    width: 64px;
+    height: 64px;
     margin-bottom: 12px;
   }
   
   .siteTitle {
-    font-size: 1.3rem;
-    margin-bottom: 8px;
+    font-size: 1.25rem;
+    margin-bottom: 6px;
   }
   
   .description {
-    font-size: 0.95rem;
+    font-size: 0.85rem;
   }
 }
 
-@media screen and (max-width: 480px) {
+/* Desktop: Full size */
+@media screen and (min-width: 1024px) {
   .logo {
-    width: 70px;
-    height: 70px;
-    margin-bottom: 10px;
+    width: 96px;
+    height: 96px;
+    margin-bottom: 20px;
   }
   
   .siteTitle {
-    font-size: 1.2rem;
+    font-size: 1.75rem;
+    margin-bottom: 12px;
   }
   
   .description {
-    font-size: 0.9rem;
+    font-size: 1rem;
   }
 }

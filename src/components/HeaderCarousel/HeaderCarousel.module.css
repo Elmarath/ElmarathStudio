@@ -1,0 +1,368 @@
+/* Header Carousel Styles */
+
+/* Desktop layout - show all cards */
+.desktopLayout {
+  display: flex;
+  gap: 1.5rem;
+  justify-content: center;
+  align-items: stretch;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 1rem;
+}
+
+.desktopCard {
+  flex: 1;
+  min-width: 0;
+  max-width: 350px;
+}
+
+/* Mobile/Tablet carousel */
+.carousel {
+  position: relative;
+  width: 100%;
+  margin: 0 auto;
+  max-width: 500px;
+}
+
+.carouselContainer {
+  overflow: hidden;
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+
+.carouselTrack {
+  display: flex;
+  transition: transform 0.3s ease-in-out;
+  width: 100%;
+}
+
+.carouselSlide {
+  flex: 0 0 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 0 20px;
+  box-sizing: border-box;
+}
+
+.slideContent {
+  width: 100%;
+  max-width: 350px;
+}
+
+/* Navigation buttons */
+.carouselButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  color: #374151;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  z-index: 10;
+}
+
+.carouselButton:hover {
+  background: rgba(255, 255, 255, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carouselButton svg {
+  width: 18px;
+  height: 18px;
+}
+
+.prevButton {
+  left: 10px;
+}
+
+.nextButton {
+  right: 10px;
+}
+
+/* Dots indicator */
+.carouselDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 1.5rem;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(156, 163, 175, 0.5);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dot:hover {
+  background: rgba(156, 163, 175, 0.7);
+  transform: scale(1.2);
+}
+
+.activeDot {
+  background: #3b82f6;
+  transform: scale(1.4);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .carousel {
+    max-width: 400px;
+  }
+  
+  .carouselContainer {
+    width: 85%;
+  }
+  
+  .carouselButton {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .carouselButton svg {
+    width: 16px;
+    height: 16px;
+  }
+  
+  .prevButton {
+    left: 5px;
+  }
+  
+  .nextButton {
+    right: 5px;
+  }
+}
+
+/* Dark theme support */
+[data-theme='dark'] .carouselButton {
+  background: rgba(55, 65, 81, 0.95);
+  color: #f3f4f6;
+}
+
+[data-theme='dark'] .carouselButton:hover {
+  background: rgba(55, 65, 81, 1);
+}
+
+[data-theme='dark'] .dot {
+  background: rgba(107, 114, 128, 0.5);
+}
+
+[data-theme='dark'] .dot:hover {
+  background: rgba(107, 114, 128, 0.7);
+}
+
+/* Focus styles for accessibility */
+.carouselButton:focus-visible,
+.dot:focus-visible {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .carouselTrack,
+  .carouselButton {
+    transition: none;
+  }
+}
+
+/* Mobile/Tablet carousel */
+.carousel {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  overflow: hidden;
+}
+
+.carouselContainer {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.carouselTrack {
+  display: flex;
+  width: 300%; /* 3 cards * 100% */
+  transition: transform 0.3s ease-in-out;
+}
+
+.carouselSlide {
+  flex: 0 0 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 16px;
+}
+
+/* Navigation buttons */
+.carouselButton {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--ifm-background-color);
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.carouselButton:hover {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.carouselButton svg {
+  width: 20px;
+  height: 20px;
+  color: var(--ifm-color-content-secondary);
+}
+
+.carouselButton:hover svg {
+  color: var(--ifm-color-primary);
+}
+
+.prevButton {
+  left: -20px;
+}
+
+.nextButton {
+  right: -20px;
+}
+
+/* Dots indicator */
+.carouselDots {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 24px;
+}
+
+.dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--ifm-color-emphasis-300);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 0.5;
+}
+
+.dot:hover {
+  opacity: 0.8;
+  transform: scale(1.2);
+}
+
+.activeDot {
+  background: var(--ifm-color-primary);
+  opacity: 1;
+  transform: scale(1.2);
+}
+
+/* Mobile specific adjustments */
+@media screen and (max-width: 767px) {
+  .carousel {
+    max-width: 100%;
+    padding: 0 16px;
+  }
+  
+  .carouselButton {
+    width: 36px;
+    height: 36px;
+  }
+  
+  .carouselButton svg {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .prevButton {
+    left: -18px;
+  }
+  
+  .nextButton {
+    right: -18px;
+  }
+  
+  .carouselDots {
+    margin-top: 20px;
+  }
+  
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+}
+
+/* Tablet adjustments */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .desktopLayout {
+    gap: 32px;
+    padding: 0 24px;
+  }
+  
+  .carousel {
+    max-width: 400px;
+  }
+}
+
+/* Large desktop */
+@media screen and (min-width: 1440px) {
+  .desktopLayout {
+    gap: 64px;
+    padding: 0 48px;
+  }
+}
+
+/* Accessibility improvements */
+@media (prefers-reduced-motion: reduce) {
+  .carouselTrack {
+    transition: none;
+  }
+  
+  .carouselButton,
+  .dot {
+    transition: none;
+  }
+}
+
+/* Touch interaction feedback */
+.carouselContainer:active {
+  cursor: grabbing;
+}
+
+/* Focus states for accessibility */
+.carouselButton:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}
+
+.dot:focus {
+  outline: 2px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+}

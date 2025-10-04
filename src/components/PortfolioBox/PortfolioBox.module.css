@@ -1,33 +1,135 @@
-/* PortfolioBox specific styles - base card styles are in HeaderCard */
+/* Modern PortfolioBox following profile card standards */
 .openToWork {
-    position: absolute;
-    top: 5px;
-    right: 5px;
-    background: linear-gradient(45deg, #4CAF50, #45a049);
-    color: white;
-    padding: 8px 16px;
-    border-radius: 20px;
-    font-size: 0.8rem;
-    font-weight: bold;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    animation: pulse 2s infinite;
-    text-decoration: none;
-    transition: transform 0.2s ease;
-    border: none;
-    cursor: pointer;
-    z-index: 10;
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
 }
 
 .openToWork:hover {
-    transform: scale(1.1);
-    text-decoration: none;
-    color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
+.profilePic {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  margin-bottom: 16px;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  object-fit: cover;
+}
+
+.name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0 0 4px 0;
+  color: var(--ifm-font-color-base);
+  line-height: 1.2;
+}
+
+.title {
+  font-size: 1rem;
+  font-weight: 500;
+  margin: 0 0 12px 0;
+  color: var(--ifm-color-primary);
+}
+
+.description {
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.4;
+  opacity: 0.8;
+  margin: 0;
+}
+
+.descriptionLink {
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+  padding: 8px;
+  margin: -8px;
+}
+
+.descriptionLink:hover {
+  text-decoration: none;
+  color: inherit;
+  background-color: var(--ifm-color-emphasis-100);
+}
+
+.descriptionLink:hover .description {
+  color: var(--ifm-color-primary);
+  opacity: 1;
+}
+
+/* Mobile: Compact but readable */
+@media screen and (max-width: 767px) {
+  .profilePic {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 12px;
+  }
+  
+  .name {
+    font-size: 1.1rem;
+    margin-bottom: 3px;
+  }
+  
+  .title {
+    font-size: 0.9rem;
+    margin-bottom: 8px;
+  }
+  
+  .description {
+    font-size: 0.8rem;
+  }
+  
+  .openToWork {
+    top: 8px;
+    right: 8px;
+    padding: 3px 6px;
+    font-size: 0.7rem;
+  }
+}
+
+/* Desktop: Full size */
+@media screen and (min-width: 1024px) {
+  .profilePic {
+    width: 96px;
+    height: 96px;
+    margin-bottom: 20px;
+  }
+  
+  .name {
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  
+  .title {
+    font-size: 1.1rem;
+    margin-bottom: 16px;
+  }
+  
+  .description {
+    font-size: 1rem;
+  }
+  
+  .openToWork {
+    top: 16px;
+    right: 16px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
 }
 
 .profilePic {
@@ -308,8 +410,45 @@
     75% { transform: translateY(-15px) rotate(1deg); }
 }
 
-/* Responsive Design - Component specific scaling */
-@media screen and (max-width: 768px) {
+/* Responsive Design - Readable text with compact layout */
+@media screen and (max-width: 767px) {
+  .profilePic {
+    width: 35px;
+    height: 35px;
+    margin-bottom: 4px;
+  }
+  
+  .name {
+    font-size: 0.9rem;
+    margin: 0 0 3px 0;
+    line-height: 1.1;
+  }
+  
+  .title {
+    font-size: 0.75rem;
+    margin: 0 0 4px 0;
+    line-height: 1.1;
+  }
+  
+  .description {
+    font-size: 0.65rem;
+    line-height: 1.2;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .openToWork {
+    padding: 3px 6px;
+    font-size: 0.6rem;
+    top: 2px;
+    right: 2px;
+  }
+}
+
+@media screen and (min-width: 768px) {
   .profilePic {
     width: 70px;
     height: 70px;
@@ -334,25 +473,5 @@
   .openToWork {
     padding: 6px 12px;
     font-size: 0.75rem;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .profilePic {
-    width: 60px;
-    height: 60px;
-    margin-bottom: 10px;
-  }
-  
-  .name {
-    font-size: 1.1rem;
-  }
-  
-  .title {
-    font-size: 0.9rem;
-  }
-  
-  .description {
-    font-size: 0.8rem;
   }
 }
