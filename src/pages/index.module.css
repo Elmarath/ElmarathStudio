@@ -6,6 +6,17 @@
 .heroBanner {
   padding: 1rem 0; /* Keep the section size compact */
   text-align: center;
+  background-color: var(--ifm-background-surface-color);
+}
+
+/* Dark mode: use the beautiful orange/yellow background you liked */
+[data-theme='dark'] .heroBanner {
+  background: linear-gradient(135deg, #ffc480, #F9A826);
+}
+
+/* Light mode: use a soft, warm complementary background */
+[data-theme='light'] .heroBanner {
+  background: linear-gradient(135deg, #fff5e6, #ffeaa7);
 }
 
 @media screen and (max-width: 996px) {
@@ -35,6 +46,24 @@
   margin-top: 20px; /* Add margin to separate button container from existing buttons */
 }
 
+.headerContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+@media screen and (min-width: 768px) {
+  .headerContainer {
+    flex-direction: row;
+    justify-content: center;
+    gap: 40px;
+  }
+}
+
 .documentsTitle {
   text-align: center;
   font-size: 2.5em;
@@ -42,42 +71,4 @@
   margin-bottom: 20px;
   color: var(--ifm-color-primary-dark);
   margin-bottom: 20px;
-}
-
-.headerBox {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--ifm-background-surface, #ffc480);
-  border-radius: 16px;
-  box-shadow: 0 2px 16px rgba(0,0,0,0.07);
-  padding: 1.5rem 2rem;
-  max-width: 700px;
-  margin: 2rem auto;
-}
-
-.logo {
-  max-width: 100px;
-  width: 100%;
-  height: auto;
-  margin-right: 2rem;
-}
-
-.headerText {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.siteTitle {
-  font-size: 2rem;
-  font-weight: bold;
-  margin: 0 0 0.5rem 0;
-  color: var(--ifm-heading-color, #222);
-}
-
-.siteDescription {
-  font-size: 1.1rem;
-  color: var(--ifm-font-color-base, #444);
-  margin: 0;
 }

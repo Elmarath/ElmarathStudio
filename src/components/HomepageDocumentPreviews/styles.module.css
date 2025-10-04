@@ -1,62 +1,480 @@
-.features {
-  display: flex;
-  align-items: center;
-  padding: 2rem 0;
+/* Section Styling */
+.documents {
+  padding: 4rem 0;
+  background: linear-gradient(135deg, var(--ifm-background-color) 0%, var(--ifm-color-emphasis-100) 100%);
+  position: relative;
+}
+
+.documents::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='grid' width='10' height='10' patternUnits='userSpaceOnUse'%3E%3Cpath d='M 10 0 L 0 0 0 10' fill='none' stroke='%23F9A826' stroke-width='0.5' opacity='0.1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23grid)'/%3E%3C/svg%3E") repeat;
+  pointer-events: none;
+}
+
+.fullWidthContainer {
   width: 100%;
-}
-
-.featureSvg {
-  height: 200px;
-  width: 200px;
-}
-
-.centeredRow {
-  display: flex;
-  justify-content: center;
-}
-
-.documentImg {
-  width: 200px;
-  /* Adjust as needed */
-  height: 200px;
-  /* Adjust as needed */
-  object-fit: cover;
-  /* This will ensure the aspect ratio of the image is maintained */
-}
-
-.centered {
-  text-align: center;
-}
-
-.searchBar {
-  display: block;
-  margin: 1rem auto;
-  padding: 0.5rem 1rem;
-  width: 80%;
-  max-width: 400px;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  outline: none;
-}
-
-.searchBar:focus {
-  border-color: #007bff;
-  box-shadow: 0 0 4px rgba(0, 123, 255, 0.5);
+  max-width: none;
+  padding: 0 2rem;
 }
 
 .sectionHeader {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 4rem;
+  position: relative;
+  z-index: 1;
 }
 
 .sectionTitleLink {
-  font-size: 2.5rem;
-  font-weight: bold;
+  font-size: 3rem;
+  font-weight: 800;
   text-decoration: none;
-  color: inherit; /* Inherit the color from the theme */
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-light));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: all 0.3s ease;
+  display: inline-block;
 }
 
 .sectionTitleLink:hover {
-  text-decoration: underline;
+  transform: translateY(-2px);
+  text-decoration: none;
+  filter: brightness(1.1);
+}
+
+.sectionSubtitle {
+  font-size: 1.2rem;
+  color: var(--ifm-color-content-secondary);
+  margin: 1rem 0 2rem 0;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Enhanced Search Styling */
+.searchContainer {
+  max-width: 500px;
+  margin: 0 auto;
+  position: relative;
+}
+
+.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: var(--ifm-background-color);
+  border: 2px solid var(--ifm-color-emphasis-300);
+  border-radius: 25px;
+  padding: 0.5rem 1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+.searchInputWrapper:focus-within {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 6px 25px rgba(249, 168, 38, 0.3);
+  transform: translateY(-2px);
+}
+
+.searchIcon {
+  width: 20px;
+  height: 20px;
+  color: var(--ifm-color-content-secondary);
+  margin-right: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+.searchInputWrapper:focus-within .searchIcon {
+  color: var(--ifm-color-primary);
+}
+
+.searchBar {
+  flex: 1;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
+  padding: 0.5rem 0;
+}
+
+.searchBar::placeholder {
+  color: var(--ifm-color-content-secondary);
+  opacity: 0.7;
+}
+
+.clearButton {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: var(--ifm-color-content-secondary);
+  cursor: pointer;
+  padding: 0.25rem;
+  margin-left: 0.5rem;
+  border-radius: 50%;
+  transition: all 0.2s ease;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.clearButton:hover {
+  background-color: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-primary-dark);
+}
+
+.searchResults {
+  text-align: center;
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary);
+  font-weight: 500;
+}
+
+/* Responsive Grid Layout */
+.documentGrid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 1.5rem;
+  position: relative;
+  z-index: 1;
+  max-width: none;
+  margin: 0 auto;
+  padding: 0;
+}
+
+/* Card Styling */
+.documentCard {
+  display: flex;
+  flex-direction: column;
+  width: 350px;
+  height: 350px;
+  flex-shrink: 0;
+}
+
+.cardContainer {
+  background: var(--ifm-background-color);
+  border-radius: 20px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s ease;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.cardContainer:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  border-color: var(--ifm-color-primary-light);
+}
+
+.imageContainer {
+  position: relative;
+  overflow: hidden;
+  height: 60%;
+  background: linear-gradient(135deg, var(--ifm-color-emphasis-100), var(--ifm-color-emphasis-200));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.imageLink {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.3s ease;
+}
+
+.imageLink:hover {
+  transform: scale(1.02);
+}
+
+.documentImg {
+  max-width: 90%;
+  max-height: 90%;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  transition: transform 0.4s ease;
+  border-radius: 12px;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+.cardContainer:hover .documentImg {
+  transform: scale(1.1);
+  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+}
+
+.imageOverlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(249, 168, 38, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.cardContainer:hover .imageOverlay {
+  opacity: 1;
+}
+
+.viewDocsButton {
+  color: white;
+  font-weight: 600;
+  font-size: 1.1rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 25px;
+  backdrop-filter: blur(10px);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.cardContent {
+  padding: 1.25rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.titleLink {
+  text-decoration: none;
+  color: inherit;
+}
+
+.titleLink:hover {
+  text-decoration: none;
+  color: inherit;
+}
+
+.documentTitle {
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 0 0 0.75rem 0;
+  color: var(--ifm-font-color-base);
+  transition: color 0.3s ease;
+  line-height: 1.3;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.titleLink:hover .documentTitle {
+  color: var(--ifm-color-primary-dark);
+}
+
+.documentDescription {
+  color: var(--ifm-color-content-secondary);
+  line-height: 1.5;
+  margin: 0 0 1rem 0;
+  flex: 1;
+  font-size: 0.9rem;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.cardActions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.docsButton,
+.marketplaceButton {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 0.85rem;
+  transition: all 0.3s ease;
+  border: 2px solid;
+  flex: 1;
+  justify-content: center;
+  min-width: 100px;
+}
+
+.docsButton {
+  background: var(--ifm-color-primary);
+  color: white;
+  border-color: var(--ifm-color-primary);
+}
+
+.docsButton:hover {
+  background: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-dark);
+  color: white;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.marketplaceButton {
+  background: transparent;
+  color: var(--ifm-color-primary-dark);
+  border-color: var(--ifm-color-primary-light);
+}
+
+.marketplaceButton:hover {
+  background: var(--ifm-color-primary-light);
+  color: var(--ifm-color-primary-darkest);
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+.buttonIcon {
+  width: 16px;
+  height: 16px;
+}
+
+/* No Results Styling */
+.noResults {
+  text-align: center;
+  padding: 4rem 2rem;
+  color: var(--ifm-color-content-secondary);
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.noResultsIcon {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 1.5rem;
+  opacity: 0.5;
+}
+
+.noResults h3 {
+  font-size: 1.5rem;
+  margin: 0 0 1rem 0;
+  color: var(--ifm-font-color-base);
+}
+
+.noResults p {
+  font-size: 1rem;
+  margin: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .sectionTitleLink {
+    font-size: 2.5rem;
+  }
+  
+  .searchContainer {
+    max-width: 90%;
+  }
+  
+  .fullWidthContainer {
+    padding: 0 1rem;
+  }
+  
+  .documentGrid {
+    gap: 1rem;
+  }
+  
+  .documentCard {
+    width: 100%;
+    height: 300px;
+    max-width: 350px;
+  }
+  
+  .cardActions {
+    flex-direction: column;
+  }
+  
+  .docsButton,
+  .marketplaceButton {
+    flex: none;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .documentGrid {
+    gap: 1rem;
+  }
+  
+  .documentCard {
+    width: 280px;
+    height: 280px;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1200px) {
+  .documentGrid {
+    gap: 1.25rem;
+  }
+  
+  .documentCard {
+    width: 320px;
+    height: 320px;
+  }
+}
+
+@media (min-width: 1201px) and (max-width: 1440px) {
+  .documentGrid {
+    gap: 1.5rem;
+  }
+  
+  .documentCard {
+    width: 350px;
+    height: 350px;
+  }
+}
+
+@media (min-width: 1441px) and (max-width: 1800px) {
+  .documentGrid {
+    gap: 1.75rem;
+  }
+  
+  .documentCard {
+    width: 380px;
+    height: 380px;
+  }
+  
+  .fullWidthContainer {
+    padding: 0 3rem;
+  }
+}
+
+@media (min-width: 1801px) {
+  .documentGrid {
+    gap: 2rem;
+  }
+  
+  .documentCard {
+    width: 400px;
+    height: 400px;
+  }
+  
+  .fullWidthContainer {
+    padding: 0 4rem;
+  }
 }
