@@ -72,3 +72,78 @@
   color: var(--ifm-color-primary-dark);
   margin-bottom: 20px;
 }
+
+/* Animated connector section */
+.connectorSection {
+  padding: 1rem 0; /* Reduced from 3rem to 1rem */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: transparent;
+}
+
+/* Simple thin line with center pulse */
+.simpleLine {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 90vw; /* Almost full width of viewport */
+  height: 0.5px; /* Much thinner - 1/4 of original 2px */
+}
+
+.lineLeft, .lineRight {
+  flex: 1;
+  height: 0.5px; /* Much thinner - 1/4 of original 2px */
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ifm-color-primary) 30%, 
+    var(--ifm-color-primary) 70%, 
+    transparent 100%);
+  opacity: 0.6;
+}
+
+.centerPulse {
+  width: 8px; /* Reduced from 20px to 8px */
+  height: 8px; /* Reduced from 20px to 8px */
+  border-radius: 50%;
+  background: var(--ifm-color-primary);
+  position: relative;
+  animation: pulse 2s ease-in-out infinite;
+  box-shadow: 0 0 5px var(--ifm-color-primary); /* Reduced glow from 10px to 5px */
+}
+
+.pulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px; /* Reduced from 20px to 8px */
+  height: 8px; /* Reduced from 20px to 8px */
+  border: 1px solid var(--ifm-color-primary); /* Reduced border from 2px to 1px */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: ringExpand 2s ease-out infinite;
+  opacity: 0.7;
+}
+
+/* Animation keyframes */
+@keyframes pulse {
+  0%, 100% { 
+    transform: scale(1); 
+    box-shadow: 0 0 10px var(--ifm-color-primary);
+  }
+  50% { 
+    transform: scale(1.2); 
+    box-shadow: 0 0 20px var(--ifm-color-primary);
+  }
+}
+
+@keyframes ringExpand {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.7;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(3);
+    opacity: 0;
+  }
+}
