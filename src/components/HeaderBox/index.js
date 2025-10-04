@@ -1,21 +1,18 @@
 import React from 'react';
+import HeaderCard from '../HeaderCard';
 import styles from './HeaderBox.module.css';
 
 const HeaderBox = () => {
-    const siteConfig = {
-        title: "Elmarath Studio"
-    };
-    
     return (
-        <div className={styles.headerBox}>
-            <img
-                src={require('@site/static/img/T_ElmarathLogo.png').default}
-                alt="Elmarath Studio Logo"
-                className={styles.logo}
+        <HeaderCard>
+            <img 
+                src="/img/T_ElmarathLogo.png" 
+                alt="Elmarath Studio Logo" 
+                className={styles.logo} 
             />
-            <h1 className={styles.siteTitle}>{siteConfig.title}</h1>
-            <p className={styles.description}>Game and Game Tools Development</p>
-        </div>
+            <h2 className={styles.title}>Elmarath Studio</h2>
+            <p className={styles.description}>Professional Game Development Tools</p>
+        </HeaderCard>
     );
 };
 

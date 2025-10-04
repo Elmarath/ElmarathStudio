@@ -207,10 +207,8 @@
 }
 
 .documentImg {
-  max-width: 90%;
-  max-height: 90%;
-  width: auto;
-  height: auto;
+  width: 140px;
+  height: 140px;
   object-fit: contain;
   transition: transform 0.4s ease;
   border-radius: 12px;
@@ -302,25 +300,30 @@
 
 .cardActions {
   display: flex;
-  gap: 0.75rem;
-  flex-wrap: wrap;
+  gap: 0.5rem;
+  flex-wrap: nowrap;
+  align-items: stretch;
 }
 
 .docsButton,
-.marketplaceButton {
+.marketplaceButton,
+.githubButton {
   display: inline-flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  gap: 0.3rem;
+  padding: 0.4rem 0.6rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.7rem;
   transition: all 0.3s ease;
   border: 2px solid;
   flex: 1;
   justify-content: center;
-  min-width: 100px;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .docsButton {
@@ -348,6 +351,31 @@
   color: var(--ifm-color-primary-darkest);
   text-decoration: none;
   transform: translateY(-2px);
+}
+
+.githubButton {
+  background: transparent;
+  color: #333;
+  border-color: #333;
+}
+
+[data-theme='dark'] .githubButton {
+  color: #fff;
+  border-color: #fff;
+}
+
+.githubButton:hover {
+  background: #333;
+  color: white;
+  border-color: #333;
+  text-decoration: none;
+  transform: translateY(-2px);
+}
+
+[data-theme='dark'] .githubButton:hover {
+  background: #fff;
+  color: #333;
+  border-color: #fff;
 }
 
 .buttonIcon {
@@ -385,34 +413,95 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .sectionTitleLink {
-    font-size: 2.5rem;
-  }
-  
-  .searchContainer {
-    max-width: 90%;
-  }
-  
-  .fullWidthContainer {
-    padding: 0 1rem;
-  }
-  
-  .documentGrid {
-    gap: 1rem;
+    font-size: 2.2rem;
   }
   
   .documentCard {
     width: 100%;
-    height: 300px;
-    max-width: 350px;
+    height: 320px; /* Increased height for better proportions */
+    max-width: 320px;
+  }
+  
+  /* Add subtle pulse animation to indicate interactivity */
+  .cardContainer {
+    animation: subtlePulse 3s ease-in-out infinite;
+  }
+  
+  @keyframes subtlePulse {
+    0%, 100% { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); }
+    50% { box-shadow: 0 8px 30px rgba(249, 168, 38, 0.15); }
+  }
+  
+  /* Uniform larger images on mobile for better visibility */
+  .documentImg {
+    width: 160px;
+    height: 160px;
+  }
+  
+  .cardContainer:hover .documentImg {
+    transform: scale(1.1);
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
+  }
+  
+  /* Hide description by default on mobile, show on hover */
+  .documentDescription {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: all 0.3s ease;
+    margin: 0;
+  }
+  
+  .cardContainer:hover .documentDescription,
+  .cardContainer:active .documentDescription {
+    opacity: 1;
+    max-height: 80px;
+    margin: 0 0 1rem 0;
+  }
+  
+  /* Adjust card content to accommodate hidden description */
+  .cardContent {
+    padding: 1rem;
+  }
+  
+  .documentTitle {
+    font-size: 1.1rem;
+    margin: 0 0 0.5rem 0;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+  }
+  
+  /* Add a subtle hint text when description is hidden */
+  .cardContent::after {
+    content: "Tap to see description";
+    font-size: 0.7rem;
+    color: var(--ifm-color-content-secondary);
+    opacity: 0.6;
+    margin-top: 0.5rem;
+    transition: opacity 0.3s ease;
+  }
+  
+  .cardContainer:hover .cardContent::after,
+  .cardContainer:active .cardContent::after {
+    opacity: 0;
   }
   
   .cardActions {
-    flex-direction: column;
+    gap: 0.3rem;
+    margin-top: auto;
   }
   
   .docsButton,
-  .marketplaceButton {
-    flex: none;
+  .marketplaceButton,
+  .githubButton {
+    font-size: 0.65rem;
+    padding: 0.5rem 0.4rem;
+    gap: 0.2rem;
+  }
+  
+  .buttonIcon {
+    width: 14px;
+    height: 14px;
   }
 }
 

@@ -1,28 +1,79 @@
 ---
 slug: About Me
-title: About Me
+title: About Me - Denizhan Toprak
 authors: [Denizhan]
-tags: [Blog, Personal, Business]
+tags: [Portfolio, Game Development, Unreal Engine, Plugins, Personal]
 ---
 
-In 2019 I started studying Computer Engineering in Marmara University Turkey. Since than I am interested in game development, business management in software companies and serverless computing systems. I love discovering new ideas and new techs.
+Welcome to my personal portfolio! I'm Denizhan Toprak, a passionate C++ Gameplay Programmer and solo game developer specializing in Unreal Engine solutions. This is where I share my journey, development insights, and showcase the tools I've created for the game development community.
 
 <!-- truncate -->
 
-# Experience
-## Marmara Game Development (OGK) Club Chairman
-After I started Marmara University I found myself discovering different diciplines. I was already interesed in game developement but there were no organization relavent to that. That was the couse how Marmara Game Development student club had founded.
+# About My Work
 
-The club had several activity ideas: Making game jams regularly, planning "how to" and beginner lessons in tools which are used in game development, workshops, talks etc. And also finding sponsors for these activites. Club had just founded so I had participated in all of these processes. There were always problems with these organizations: lack of communication, not being experienced with new activities. 
+I'm the solo developer behind all the Unreal Engine plugins featured on this website. Each plugin represents months of dedicated work, from concept to implementation, focusing on solving real-world game development challenges that I've encountered in my own projects.
 
-## Intern In Retter Business Services (RBS)
-My University had a mandatory internship program. So I had to find a suitible software company. I had a friend who was working with Retter at that time. I was really suprised with their tech. And I decided to apply to Retter's internship program. I can say that, I feel really lucky to find such a good team at that time.
+## Current Focus: Professional Plugin Development
 
-Business Management  was my first stop. Usually I was trying to learn what each job title do and how do they communicate with each other. After that I could started to open tasks to developers and join meetings with our customers with my seniors. In the beginning of this intern I remember, I was nervous while communicating with our developers. Software companies and their "language" was new for me. But I got used to it and liked it as time passes.
+All the plugins showcased on this site - from the Ability Queue System to the Easy Skeletal Mesh Merge Async - are my independent creations. I believe in building tools that not only solve problems but also enhance the development workflow for fellow game developers.
 
-## Junior Developer at Retter Business Services (RBS)
-After completing my intern at RBS, I continued there. I was working part-time beacuse of my on going University education. I was given very different tasks with each other. I believe this process helped my adaptation and time management skills to develop.
-In Retter; I was tester, made  test automation with cypress , wrote  javascript  backend and documentation. 
+### Featured Projects:
+- **Advanced Hit Trailer (AHT)** - Modular hit detection system
+- **Ability Queue System (AQS)** - Extension of Epic's Gameplay Ability System
+- **Nested Inventory Architecture (NIA)** - Customizable inventory solutions
+- **Modular Action System (MAS)** - Data-driven action framework
+- **Easy Skeletal Mesh Merge Async** - Optimized character modularization
+- **Easy Ability Set System** - Streamlined ability management
 
-## Solo Game Development
-Since 2020 I develop my own game called Hermod's Ride. It has complex systems inside it, and visually stylized. This duality makes a perfect enviroment in my opinion: clear and on point visuals and easy to learn but hard to master game systems. With this goal in mind I keep my solo Game development with the engine of choice *Unreal Engine 5*.
+## Development Philosophy
+
+I focus on creating solutions that are:
+- **Performance-oriented**: Optimized for production use
+- **Developer-friendly**: Easy to integrate and customize
+- **Well-documented**: Comprehensive guides and examples
+- **Community-driven**: Built based on real developer needs
+
+# Development Journey
+
+## Education & Early Experience
+Started my journey in Computer Engineering at Marmara University, Turkey in 2019. Founded and led the Marmara Game Development Club, organizing game jams, workshops, and educational events for aspiring developers.
+
+## Professional Experience
+### Retter Business Services (RBS)
+- **Intern & Junior Developer**: Gained valuable experience in business management, software development, and customer communication
+- **Technical Skills**: JavaScript backend development, test automation with Cypress, documentation writing
+- **Soft Skills**: Team collaboration, project management, client interaction
+
+### Solo Game Development Journey
+Since 2020, I've been developing **Hermod's Ride**, a topdown medieval slasher multiplayer arena game. This project serves as both a creative outlet and a testing ground for the systems and plugins I develop.
+
+## Current Status: Open to Work
+
+I'm actively seeking new opportunities in game development, particularly roles involving:
+- C++ Gameplay Programming
+- Unreal Engine development
+- Tool and plugin creation
+- System architecture and optimization
+
+# Development Insights & Devlogs
+
+This blog will regularly feature:
+- **Plugin Development Insights**: Behind-the-scenes look at how I create and optimize plugins
+- **Technical Deep Dives**: Detailed explanations of complex systems and solutions
+- **Industry Observations**: Thoughts on game development trends and best practices
+- **Project Updates**: Progress reports on Hermod's Ride and new plugin developments
+- **Community Interactions**: Responses to feedback and feature requests
+
+# Let's Connect!
+
+I'm always excited to discuss game development, share knowledge, and explore collaboration opportunities. Whether you're interested in my plugins, want to chat about Unreal Engine development, or have questions about any of my projects, feel free to reach out!
+
+**Contact Information:**
+- Email: toprakdenizhan19@gmail.com
+- LinkedIn: [Denizhan Toprak](https://www.linkedin.com/in/denizhan-toprak-006073193/)
+- GitHub: [Easy Skeletal Mesh Merge Async](https://github.com/Elmarath/EasySkeletalMeshMergeAsync)
+- CV: [View My Professional CV](https://docs.google.com/document/d/1NyO2H-jLeTuhU76wPoMm6xU3kDFCQn3Dn-A5imPmtfA/edit?usp=sharing)
+
+---
+
+*This website and all featured plugins are developed independently. I take pride in creating professional-grade tools that help fellow developers bring their visions to life.*

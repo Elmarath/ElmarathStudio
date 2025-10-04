@@ -10,6 +10,7 @@ import React from 'react';
 import HireBox from '../components/HireBox';
 import PortfolioBox from '../components/PortfolioBox';
 import HeaderBox from '../components/HeaderBox';
+import YouTubeBox from '../components/YouTubeBox';
 
 // Simple animated connector with thin fading line
 function AnimatedConnector() {
@@ -34,6 +35,7 @@ function HomepageHeader() {
       <div className={styles.headerContainer}>
         <HeaderBox />
         <PortfolioBox />
+        <YouTubeBox />
       </div>
     </header>
   );

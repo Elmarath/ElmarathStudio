@@ -51,7 +51,7 @@
   flex-direction: column;
   align-items: center;
   gap: 20px;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 20px;
 }
@@ -60,7 +60,15 @@
   .headerContainer {
     flex-direction: row;
     justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .headerContainer {
     gap: 40px;
+    flex-wrap: nowrap;
   }
 }
 

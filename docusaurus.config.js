@@ -85,7 +85,7 @@ const config = {
             position: 'left',
             label: 'Plug-in Tutorials',
           },
-          { to: '/blog', label: 'About Us', position: 'right' },
+          { to: '/blog', label: 'About Me', position: 'right' },
           {
             href: 'https://github.com/Elmarath',
             label: 'GitHub',

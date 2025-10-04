@@ -1,0 +1,179 @@
+/* Floating YouTube Button */
+.floatingYouTube {
+  position: fixed;
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #FF0000, #CC0000);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 1000;
+  box-shadow: 0 8px 25px rgba(255, 0, 0, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 3px solid rgba(255, 255, 255, 0.2);
+}
+
+.floatingYouTube:hover {
+  transform: translateY(-50%) scale(1.1);
+  box-shadow: 0 12px 35px rgba(255, 0, 0, 0.4);
+  border-color: rgba(255, 255, 255, 0.4);
+}
+
+.iconContainer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.youtubeIcon {
+  width: 28px;
+  height: 28px;
+  color: white;
+  transition: transform 0.3s ease;
+}
+
+.floatingYouTube:hover .youtubeIcon {
+  transform: scale(1.1);
+}
+
+/* Pulsing ring animation */
+.pulseRing {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  border: 2px solid rgba(255, 0, 0, 0.6);
+  border-radius: 50%;
+  animation: pulse 2s ease-out infinite;
+  pointer-events: none;
+}
+
+@keyframes pulse {
+  0% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+  }
+}
+
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  right: 75px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--ifm-background-color);
+  border: 2px solid var(--ifm-color-primary);
+  border-radius: 12px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+  animation: tooltipSlideIn 0.3s ease-out;
+  z-index: 1001;
+}
+
+.tooltipText {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--ifm-font-color-base);
+}
+
+.tooltipArrow {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  border-left: 8px solid var(--ifm-color-primary);
+}
+
+@keyframes tooltipSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) translateX(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(-50%) translateX(0);
+  }
+}
+
+/* Responsive adjustments */
+@media screen and (max-width: 768px) {
+  .floatingYouTube {
+    right: 20px;
+    width: 50px;
+    height: 50px;
+  }
+  
+  .youtubeIcon {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .pulseRing {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .tooltip {
+    right: 60px;
+    font-size: 0.75rem;
+    padding: 6px 10px;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .floatingYouTube {
+    right: 15px;
+    bottom: 100px;
+    top: auto;
+    transform: none;
+    width: 45px;
+    height: 45px;
+  }
+  
+  .floatingYouTube:hover {
+    transform: scale(1.1);
+  }
+  
+  .youtubeIcon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .pulseRing {
+    width: 45px;
+    height: 45px;
+  }
+  
+  .tooltip {
+    display: none; /* Hide tooltip on very small screens */
+  }
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .tooltip {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-primary-light);
+}
+
+[data-theme='dark'] .tooltipArrow {
+  border-left-color: var(--ifm-color-primary-light);
+}
