@@ -172,128 +172,176 @@
   flex-shrink: 0;
 }
 
+/* Dynamic Expand/Collapse Card System */
 .cardContainer {
+  position: relative;
   background: var(--ifm-background-color);
   border-radius: 20px;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  border: 2px solid var(--ifm-color-emphasis-200);
-  height: 100%;
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  height: 100%; /* Maintain consistent height */
   display: flex;
   flex-direction: column;
-  position: relative;
   cursor: pointer;
+  backdrop-filter: blur(8px);
 }
 
 .cardContainer:hover {
-  transform: translateY(-8px) scale(1.03);
+  transform: translateY(-12px) scale(1.03);
   box-shadow: 
-    0 20px 40px rgba(0, 0, 0, 0.15),
-    0 8px 16px rgba(0, 0, 0, 0.1),
+    0 25px 50px rgba(0, 0, 0, 0.2),
+    0 12px 24px rgba(0, 0, 0, 0.15),
     0 0 0 1px var(--ifm-color-primary-lightest);
-  border-color: var(--ifm-color-primary);
+  border-color: rgba(var(--ifm-color-primary-rgb), 0.4);
 }
 
-.cardContainer:hover::before {
+/* Background Icon - Clearly visible by default, enhanced on hover */
+.backgroundIcon {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  overflow: hidden;
+  opacity: 1; /* Fully visible for clear, vibrant icons */
+  transition: opacity 0.3s ease;
+}
+
+.cardContainer:hover .backgroundIcon {
+  opacity: 1; /* Keep fully visible on hover */
+}
+
+.backgroundImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
   opacity: 1;
+  filter: brightness(0.9) contrast(1.1); /* Clear and crisp with slight enhancement */
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(1.05); /* Slight zoom for visual interest */
 }
 
-.cardContainer::before {
+.cardContainer:hover .backgroundImg {
+  transform: scale(1.1); /* Enhanced zoom on hover */
+  filter: brightness(1.0) contrast(1.2); /* Slightly brighter and more contrast on hover */
+}
+
+/* Content overlay with glassmorphism effect */
+.contentOverlay {
+  position: relative;
+  z-index: 2;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.05) 0%,
+    rgba(255, 255, 255, 0.02) 100%);
+  backdrop-filter: none; /* No blur by default - icons stay clear */
+  transition: backdrop-filter 0.3s ease;
+}
+
+.cardContainer:hover .contentOverlay {
+  backdrop-filter: blur(8px); /* Apply blur only on hover */
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.1) 0%,
+    rgba(255, 255, 255, 0.05) 100%);
+}
+
+/* Card Header - Always visible with balanced contrast for text readability */
+.cardHeader {
+  padding: 1.5rem 1.5rem 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.4); /* Middle ground - readable but not too strong */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  transition: background 0.3s ease;
+  flex-shrink: 0;
+  backdrop-filter: blur(6px); /* Moderate blur for text area */
+}
+
+.cardContainer:hover .cardHeader {
+  background: rgba(255, 255, 255, 0.6);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Expandable content - hidden by default, expands to fill available space */
+.expandableContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  opacity: 0;
+  transform: translateY(-10px);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow: hidden;
+}
+
+.cardContainer:hover .expandableContent {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.descriptionSection {
+  padding: 1rem 1.5rem;
+  background: rgba(255, 255, 255, 0.25);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.descriptionSection::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, 
-    var(--ifm-color-primary-lightest) 0%, 
-    transparent 60%);
-  opacity: 0;
-  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background: linear-gradient(135deg,
+    rgba(var(--ifm-color-primary-rgb), 0.05) 0%,
+    rgba(var(--ifm-color-secondary-rgb), 0.03) 100%);
   pointer-events: none;
+}
+
+.documentDescription {
+  font-size: 0.9rem;
+  line-height: 1.5;
+  color: var(--ifm-color-content);
+  margin: 0;
+  position: relative;
   z-index: 1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  font-weight: 500;
 }
 
-.cardContainer > * {
+/* Actions Section - Always visible at bottom */
+.actionsSection {
+  background: rgba(255, 255, 255, 0.1);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
   position: relative;
-  z-index: 2;
+  transition: background 0.3s ease;
+  flex-shrink: 0;
 }
 
-.imageContainer {
-  position: relative;
-  overflow: hidden;
-  height: 60%;
-  background: linear-gradient(135deg, var(--ifm-color-emphasis-100), var(--ifm-color-emphasis-200));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1.5rem;
+.cardContainer:hover .actionsSection {
+  background: rgba(255, 255, 255, 0.25);
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
 }
 
-.imageLink {
-  display: flex;
-  width: 100%;
-  height: 100%;
-  position: relative;
-  align-items: center;
-  justify-content: center;
-  transition: transform 0.3s ease;
-}
-
-.imageLink:hover {
-  transform: scale(1.02);
-}
-
-.documentImg {
-  width: 140px;
-  height: 140px;
-  object-fit: contain;
-  transition: transform 0.4s ease;
-  border-radius: 12px;
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
-}
-
-.cardContainer:hover .documentImg {
-  transform: scale(1.1);
-  filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
-}
-
-.imageOverlay {
+.actionsSection::before {
+  content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(249, 168, 38, 0.9);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-}
-
-.cardContainer:hover .imageOverlay {
-  opacity: 1;
-}
-
-.viewDocsButton {
-  color: white;
-  font-weight: 600;
-  font-size: 1.1rem;
-  padding: 0.75rem 1.5rem;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 25px;
-  backdrop-filter: blur(10px);
-  border: 2px solid rgba(255, 255, 255, 0.3);
-}
-
-.cardContent {
-  padding: 1.25rem;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
+  background: linear-gradient(135deg,
+    rgba(var(--ifm-color-primary-rgb), 0.08) 0%,
+    rgba(var(--ifm-color-secondary-rgb), 0.05) 100%);
+  pointer-events: none;
 }
 
 .titleLink {
@@ -309,7 +357,7 @@
 .documentTitle {
   font-size: 1.2rem;
   font-weight: 700;
-  margin: 0 0 0.75rem 0;
+  margin: 0;
   color: var(--ifm-font-color-base);
   transition: color 0.3s ease;
   line-height: 1.3;
@@ -318,30 +366,28 @@
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
+  text-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.4),
+    0 0 8px rgba(255, 255, 255, 0.8); /* Moderate shadow with light outline */
+  position: relative;
+  z-index: 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
 
 .titleLink:hover .documentTitle {
   color: var(--ifm-color-primary-dark);
 }
 
-.documentDescription {
-  color: var(--ifm-color-content-secondary);
-  line-height: 1.5;
-  margin: 0 0 1rem 0;
-  flex: 1;
-  font-size: 0.9rem;
-  overflow: hidden;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  line-clamp: 3;
-  -webkit-box-orient: vertical;
-}
-
 .cardActions {
   display: flex;
   gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  position: relative;
+  z-index: 1;
   flex-wrap: nowrap;
-  align-items: stretch;
+  align-items: center;
+  justify-content: center;
 }
 
 .docsButton,
@@ -350,16 +396,17 @@
   display: inline-flex;
   align-items: center;
   gap: 0.3rem;
-  padding: 0.4rem 0.6rem;
+  padding: 0.4rem 0.8rem;
   border-radius: 8px;
   text-decoration: none;
   font-weight: 600;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   transition: all 0.3s ease;
   border: 2px solid;
-  flex: 1;
   justify-content: center;
-  min-width: 0;
+  min-width: 70px;
+  max-width: 120px;
+  width: auto;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -431,28 +478,114 @@
 }
 
 .githubButton {
-  background: transparent;
-  color: #333;
-  border-color: #333;
+  background: linear-gradient(135deg, #24292e, #1b1f23);
+  color: white;
+  border-color: #24292e;
+  box-shadow: 0 2px 8px rgba(36, 41, 46, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.githubButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.githubButton:hover::before {
+  left: 100%;
 }
 
 [data-theme='dark'] .githubButton {
-  color: #fff;
-  border-color: #fff;
+  background: linear-gradient(135deg, #f6f8fa, #e1e4e8);
+  color: #24292e;
+  border-color: #e1e4e8;
+  box-shadow: 0 2px 8px rgba(246, 248, 250, 0.3);
 }
 
 .githubButton:hover {
-  background: #333;
+  background: linear-gradient(135deg, #1b1f23, #0d1117);
   color: white;
-  border-color: #333;
+  border-color: #1b1f23;
   text-decoration: none;
-  transform: translateY(-2px);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(36, 41, 46, 0.4);
 }
 
 [data-theme='dark'] .githubButton:hover {
-  background: #fff;
-  color: #333;
-  border-color: #fff;
+  background: linear-gradient(135deg, #e1e4e8, #d1d5da);
+  color: #24292e;
+  border-color: #d1d5da;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 4px 12px rgba(246, 248, 250, 0.4);
+}
+
+/* Dark theme support for expandable structure */
+[data-theme='dark'] .cardContainer {
+  background: rgba(30, 34, 40, 0.8);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 
+    0 8px 32px rgba(0, 0, 0, 0.4),
+    0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+[data-theme='dark'] .cardContainer:hover {
+  border-color: rgba(var(--ifm-color-primary-rgb), 0.6);
+  box-shadow: 
+    0 25px 50px rgba(0, 0, 0, 0.5),
+    0 12px 24px rgba(0, 0, 0, 0.3),
+    0 0 0 1px var(--ifm-color-primary-dark);
+}
+
+[data-theme='dark'] .contentOverlay {
+  background: linear-gradient(135deg, 
+    rgba(30, 34, 40, 0.3) 0%,
+    rgba(30, 34, 40, 0.25) 100%);
+  backdrop-filter: none; /* No blur by default */
+}
+
+[data-theme='dark'] .cardContainer:hover .contentOverlay {
+  background: linear-gradient(135deg, 
+    rgba(30, 34, 40, 0.4) 0%,
+    rgba(30, 34, 40, 0.35) 100%);
+  backdrop-filter: blur(8px); /* Apply blur only on hover */
+}
+
+[data-theme='dark'] .cardHeader {
+  background: rgba(0, 0, 0, 0.45); /* Middle ground for dark mode */
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(6px);
+}
+
+[data-theme='dark'] .cardContainer:hover .cardHeader {
+  background: rgba(0, 0, 0, 0.65);
+  border-bottom-color: rgba(255, 255, 255, 0.12);
+}
+
+[data-theme='dark'] .documentTitle {
+  text-shadow: 
+    0 1px 3px rgba(255, 255, 255, 0.4),
+    0 0 8px rgba(0, 0, 0, 0.8); /* Moderate shadow with dark outline for dark mode */
+}
+
+[data-theme='dark'] .descriptionSection {
+  background: rgba(0, 0, 0, 0.2);
+  border-bottom-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .actionsSection {
+  background: rgba(0, 0, 0, 0.15);
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .cardContainer:hover .actionsSection {
+  background: rgba(0, 0, 0, 0.3);
+  border-top-color: rgba(255, 255, 255, 0.12);
 }
 
 /* Enhanced focus states for accessibility */
@@ -532,82 +665,47 @@
   
   .documentCard {
     width: 100%;
-    height: 320px; /* Increased height for better proportions */
+    height: 320px;
     max-width: 320px;
   }
   
-  /* Add subtle pulse animation to indicate interactivity */
-  .cardContainer {
-    animation: subtlePulse 3s ease-in-out infinite;
+  /* Mobile responsive adjustments for new structure */
+  .cardContainer:hover {
+    transform: translateY(-8px) scale(1.02);
   }
   
-  @keyframes subtlePulse {
-    0%, 100% { box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1); }
-    50% { box-shadow: 0 8px 30px rgba(249, 168, 38, 0.15); }
-  }
-  
-  /* Uniform larger images on mobile for better visibility */
-  .documentImg {
-    width: 160px;
-    height: 160px;
-  }
-  
-  .cardContainer:hover .documentImg {
-    transform: scale(1.1);
-    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.2));
-  }
-  
-  /* Hide description by default on mobile, show on hover */
-  .documentDescription {
-    opacity: 0;
-    max-height: 0;
-    overflow: hidden;
-    transition: all 0.3s ease;
-    margin: 0;
-  }
-  
-  .cardContainer:hover .documentDescription,
-  .cardContainer:active .documentDescription {
-    opacity: 1;
-    max-height: 80px;
-    margin: 0 0 1rem 0;
-  }
-  
-  /* Adjust card content to accommodate hidden description */
-  .cardContent {
-    padding: 1rem;
+  .cardHeader {
+    padding: 1rem 1rem 0.5rem 1rem;
   }
   
   .documentTitle {
     font-size: 1.1rem;
-    margin: 0 0 0.5rem 0;
+    margin: 0;
     -webkit-line-clamp: 2;
     line-clamp: 2;
   }
   
-  /* Add a subtle hint text when description is hidden */
-  .cardContent::after {
-    content: "Tap to see description";
-    font-size: 0.7rem;
-    color: var(--ifm-color-content-secondary);
-    opacity: 0.6;
-    margin-top: 0.5rem;
-    transition: opacity 0.3s ease;
+  .descriptionSection {
+    padding: 0.75rem 1rem;
   }
   
-  .cardContainer:hover .cardContent::after,
-  .cardContainer:active .cardContent::after {
-    opacity: 0;
+  .documentDescription {
+    font-size: 0.8rem;
+    line-height: 1.4;
   }
   
   .cardActions {
-    gap: 0.3rem;
-    margin-top: auto;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding: 0.75rem 1rem;
   }
   
   .docsButton,
   .marketplaceButton,
   .githubButton {
+    width: 100%;
+    min-width: auto;
+    max-width: none;
     font-size: 0.65rem;
     padding: 0.5rem 0.4rem;
     gap: 0.2rem;
@@ -639,6 +737,14 @@
     width: 320px;
     height: 320px;
   }
+  
+  .docsButton,
+  .marketplaceButton,
+  .githubButton {
+    max-width: 115px;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.75rem;
+  }
 }
 
 @media (min-width: 1201px) and (max-width: 1440px) {
@@ -649,6 +755,14 @@
   .documentCard {
     width: 350px;
     height: 350px;
+  }
+  
+  .docsButton,
+  .marketplaceButton,
+  .githubButton {
+    max-width: 125px;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.78rem;
   }
 }
 
@@ -665,6 +779,14 @@
   .fullWidthContainer {
     padding: 0 3rem;
   }
+  
+  .docsButton,
+  .marketplaceButton,
+  .githubButton {
+    max-width: 130px;
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+  }
 }
 
 @media (min-width: 1801px) {
@@ -679,6 +801,14 @@
   
   .fullWidthContainer {
     padding: 0 4rem;
+  }
+  
+  .docsButton,
+  .marketplaceButton,
+  .githubButton {
+    max-width: 140px;
+    padding: 0.6rem 1.2rem;
+    font-size: 0.85rem;
   }
 }
 
@@ -730,7 +860,10 @@
   .cardContainer,
   .docsButton,
   .marketplaceButton,
-  .sectionTitleLink {
+  .sectionTitleLink,
+  .contentOverlay,
+  .expandableContent,
+  .backgroundImg {
     animation: none;
     transition: none;
   }
@@ -738,6 +871,11 @@
   .cardContainer:hover,
   .docsButton:hover,
   .marketplaceButton:hover {
+    transform: none;
+  }
+  
+  .expandableContent {
+    opacity: 1;
     transform: none;
   }
 }

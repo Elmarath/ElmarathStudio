@@ -214,17 +214,29 @@
 }
 
 .contactModal {
-    background-color: var(--ifm-background-color);
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95) 0%, 
+        rgba(255, 255, 255, 0.9) 100%);
+    backdrop-filter: blur(20px);
     border-radius: 20px;
     padding: 40px;
     max-width: 500px;
     width: 95%;
-    min-height: 350px;
+    max-height: 85vh; /* Limit height to allow scrolling */
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
     border: 2px solid var(--ifm-color-primary);
     position: relative;
     animation: modalSlideIn 0.3s ease-out;
     overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Dark theme support for modal background */
+[data-theme='dark'] .contactModal {
+    background: linear-gradient(135deg, 
+        rgba(30, 30, 30, 0.95) 0%, 
+        rgba(20, 20, 20, 0.9) 100%);
 }
 
 .contactModal::before {
@@ -290,11 +302,86 @@
 .modalTitle {
     font-size: 1.5rem;
     font-weight: bold;
-    margin: 0 0 35px 0;
+    margin: 0 0 25px 0;
     color: var(--ifm-font-color-base);
     text-align: center;
     position: relative;
     padding-bottom: 15px;
+    flex-shrink: 0;
+}
+
+.modalContent {
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 10px;
+    margin-right: -10px;
+}
+
+/* Custom scrollbar styling */
+.modalContent::-webkit-scrollbar {
+    width: 6px;
+}
+
+.modalContent::-webkit-scrollbar-track {
+    background: var(--ifm-color-emphasis-100);
+    border-radius: 3px;
+}
+
+.modalContent::-webkit-scrollbar-thumb {
+    background: var(--ifm-color-primary);
+    border-radius: 3px;
+}
+
+.modalContent::-webkit-scrollbar-thumb:hover {
+    background: var(--ifm-color-primary-dark);
+}
+
+/* Blog icon styling */
+.blogIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+/* Ensure blog icon is visible in dark theme too */
+[data-theme='dark'] .blogIcon {
+    color: white;
+}
+
+/* Mail icon styling */
+.mailIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+/* LinkedIn icon styling */
+.linkedinIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+/* Resume icon styling */
+.resumeIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+/* GitHub icon styling */
+.githubIcon {
+    width: 20px;
+    height: 20px;
+    color: white;
+}
+
+/* Ensure all icons are white in dark theme */
+[data-theme='dark'] .mailIcon,
+[data-theme='dark'] .linkedinIcon,
+[data-theme='dark'] .resumeIcon,
+[data-theme='dark'] .githubIcon {
+    color: white;
 }
 
 .modalTitle::after {
@@ -461,6 +548,31 @@
     font-size: 0.6rem;
     top: 2px;
     right: 2px;
+  }
+  
+  /* Mobile modal adjustments */
+  .contactModal {
+    width: 95%;
+    padding: 20px;
+    max-height: 90vh;
+  }
+  
+  .modalTitle {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+  }
+  
+  .contactItem {
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  .contactLabel {
+    font-size: 0.9rem;
+  }
+  
+  .contactLink {
+    font-size: 0.8rem;
   }
 }
 
