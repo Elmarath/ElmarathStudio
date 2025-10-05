@@ -1,4 +1,4 @@
-/* Modern card design following industry standards */
+/* Enhanced modern card design with visual consistency */
 .headerCard {
   display: flex;
   flex-direction: column;
@@ -7,90 +7,114 @@
   background: var(--ifm-background-color);
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 12px;
-  padding: 24px;
+  padding: 16px;
   text-align: center;
   position: relative;
   cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 1px 2px rgba(0, 0, 0, 0.06);
   width: 100%;
   max-width: 320px;
-  min-height: 200px;
+  min-height: 140px;
+  backdrop-filter: blur(8px);
+  overflow: hidden;
 }
 
+/* Enhanced hover effects */
 .headerCard:hover {
-  transform: translateY(-2px);
+  transform: translateY(-4px) scale(1.02);
   border-color: var(--ifm-color-primary);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.15),
+    0 4px 10px rgba(0, 0, 0, 0.1),
+    0 0 0 1px var(--ifm-color-primary-lightest);
 }
 
-/* Mobile: Stack vertically with full width */
+.headerCard:hover::before {
+  opacity: 1;
+}
+
+.headerCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, 
+    var(--ifm-color-primary-lightest) 0%, 
+    transparent 50%);
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.headerCard > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Focus states for accessibility */
+.headerCard:focus-visible {
+  outline: 3px solid var(--ifm-color-primary);
+  outline-offset: 2px;
+  transform: translateY(-2px);
+}
+
+.headerCard:active {
+  transform: translateY(-1px) scale(1.01);
+  transition: all 0.1s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Mobile responsive */
 @media screen and (max-width: 767px) {
   .headerCard {
     width: 100%;
     max-width: 400px;
-    min-height: 160px;
-    padding: 20px;
+    min-height: 100px;
+    padding: 12px;
     margin: 0 auto;
   }
-}
-
-/* Tablet: Medium size */
-@media screen and (min-width: 768px) and (max-width: 1023px) {
-  .headerCard {
-    max-width: 280px;
-    min-height: 180px;
+  
+  .headerCard:hover {
+    transform: translateY(-2px) scale(1.01);
   }
 }
 
-/* Desktop: Full size */
-@media screen and (min-width: 1024px) {
-  .headerCard {
-    max-width: 320px;
-    min-height: 200px;
-    padding: 32px;
+/* Dark theme enhancements */
+[data-theme='dark'] .headerCard {
+  background: var(--ifm-background-surface-color);
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .headerCard:hover {
+  border-color: var(--ifm-color-primary-light);
+  box-shadow: 
+    0 8px 25px rgba(0, 0, 0, 0.3),
+    0 4px 10px rgba(0, 0, 0, 0.2),
+    0 0 0 1px var(--ifm-color-primary-dark);
+}
+
+[data-theme='dark'] .headerCard::before {
+  background: linear-gradient(135deg, 
+    var(--ifm-color-primary-darkest) 0%, 
+    transparent 50%);
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .headerCard,
+  .headerCard:hover,
+  .headerCard::before {
+    transition: none;
+    animation: none;
   }
-}Card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  border: 2px solid var(--ifm-color-primary);
-  padding: 30px;
-  border-radius: 15px;
-  background-color: var(--ifm-background-color);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-  width: 100%;
-  max-width: 350px;
-  min-height: 300px;
-  height: auto;
-  margin: 20px auto;
-  transition: all 0.3s ease-in-out;
-  text-align: center;
-  position: relative;
-  cursor: pointer;
-  overflow: hidden;
-}
-
-.headerCard:hover {
-  transform: translateY(-10px);
-  border-color: var(--ifm-color-primary-dark);
-  background-color: var(--ifm-color-emphasis-100);
-}
-
-/* Responsive Design - Smaller cards on mobile */
-@media screen and (max-width: 768px) {
-  .headerCard {
-    max-width: 280px;
-    height: 280px;
-    padding: 20px;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .headerCard {
-    max-width: 250px;
-    height: 250px;
-    padding: 15px;
+  
+  .headerCard:hover {
+    transform: none;
   }
 }

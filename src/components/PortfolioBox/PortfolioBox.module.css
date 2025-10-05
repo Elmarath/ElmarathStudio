@@ -1,4 +1,20 @@
-/* Modern PortfolioBox following profile card standards */
+/* Modern PortfolioBox.profilePic {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  margin-bottom: 8px;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  object-fit: cover;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  z-index: 2;
+}
+
+.profilePic:hover {
+  transform: scale(1.1) rotate(5deg);
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+}ng profile card standards */
 .openToWork {
   position: absolute;
   top: 12px;

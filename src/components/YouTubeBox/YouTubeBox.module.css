@@ -1,4 +1,20 @@
-/* Modern YouTubeBox following social media card standards */
+/* Modern Y.youtubeIcon {
+  width: 48px;
+  height: 48px;
+  color: #FF0000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  filter: drop-shadow(0 2px 4px rgba(255, 0, 0, 0.2));
+  position: relative;
+  z-index: 2;
+}
+
+.youtubeIcon:hover {
+  transform: scale(1.15) rotate(-5deg);
+  color: #CC0000;
+  filter: 
+    drop-shadow(0 4px 8px rgba(255, 0, 0, 0.3))
+    drop-shadow(0 0 20px rgba(255, 0, 0, 0.2));
+}Box following social media card standards */
 
 /* Header with YouTube icon */
 .youtubeHeader {
