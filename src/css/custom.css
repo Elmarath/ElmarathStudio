@@ -233,27 +233,7 @@ code {
   background-color: var(--ifm-color-emphasis-100);
 }
 
-/* Enhanced navbar */
-.navbar {
-  backdrop-filter: blur(20px);
-  background-color: rgba(255, 255, 255, 0.8);
-  border-bottom: 1px solid var(--ifm-color-emphasis-200);
-  box-shadow: var(--ifm-shadow-sm);
-}
-
-[data-theme='dark'] .navbar {
-  background-color: rgba(30, 30, 30, 0.8);
-}
-
-.navbar__link {
-  font-weight: 500;
-  transition: all var(--ifm-transition-fast);
-}
-
-.navbar__link:hover {
-  color: var(--ifm-color-primary);
-  transform: translateY(-1px);
-}
+/* Temporarily removed all navbar styling to test mobile functionality */
 
 /* Enhanced footer */
 .footer {
@@ -357,20 +337,9 @@ img:hover {
   color: var(--ifm-color-gray-900);
 }
 
-/* CRITICAL: Ensure modals are always on top of everything */
+/* ONLY essential modal z-index - nothing else should interfere */
 [class*="modalOverlay"] {
   z-index: 2147483647 !important;
   position: fixed !important;
   isolation: isolate !important;
-}
-
-/* Ensure all other elements respect modal stacking */
-.navbar,
-.navbar__inner,
-[class*="heroBanner"],
-[class*="documents"],
-[class*="sectionHeader"],
-[class*="cardContainer"],
-[class*="floating"] {
-  z-index: auto !important;
 }

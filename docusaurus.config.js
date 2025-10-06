@@ -78,6 +78,7 @@ const config = {
           alt: 'Elmarath Logo',
           src: 'img/T_ElmarathLogo.png',
         },
+        hideOnScroll: true,
         items: [
           {
             type: 'docSidebar',

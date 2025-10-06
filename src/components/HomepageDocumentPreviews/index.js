@@ -1,62 +1,12 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import Heading from '@theme/Heading';
+import { DOCUMENT_LIST } from '../../data';
+import { useExternalLink, useSearch } from '../../hooks';
 import styles from './styles.module.css';
 
-const DocumentList = [
-  {
-    title: "Local Staged Interaction (LSI)",
-    Img: require('@site/static/img/T_LSI_LocalStagedInteractionThumbanil.png').default,
-    description: "Local Interaction System that uses stages as a way to create complex player interactions with ease.",
-    DocLink: 'docs/Local-Staged-Interaction/AboutLocalStagedInteraction',
-    MarketplaceLink: '',
-  },
-  {
-    title: "Advanced Hit Trailer (AHT)",
-    Img: require('@site/static/img/T_AHT.png').default,
-    description: "A modular, optimized solution for easily controlling and extending hit results from continuous hit trails.",
-    DocLink: '/docs/AdvancedHitTrailer',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
-  },
-  {
-    title: "Ability Queue System (AQS)",
-    Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
-    description: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation.",
-    DocLink: '/docs/Ability-Queue-System/AbilityQueueSystem',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
-  },
-  {
-    title: "Nested Inventory Architecture (NIA)",
-    Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
-    description: "Create customizable, nested, section-based, object-oriented inventory systems for intuitive gameplay.",
-    DocLink: '/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
-  },
-  {
-    title: "Modular Action System (MAS)",
-    Img: require('@site/static/img/T_ModularActionSystemLogo.png').default,
-    description: "A modular, data-driven action system for games. Network-ready and easy to customize.",
-    DocLink: '/docs/Modular-Action-System/About-Modular-Action-System',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
-  },
-  {
-    title: "Easy Skeletal Mesh Merge Async",
-    Img: require('@site/static/img/EasySkeletalMeshMergeAsync.png').default,
-    description: "A simple and optimized workflow to create modular characters via skele merging.",
-    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/EasySkeletalMeshMergeAsync',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
-    GitHubLink: 'https://github.com/Elmarath/EasySkeletalMeshMergeAsync',
-  },
-  {
-    title: "Easy Ability Set System",
-    Img: require('@site/static/img/T_EasyAbilitySetSystem_Logo.png').default,
-    description: "Ability Set Management System that handles both granting and input binding for Gameplay Ability System.",
-    DocLink: '/docs/Easy-Ability-Set-System/EasyAbilitySetSystemStartup',
-    MarketplaceLink: 'https://www.unrealengine.com/marketplace/en-US/product/modular-action-system',
-  }
-];
-
 function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, description }) {
+  const openExternalLink = useExternalLink();
   const handleCardClick = (e) => {
     // Only navigate if the click wasn't on a button or link
     if (!e.target.closest('a') && !e.target.closest('button')) {
@@ -107,7 +57,10 @@ function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, descriptio
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className={styles.marketplaceButton}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openExternalLink(MarketplaceLink);
+                  }}
                 >
                   <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="currentColor">
                     <path d="M6 4V20H9V14H15V11H9V7H16V4H6Z"/>
@@ -121,7 +74,10 @@ function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, descriptio
                   target="_blank" 
                   rel="noopener noreferrer" 
                   className={styles.githubButton}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    openExternalLink(GitHubLink);
+                  }}
                 >
                   <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="currentColor">
                     <path d="M12,2A10,10 0 0,0 2,12C2,16.42 4.87,20.17 8.84,21.5C9.34,21.58 9.5,21.27 9.5,21C9.5,20.77 9.5,20.14 9.5,19.31C6.73,19.91 6.14,17.97 6.14,17.97C5.68,16.81 5.03,16.5 5.03,16.5C4.12,15.88 5.1,15.9 5.1,15.9C6.1,15.97 6.63,16.93 6.63,16.93C7.5,18.45 8.97,18 9.54,17.76C9.63,17.11 9.89,16.67 10.17,16.42C7.95,16.17 5.62,15.31 5.62,11.5C5.62,10.39 6,9.5 6.65,8.79C6.55,8.54 6.2,7.5 6.75,6.15C6.75,6.15 7.59,5.88 9.5,7.17C10.29,6.95 11.15,6.84 12,6.84C12.85,6.84 13.71,6.95 14.5,7.17C16.41,5.88 17.25,6.15 17.25,6.15C17.8,7.5 17.45,8.54 17.35,8.79C18,9.5 18.38,10.39 18.38,11.5C18.38,15.32 16.04,16.16 13.81,16.41C14.17,16.72 14.5,17.33 14.5,18.26C14.5,19.6 14.5,20.68 14.5,21C14.5,21.27 14.66,21.59 15.17,21.5C19.14,20.16 22,16.42 22,12A10,10 0 0,0 12,2Z"/>
@@ -138,11 +94,9 @@ function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, descriptio
 }
 
 export default function HomepageDocumentPreviews() {
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const filteredDocuments = DocumentList.filter((doc) =>
-    doc.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    doc.description.toLowerCase().includes(searchTerm.toLowerCase())
+  const { searchTerm, setSearchTerm, filteredItems: filteredDocuments } = useSearch(
+    DOCUMENT_LIST,
+    ['title', 'description']
   );
 
   return (
