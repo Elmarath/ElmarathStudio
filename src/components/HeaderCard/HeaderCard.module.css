@@ -92,17 +92,18 @@
 }
 
 [data-theme='dark'] .headerCard:hover {
-  border-color: var(--ifm-color-primary-light);
+  border-color: var(--ifm-color-primary);
   box-shadow: 
-    0 8px 25px rgba(0, 0, 0, 0.3),
-    0 4px 10px rgba(0, 0, 0, 0.2),
+    0 8px 25px rgba(230, 148, 31, 0.25),
+    0 4px 10px rgba(230, 148, 31, 0.15),
     0 0 0 1px var(--ifm-color-primary-dark);
 }
 
 [data-theme='dark'] .headerCard::before {
   background: linear-gradient(135deg, 
-    var(--ifm-color-primary-darkest) 0%, 
-    transparent 50%);
+    var(--ifm-color-primary-dark) 0%, 
+    var(--ifm-color-primary-darker) 25%,
+    transparent 60%);
 }
 
 /* Reduced motion support */

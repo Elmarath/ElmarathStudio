@@ -93,14 +93,14 @@
 }
 
 [data-theme='dark'] {
-  /* Enhanced Dark Theme Colors */
-  --ifm-color-primary: #F9A826;
+  /* Enhanced Dark Theme Colors - Darker yellow/orange for better contrast */
+  --ifm-color-primary: #E6941F;
   --ifm-color-primary-dark: #B37414;
   --ifm-color-primary-darker: #8F5B0B;
   --ifm-color-primary-darkest: #5C3D00;
-  --ifm-color-primary-light: #FBCB6A;
-  --ifm-color-primary-lighter: #FDDF8C;
-  --ifm-color-primary-lightest: #FFF1B8;
+  --ifm-color-primary-light: #F2A638;
+  --ifm-color-primary-lighter: #F6B851;
+  --ifm-color-primary-lightest: #FBCB6A;
   
   /* Dark Theme Secondary */
   --ifm-color-secondary: #60A5FA;
@@ -233,7 +233,8 @@ code {
   background-color: var(--ifm-color-emphasis-100);
 }
 
-/* Temporarily removed all navbar styling to test mobile functionality */
+/* Completely default navbar - testing if hideOnScroll works */
+/* No custom styling to eliminate all interference */
 
 /* Enhanced footer */
 .footer {
@@ -337,9 +338,24 @@ img:hover {
   color: var(--ifm-color-gray-900);
 }
 
+
 /* ONLY essential modal z-index - nothing else should interfere */
 [class*="modalOverlay"] {
   z-index: 2147483647 !important;
   position: fixed !important;
   isolation: isolate !important;
+}
+
+/* Smooth navbar hide/show animations */
+.navbar {
+  transition: transform var(--ifm-transition-normal) ease-out !important;
+}
+
+.navbar--fixed-top {
+  transform: translateY(0);
+}
+
+/* Smooth animation when hiding navbar */
+.navbar--fixed-top[data-navbar-hidden="true"] {
+  transform: translateY(-100%);
 }

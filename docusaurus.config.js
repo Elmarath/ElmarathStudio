@@ -124,6 +124,27 @@ const config = {
             ],
           },
           {
+            title: 'Contact',
+            items: [
+              {
+                label: 'Email',
+                href: 'mailto:toprakdenizhan19@gmail.com',
+              },
+              {
+                label: 'LinkedIn',
+                href: 'https://www.linkedin.com/in/denizhan-toprak-game-developer/',
+              },
+              {
+                label: 'Resume/CV',
+                href: 'https://drive.google.com/file/d/1lQJwU5A7gPQBOh1OjnKqxQo6ug71s7tL/view?usp=sharing',
+              },
+              {
+                label: 'GitHub Profile',
+                href: 'https://github.com/Elmarath',
+              },
+            ],
+          },
+          {
             title: 'More',
             items: [
               {

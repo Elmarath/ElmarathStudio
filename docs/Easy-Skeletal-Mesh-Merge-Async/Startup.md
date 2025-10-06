@@ -19,7 +19,17 @@ This plugin builds on Epic’s system, but offers a much simpler API and workflo
   </a>
 </p>
 
+## Video Overview
+
+Watch this comprehensive tutorial to see **EasySkeletalMeshMergeAsync** in action:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/Vn82nP2bj0s?start=33" title="Easy Skeletal Mesh Merge Async Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+*This video demonstrates the complete workflow from setup to implementation.*
+
 ![Preview](./img/T_EasySkeletalMeshAsyncPreview.gif)
+
+
 
 ## Features
 
