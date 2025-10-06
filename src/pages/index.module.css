@@ -4,19 +4,45 @@
  */
 
 .heroBanner {
-  padding: 1rem 0; /* Keep the section size compact */
+  padding: 1rem 0;
   text-align: center;
-  background-color: var(--ifm-background-surface-color);
+  position: relative;
+  overflow: hidden;
 }
 
-/* Dark mode: use the beautiful orange/yellow background you liked */
+/* Enhanced Dark Mode Background - Keep original yellowish theme */
 [data-theme='dark'] .heroBanner {
   background: linear-gradient(135deg, #ffc480, #F9A826);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
 }
 
-/* Light mode: use a soft, warm complementary background */
+/* Enhanced Light Mode Background - Cool neutrals that complement dark mode */
 [data-theme='light'] .heroBanner {
-  background: linear-gradient(135deg, #fff5e6, #ffeaa7);
+  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+  background-size: 200% 200%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* Add subtle texture overlay */
+.heroBanner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='grain' width='100' height='100' patternUnits='userSpaceOnUse'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='1' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100%25' height='100%25' fill='url(%23grain)'/%3E%3C/svg%3E") repeat;
+  pointer-events: none;
+}
+
+@keyframes gradientShift {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
 }
 
 @media screen and (max-width: 996px) {
@@ -48,21 +74,39 @@
 
 .headerContainer {
   display: flex;
-  gap: 1.5rem;
+  gap: 2rem;
   justify-content: center;
   align-items: stretch;
   width: 100%;
-  max-width: 1200px;
+  max-width: 1400px;
   margin: 0 auto;
-  padding: 32px 16px;
+  padding: 3rem 2rem;
+  position: relative;
+  z-index: 1;
 }
 
-/* Mobile responsive */
+/* Enhanced Mobile Responsive */
 @media (max-width: 768px) {
   .headerContainer {
     flex-direction: column;
-    gap: 1rem;
+    gap: 1.5rem;
     align-items: center;
+    padding: 2rem 1rem;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .headerContainer {
+    gap: 1.5rem;
+    padding: 2.5rem 1.5rem;
+    max-width: 900px;
+  }
+}
+
+@media (min-width: 1440px) {
+  .headerContainer {
+    gap: 3rem;
+    padding: 4rem 2rem;
   }
 }
 
@@ -75,77 +119,162 @@
   margin-bottom: 20px;
 }
 
-/* Animated connector section */
+/* Enhanced Animated Connector Section */
 .connectorSection {
-  padding: 1rem 0; /* Reduced from 3rem to 1rem */
+  padding: 2rem 0;
   display: flex;
   justify-content: center;
   align-items: center;
-  background: transparent;
+  background: linear-gradient(135deg, 
+    var(--ifm-background-color) 0%,
+    var(--ifm-color-emphasis-100) 100%);
+  position: relative;
 }
 
-/* Simple thin line with center pulse */
+.connectorSection::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cdefs%3E%3Cpattern id='dots' width='20' height='20' patternUnits='userSpaceOnUse'%3E%3Ccircle cx='10' cy='10' r='1' fill='%23F9A826' opacity='0.1'/%3E%3C/pattern%3E%3C/defs%3E%3Crect width='100' height='100' fill='url(%23dots)'/%3E%3C/svg%3E") repeat;
+  pointer-events: none;
+}
+
+/* Professional Line with Enhanced Animation */
 .simpleLine {
   position: relative;
   display: flex;
   align-items: center;
-  width: 90vw; /* Almost full width of viewport */
-  height: 0.5px; /* Much thinner - 1/4 of original 2px */
+  width: 80vw;
+  height: 1px;
+  z-index: 1;
 }
 
 .lineLeft, .lineRight {
   flex: 1;
-  height: 0.5px; /* Much thinner - 1/4 of original 2px */
+  height: 1px;
   background: linear-gradient(90deg, 
     transparent 0%, 
     var(--ifm-color-primary) 30%, 
     var(--ifm-color-primary) 70%, 
     transparent 100%);
+  opacity: 0.8;
+  position: relative;
+}
+
+.lineLeft::after, .lineRight::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, 
+    transparent 0%, 
+    var(--ifm-color-primary-light) 30%, 
+    var(--ifm-color-primary-light) 70%, 
+    transparent 100%);
+  animation: lineGlow 3s ease-in-out infinite;
   opacity: 0.6;
 }
 
 .centerPulse {
-  width: 8px; /* Reduced from 20px to 8px */
-  height: 8px; /* Reduced from 20px to 8px */
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
-  background: var(--ifm-color-primary);
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-light));
   position: relative;
-  animation: pulse 2s ease-in-out infinite;
-  box-shadow: 0 0 5px var(--ifm-color-primary); /* Reduced glow from 10px to 5px */
+  animation: enhancedPulse 2s ease-in-out infinite;
+  box-shadow: 
+    0 0 10px var(--ifm-color-primary),
+    0 0 20px rgba(249, 168, 38, 0.3),
+    0 0 30px rgba(249, 168, 38, 0.1);
 }
 
 .pulseRing {
   position: absolute;
   top: 50%;
   left: 50%;
-  width: 8px; /* Reduced from 20px to 8px */
-  height: 8px; /* Reduced from 20px to 8px */
-  border: 1px solid var(--ifm-color-primary); /* Reduced border from 2px to 1px */
+  width: 12px;
+  height: 12px;
+  border: 2px solid var(--ifm-color-primary);
   border-radius: 50%;
   transform: translate(-50%, -50%);
-  animation: ringExpand 2s ease-out infinite;
-  opacity: 0.7;
+  animation: enhancedRingExpand 2s ease-out infinite;
+  opacity: 0.8;
 }
 
-/* Animation keyframes */
-@keyframes pulse {
+.centerPulse::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--ifm-color-primary-light);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  animation: enhancedRingExpand 2s ease-out infinite 0.5s;
+  opacity: 0.4;
+}
+
+/* Enhanced Animation Keyframes */
+@keyframes enhancedPulse {
   0%, 100% { 
-    transform: scale(1); 
-    box-shadow: 0 0 10px var(--ifm-color-primary);
+    transform: scale(1);
+    box-shadow: 
+      0 0 10px var(--ifm-color-primary),
+      0 0 20px rgba(249, 168, 38, 0.3),
+      0 0 30px rgba(249, 168, 38, 0.1);
   }
   50% { 
-    transform: scale(1.2); 
-    box-shadow: 0 0 20px var(--ifm-color-primary);
+    transform: scale(1.3);
+    box-shadow: 
+      0 0 15px var(--ifm-color-primary),
+      0 0 30px rgba(249, 168, 38, 0.5),
+      0 0 45px rgba(249, 168, 38, 0.2);
   }
 }
 
-@keyframes ringExpand {
+@keyframes enhancedRingExpand {
   0% {
     transform: translate(-50%, -50%) scale(1);
-    opacity: 0.7;
+    opacity: 0.8;
   }
   100% {
-    transform: translate(-50%, -50%) scale(3);
+    transform: translate(-50%, -50%) scale(4);
     opacity: 0;
+  }
+}
+
+@keyframes lineGlow {
+  0%, 100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+  .connectorSection {
+    padding: 1.5rem 0;
+  }
+  
+  .simpleLine {
+    width: 90vw;
+  }
+  
+  .centerPulse {
+    width: 10px;
+    height: 10px;
+  }
+  
+  .pulseRing {
+    width: 10px;
+    height: 10px;
   }
 }

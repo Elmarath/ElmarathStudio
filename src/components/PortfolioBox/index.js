@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import HeaderCard from '../HeaderCard';
 import styles from './PortfolioBox.module.css';
 
@@ -12,6 +13,37 @@ const PortfolioBox = () => {
     const closeContactModal = () => {
         setIsContactModalOpen(false);
     };
+
+    // Lock/unlock body scroll when modal opens/closes
+    useEffect(() => {
+        if (isContactModalOpen) {
+            // Save current scroll position
+            const scrollY = window.scrollY;
+            // Lock body scroll
+            document.body.style.position = 'fixed';
+            document.body.style.top = `-${scrollY}px`;
+            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
+        } else {
+            // Restore scroll position and unlock body scroll
+            const scrollY = document.body.style.top;
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+            if (scrollY) {
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+            }
+        }
+
+        // Cleanup function to restore scroll on unmount
+        return () => {
+            document.body.style.position = '';
+            document.body.style.top = '';
+            document.body.style.width = '';
+            document.body.style.overflow = '';
+        };
+    }, [isContactModalOpen]);
 
     const openLinkedIn = () => {
         window.open('https://www.linkedin.com/in/denizhan-toprak-006073193/', '_blank');
@@ -53,8 +85,8 @@ const PortfolioBox = () => {
                 </div>
             </HeaderCard>
 
-            {/* Contact Modal */}
-            {isContactModalOpen && (
+            {/* Contact Modal - Rendered as Portal to document.body */}
+            {isContactModalOpen && createPortal(
                 <div className={styles.modalOverlay} onClick={closeContactModal}>
                     <div className={styles.contactModal} onClick={(e) => e.stopPropagation()}>
                         <button className={styles.closeButton} onClick={closeContactModal}>
@@ -157,7 +189,8 @@ const PortfolioBox = () => {
                             </svg>
                         </div>
                     </div>
-                </div>
+                </div>,
+                document.body
             )}
         </>
     );

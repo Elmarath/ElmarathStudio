@@ -30,20 +30,38 @@
 }
 
 .sectionTitleLink {
-  font-size: 3rem;
-  font-weight: 800;
+  font-size: 3.5rem;
+  font-weight: 900;
   text-decoration: none;
   background: linear-gradient(135deg, 
     var(--ifm-color-primary), 
     var(--ifm-color-primary-light),
-    var(--ifm-color-secondary));
-  background-size: 200% 200%;
+    var(--ifm-color-secondary),
+    var(--ifm-color-primary-darker));
+  background-size: 300% 300%;
   background-clip: text;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
   display: inline-block;
-  animation: gradientShift 6s ease-in-out infinite;
+  animation: gradientShift 8s ease-in-out infinite;
+  letter-spacing: -0.02em;
+  line-height: 1.1;
+  text-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  position: relative;
+}
+
+.sectionTitleLink::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--ifm-color-primary), var(--ifm-color-secondary));
+  border-radius: 2px;
+  transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes gradientShift {
@@ -52,19 +70,28 @@
 }
 
 .sectionTitleLink:hover {
-  transform: translateY(-4px) scale(1.02);
+  transform: translateY(-6px) scale(1.05);
   text-decoration: none;
-  filter: brightness(1.2);
+  filter: brightness(1.3) contrast(1.1);
   animation-play-state: paused;
+  text-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.sectionTitleLink:hover::after {
+  width: 100%;
 }
 
 .sectionSubtitle {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+  font-weight: 500;
   color: var(--ifm-color-content-secondary);
-  margin: 1rem 0 2rem 0;
-  max-width: 600px;
+  margin: 1.5rem 0 3rem 0;
+  max-width: 700px;
   margin-left: auto;
   margin-right: auto;
+  line-height: 1.6;
+  letter-spacing: -0.01em;
+  opacity: 0.9;
 }
 
 /* Enhanced Search Styling */
@@ -175,8 +202,8 @@
 /* Dynamic Expand/Collapse Card System */
 .cardContainer {
   position: relative;
-  background: var(--ifm-background-color);
   border-radius: 20px;
+  background: rgba(255, 255, 255, 0.08);
   overflow: hidden;
   box-shadow: 
     0 8px 32px rgba(0, 0, 0, 0.12),
@@ -187,7 +214,8 @@
   display: flex;
   flex-direction: column;
   cursor: pointer;
-  backdrop-filter: blur(8px);
+  transform: translate3d(0, 0, 0); /* Force hardware acceleration */
+  will-change: transform; /* Optimize for animations */
 }
 
 .cardContainer:hover {
@@ -241,12 +269,11 @@
   background: linear-gradient(135deg, 
     rgba(255, 255, 255, 0.05) 0%,
     rgba(255, 255, 255, 0.02) 100%);
-  backdrop-filter: none; /* No blur by default - icons stay clear */
-  transition: backdrop-filter 0.3s ease;
+  backdrop-filter: none; /* No blur for crystal clear default state */
+  transition: background 0.3s ease; /* Remove backdrop-filter from transition */
 }
 
 .cardContainer:hover .contentOverlay {
-  backdrop-filter: blur(8px); /* Apply blur only on hover */
   background: linear-gradient(135deg, 
     rgba(255, 255, 255, 0.1) 0%,
     rgba(255, 255, 255, 0.05) 100%);
@@ -259,7 +286,7 @@
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
   transition: background 0.3s ease;
   flex-shrink: 0;
-  backdrop-filter: blur(6px); /* Moderate blur for text area */
+  backdrop-filter: none; /* No blur for crystal clear text */
 }
 
 .cardContainer:hover .cardHeader {
