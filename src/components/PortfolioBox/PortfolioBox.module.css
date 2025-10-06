@@ -209,7 +209,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000; /* Reduced from maximum to test mobile navbar */
+    z-index: 10; /* Very low to ensure mobile navbar appears above */
     backdrop-filter: blur(4px);
     isolation: isolate; /* Create new stacking context */
 }

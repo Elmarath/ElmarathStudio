@@ -339,23 +339,6 @@ img:hover {
 }
 
 
-/* ONLY essential modal z-index - nothing else should interfere */
-[class*="modalOverlay"] {
-  z-index: 2147483647 !important;
-  position: fixed !important;
-  isolation: isolate !important;
-}
+/* Modal z-index controlled by individual components */
 
-/* Smooth navbar hide/show animations */
-.navbar {
-  transition: transform var(--ifm-transition-normal) ease-out !important;
-}
-
-.navbar--fixed-top {
-  transform: translateY(0);
-}
-
-/* Smooth animation when hiding navbar */
-.navbar--fixed-top[data-navbar-hidden="true"] {
-  transform: translateY(-100%);
-}
+/* Default Docusaurus navbar - no custom overrides to avoid mobile menu conflicts */

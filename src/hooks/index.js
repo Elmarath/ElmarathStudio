@@ -63,16 +63,28 @@ export const useExternalLink = () => {
 /**
  * Custom hook for search functionality
  * @param {Array} items - Items to search through
- * @param {string} searchKey - Key to search in items
+ * @param {string|Array} searchFields - Field(s) to search in items
  * @returns {object} Search state and filtered results
  */
-export const useSearch = (items, searchKey = 'title') => {
+export const useSearch = (items, searchFields = 'title') => {
   const [searchTerm, setSearchTerm] = useState('');
 
-  const filteredItems = items.filter(item =>
-    item[searchKey]?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    item.description?.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredItems = items.filter(item => {
+    if (!searchTerm) return true;
+    
+    const searchTermLower = searchTerm.toLowerCase();
+    
+    // Handle multiple search fields
+    if (Array.isArray(searchFields)) {
+      return searchFields.some(field => 
+        item[field]?.toLowerCase().includes(searchTermLower)
+      );
+    }
+    
+    // Handle single search field
+    return item[searchFields]?.toLowerCase().includes(searchTermLower) ||
+           item.description?.toLowerCase().includes(searchTermLower);
+  });
 
   const clearSearch = () => setSearchTerm('');
 
