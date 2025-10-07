@@ -2,9 +2,11 @@
 sidebar_position: 1
 ---
 
+import PluginLinks from '@site/src/components/PluginLinks';
+
 # About Nested Inventory Architecture
 
-[Marketplace](https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture)
+<PluginLinks pluginId="NestedInventoryArchitecture" />
 
 **Nested Inventory Architecture** (abbreviated as **NIA**) will allow your players to create and interact with inventories intuitively and easily with the help of *Nested Inventory*, *Object Based*, *Section Based* approach with customizable architecture!
 

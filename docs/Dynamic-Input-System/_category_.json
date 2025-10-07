@@ -1,0 +1,8 @@
+{
+  "label": "Dynamic Input System",
+  "position": 9,
+  "link": {
+    "type": "generated-index",
+    "description": "A dynamic, flexible input system for Unreal Engine that allows runtime input binding and management."
+  }
+}

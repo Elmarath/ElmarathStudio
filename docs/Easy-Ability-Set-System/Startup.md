@@ -4,7 +4,11 @@ title: Easy Ability Set Startup
 sidebar_position: 1
 ---
 
+import PluginLinks from '@site/src/components/PluginLinks';
+
 # Easy Ability Set System for Gameplay Ability System
+
+<PluginLinks pluginId="EasyAbilitySetSystem" />
 
 The **Easy Ability Set System** is a [Lyra](https://dev.epicgames.com/documentation/en-us/unreal-engine/lyra-sample-game-in-unreal-engine?application_version=5.5)-inspired, lightweight plugin that extends Unreal Engine’s [**Gameplay Ability System (GAS)**](https://dev.epicgames.com/documentation/en-us/unreal-engine/gameplay-ability-system-for-unreal-engine). It lets you easily define, grant, clear, and manage groups of abilities at runtime—no more assigning abilities one by one!
 

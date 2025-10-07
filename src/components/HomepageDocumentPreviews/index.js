@@ -5,7 +5,7 @@ import { DOCUMENT_LIST } from '../../data';
 import { useExternalLink, useSearch } from '../../hooks';
 import styles from './styles.module.css';
 
-function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, description }) {
+function Document({ Img, title, DocLink, FabLink, GitHubLink, description }) {
   const openExternalLink = useExternalLink();
   const handleCardClick = (e) => {
     // Only navigate if the click wasn't on a button or link
@@ -51,15 +51,15 @@ function Document({ Img, title, DocLink, MarketplaceLink, GitHubLink, descriptio
                 </svg>
                 Docs
               </a>
-              {MarketplaceLink && (
+              {FabLink && (
                 <a 
-                  href={MarketplaceLink} 
+                  href={FabLink} 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  className={styles.marketplaceButton}
+                  className={styles.fabButton}
                   onClick={(e) => {
                     e.stopPropagation();
-                    openExternalLink(MarketplaceLink);
+                    openExternalLink(FabLink);
                   }}
                 >
                   <svg className={styles.buttonIcon} viewBox="0 0 24 24" fill="currentColor">

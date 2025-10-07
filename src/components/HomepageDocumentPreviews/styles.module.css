@@ -418,7 +418,7 @@
 }
 
 .docsButton,
-.marketplaceButton,
+.fabButton,
 .githubButton {
   display: inline-flex;
   align-items: center;
@@ -472,7 +472,7 @@
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
 }
 
-.marketplaceButton {
+.fabButton {
   background: linear-gradient(135deg, #F59E0B, #D97706);
   color: white;
   border-color: #F59E0B;
@@ -481,7 +481,7 @@
   overflow: hidden;
 }
 
-.marketplaceButton::before {
+.fabButton::before {
   content: '';
   position: absolute;
   top: 0;
@@ -492,11 +492,11 @@
   transition: left 0.5s;
 }
 
-.marketplaceButton:hover::before {
+.fabButton:hover::before {
   left: 100%;
 }
 
-.marketplaceButton:hover {
+.fabButton:hover {
   background: linear-gradient(135deg, #D97706, #B45309);
   color: white;
   text-decoration: none;
@@ -623,7 +623,7 @@
 }
 
 .docsButton:focus-visible,
-.marketplaceButton:focus-visible,
+.fabButton:focus-visible,
 .githubButton:focus-visible {
   outline: 3px solid var(--ifm-color-primary);
   outline-offset: 2px;
@@ -728,7 +728,7 @@
   }
   
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .githubButton {
     width: 100%;
     min-width: auto;
@@ -766,7 +766,7 @@
   }
   
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .githubButton {
     max-width: 115px;
     padding: 0.4rem 0.8rem;
@@ -785,7 +785,7 @@
   }
   
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .githubButton {
     max-width: 125px;
     padding: 0.45rem 0.9rem;
@@ -808,7 +808,7 @@
   }
   
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .githubButton {
     max-width: 130px;
     padding: 0.5rem 1rem;
@@ -831,7 +831,7 @@
   }
   
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .githubButton {
     max-width: 140px;
     padding: 0.6rem 1.2rem;
@@ -847,7 +847,7 @@
 }
 
 .docsButton:focus-visible,
-.marketplaceButton:focus-visible,
+.fabButton:focus-visible,
 .githubButton:focus-visible {
   outline: 3px solid var(--ifm-color-primary);
   outline-offset: 2px;
@@ -886,7 +886,7 @@
   .documentCard,
   .cardContainer,
   .docsButton,
-  .marketplaceButton,
+  .fabButton,
   .sectionTitleLink,
   .contentOverlay,
   .expandableContent,
@@ -897,7 +897,7 @@
   
   .cardContainer:hover,
   .docsButton:hover,
-  .marketplaceButton:hover {
+  .fabButton:hover {
     transform: none;
   }
   

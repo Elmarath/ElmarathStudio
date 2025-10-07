@@ -2,7 +2,11 @@
 sidebar_position: 1
 ---
 
+import PluginLinks from '@site/src/components/PluginLinks';
+
 # About Local Staged Interaction Framework
+
+<PluginLinks pluginId="LocalStagedInteraction" />
 
 Creating reliable interaction systems in games can be challenging—both in terms of gameplay design and technical implementation. You need to consider many conditions to determine whether an item can be interacted with, and ensure these states are clearly visible to the player.
 
