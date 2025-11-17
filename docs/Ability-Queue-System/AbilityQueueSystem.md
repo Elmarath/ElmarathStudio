@@ -8,6 +8,16 @@ import PluginLinks from '@site/src/components/PluginLinks';
 
 <PluginLinks pluginId="AbilityQueueSystem" />
 
+## Video Overview
+
+Watch this comprehensive tutorial to see **Ability Queue System** in action:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/zY2tzwx91Qc?start=1" title="Ability Queue System Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+*This video demonstrates the complete workflow from setup to implementation.*
+
+## Overview
+
 Ability System is a very well-structured official solution for creating gameplay interaction events. Though it is very modular, it lacks fluid transitions between actions. This plugin solves this by giving each action (in its phases) priorities and activating them accordingly, without interfering with Epic's Ability System.
 
 ![DecideMontageImage](./img/T_AbilityQueuesSystemFeatured.png) 
