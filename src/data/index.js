@@ -41,7 +41,7 @@ export const DOCUMENT_LIST = [
     title: "Easy Skeletal Mesh Merge Async",
     Img: require('@site/static/img/EasySkeletalMeshMergeAsync.png').default,
     description: "A simple and optimized workflow to create modular characters via skele merging.",
-    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/Startup',
+    DocLink: '/docs/category/easy-skeletal-mesh-merge-async',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/easy-skeletal-mesh-merge-async',
     GitHubLink: 'https://github.com/Elmarath/EasySkeletalMeshMergeAsync',
   },

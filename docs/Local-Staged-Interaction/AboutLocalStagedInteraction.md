@@ -8,6 +8,16 @@ import PluginLinks from '@site/src/components/PluginLinks';
 
 <PluginLinks pluginId="LocalStagedInteraction" />
 
+## Video Overview
+
+Watch this comprehensive tutorial to see **Local Staged Interaction Framework** in action:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/N_uTlWtp7rg?si=a3h-qjauFSfyuG0J" title="Local Staged Interaction Framework Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+*This video demonstrates the complete workflow from setup to implementation.*
+
+## Overview
+
 Creating reliable interaction systems in games can be challenging—both in terms of gameplay design and technical implementation. You need to consider many conditions to determine whether an item can be interacted with, and ensure these states are clearly visible to the player.
 
 This plugin is designed to solve exactly those problems.

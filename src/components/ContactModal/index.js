@@ -11,12 +11,12 @@ import styles from './ContactModal.module.css';
  * @param {function} onClose - Function to close modal
  */
 const ContactModal = ({ isOpen, onClose }) => {
-  const openExternalLink = useExternalLink();
+  const { openLink } = useExternalLink();
 
   const handleContactAction = (item) => {
     switch (item.action) {
       case 'external':
-        openExternalLink(item.link);
+        openLink(item.link);
         break;
       case 'navigate':
         window.location.href = item.link;
