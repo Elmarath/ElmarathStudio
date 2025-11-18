@@ -8,6 +8,16 @@ import PluginLinks from '@site/src/components/PluginLinks';
 
 <PluginLinks pluginId="AdvancedHitTrailer" />
 
+## Video Overview
+
+Watch this comprehensive tutorial to see **Advanced Hit Trailer** in action:
+
+<iframe width="100%" height="400" src="https://www.youtube.com/embed/a8clpcFSLOE?start=989" title="Advanced Hit Trailer Tutorial" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
+*This video demonstrates the complete workflow from setup to implementation.*
+
+## Overview
+
 The Advanced Hit Trailer plugin offers a robust and modular system designed to generate multiple hit results from selected skeletal mesh sockets over time. This tool provides the flexibility to activate or deactivate trails using handles, simplifying complex tracing operations for your projects.
 
 
