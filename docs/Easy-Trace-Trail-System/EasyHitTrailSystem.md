@@ -6,7 +6,7 @@ import PluginLinks from '@site/src/components/PluginLinks';
 
 # Easy Trace-Trail System Overview
 
-<PluginLinks pluginId="EasyHitTrailSystem" />
+<PluginLinks pluginId="EasyTraceTrailSystem" />
 
 ## Video Overview
 

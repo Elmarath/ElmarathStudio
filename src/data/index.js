@@ -10,11 +10,11 @@ export const DOCUMENT_LIST = [
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/local-staged-interaction',
   },
   {
-    id: 'EasyHitTrailSystem',
-    title: "Easy Hit Trail System",
+    id: 'EasyTraceTrailSystem',
+    title: "Easy Trace-Trail System",
     Img: require('@site/static/img/T_EasyTraceTrailSystemThumbnail.png').default,
     description: "A modular, optimized solution for easily controlling and extending hit results from continuous hit trails.",
-    DocLink: '/docs/Easy-Hit-Trail-System/EasyHitTrailSystem',
+    DocLink: '/docs/Easy-Trace-Trail-System/EasyTraceTrailSystem',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/advanced-hit-trailer',
   },
   {
