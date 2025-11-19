@@ -18,10 +18,10 @@ I'm the solo developer behind all the Unreal Engine plugins featured on this web
 All the plugins showcased on this site - from the Ability Queue System to the Easy Skeletal Mesh Merge Async - are my independent creations. I believe in building tools that not only solve problems but also enhance the development workflow for fellow game developers.
 
 ### Featured Projects:
-- **Advanced Hit Trailer (AHT)** - Modular hit detection system
-- **Ability Queue System (AQS)** - Extension of Epic's Gameplay Ability System
-- **Nested Inventory Architecture (NIA)** - Customizable inventory solutions
-- **Modular Action System (MAS)** - Data-driven action framework
+- **Easy Hit Trail System** - Modular hit detection system
+- **Ability Queue System** - Extension of Epic's Gameplay Ability System
+- **Nested Inventory Architecture** - Customizable inventory solutions
+- **Modular Action System** - Data-driven action framework
 - **Easy Skeletal Mesh Merge Async** - Optimized character modularization
 - **Easy Ability Set System** - Streamlined ability management
 

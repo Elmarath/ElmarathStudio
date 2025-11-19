@@ -3,35 +3,36 @@ import { PERSONAL_INFO } from '../constants';
 // Document list for HomepageDocumentPreviews component
 export const DOCUMENT_LIST = [
   {
-    title: "Local Staged Interaction (LSI)",
+    title: "Local Staged Interaction",
     Img: require('@site/static/img/T_LSI_LocalStagedInteractionThumbanil.png').default,
     description: "Local Interaction System that uses stages as a way to create complex player interactions with ease.",
     DocLink: 'docs/Local-Staged-Interaction/AboutLocalStagedInteraction',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/local-staged-interaction',
   },
   {
-    title: "Advanced Hit Trailer (AHT)",
-    Img: require('@site/static/img/T_AHT.png').default,
+    id: 'EasyHitTrailSystem',
+    title: "Easy Hit Trail System",
+    Img: require('@site/static/img/T_EasyTraceTrailSystemThumbnail.png').default,
     description: "A modular, optimized solution for easily controlling and extending hit results from continuous hit trails.",
-    DocLink: '/docs/AdvancedHitTrailer',
+    DocLink: '/docs/Easy-Hit-Trail-System/EasyHitTrailSystem',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/advanced-hit-trailer',
   },
   {
-    title: "Ability Queue System (AQS)",
+    title: "Ability Queue System",
     Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
     description: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation.",
     DocLink: '/docs/Ability-Queue-System/AbilityQueueSystem',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
-    title: "Nested Inventory Architecture (NIA)",
+    title: "Nested Inventory Architecture",
     Img: require('@site/static/img/T_NIA_Thumbnail.png').default,
     description: "Create customizable, nested, section-based, object-oriented inventory systems for intuitive gameplay.",
     DocLink: '/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/nested-inventory-architecture',
   },
   {
-    title: "Modular Action System (MAS)",
+    title: "Modular Action System",
     Img: require('@site/static/img/T_ModularActionSystemLogo.png').default,
     description: "A modular, data-driven action system for games. Network-ready and easy to customize.",
     DocLink: '/docs/Modular-Action-System/About-Modular-Action-System',
