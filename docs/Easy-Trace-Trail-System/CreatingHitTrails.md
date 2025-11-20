@@ -37,6 +37,8 @@ Notice I use two different *SocketToPrefixData* configurations. This allows diff
 - **Thrust attacks** → Uses "Tip" section for precise stabbing damage
 - **Swing attacks** → Uses "Edge" section for slashing damage  
 
+   ![Dynamic Section Mapping Gif](./img/T_TrailingDebugShowcase.gif)
+
 This flexibility lets you map the same physical weapon sections to different [GameplayTags](https://dev.epicgames.com/documentation/en-us/unreal-engine/using-gameplay-tags-in-unreal-engine) based on the attack type.
 
 **Task Settings Configuration:**  

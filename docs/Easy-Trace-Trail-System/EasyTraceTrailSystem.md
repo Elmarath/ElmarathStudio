@@ -26,6 +26,7 @@ The plugin **automatically calculates the correct spacing** and performs continu
 
 The hit detection parameters use the same configuration as Unreal Engine’s built-in tracing system, making it intuitive and very easy to adopt into existing workflows.
 
+---
 
 ### ⭐ Key Benefits
 
@@ -41,6 +42,7 @@ The hit detection parameters use the same configuration as Unreal Engine’s bui
 
 * Modular and easy to integrate into any project
 
+---
 
 ### 🎮 Typical Use Cases
 
@@ -55,11 +57,3 @@ The hit detection parameters use the same configuration as Unreal Engine’s bui
 ![Easy Trace-Trail System Example](./img/T_EasyTraceTrailSystemShowcase.png)
 
 Though this plugin is easy to use, there are a few key concepts to understand to make the most of its powerful features. Further documentation will explain how to setup and use this system for your project.
-
-## Prerequisites
-
-Before getting started, make sure you're familiar with:
-- **Unreal Engine Basics** - Creating and editing meshes, using the Blueprint editor
-- **Sockets** - Adding and positioning sockets on mesh assets ([Unreal Documentation](https://dev.epicgames.com/documentation/en-us/unreal-engine/setting-up-and-using-sockets-with-static-meshes))
-- **Collision/Tracing** - Understanding trace channels and collision responses
-- **Blueprints or C++** - Basic programming knowledge for handling hit events

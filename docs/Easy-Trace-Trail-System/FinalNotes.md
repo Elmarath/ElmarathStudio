@@ -43,7 +43,7 @@ The Easy Trace-Trail System is designed to give you precise, performance-optimiz
 - Experiment with different trace shapes for different weapon types
 - Leverage the priority system for complex multi-section weapons
 
-We hope this plugin enhances your game development workflow and helps you create engaging combat experiences. If you have questions, suggestions, or need support, please don't hesitate to reach out to us through our support channels.
+We hope this plugin enhances your game development workflow and helps you create engaging gameplay experiences. If you have questions, suggestions, or need support, please don't hesitate to reach out to us through our support channels.
 
 **Happy developing!** 🗡️
 

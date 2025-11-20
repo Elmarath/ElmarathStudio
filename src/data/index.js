@@ -18,10 +18,10 @@ export const DOCUMENT_LIST = [
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/advanced-hit-trailer',
   },
   {
-    title: "Ability Queue System",
-    Img: require('@site/static/img/T_AbilityQueueSystemThumbnail.png').default,
+    title: "Ability Queue Task System",
+    Img: require('@site/static/img/T_AbilityQueueTaskSystemThumbnail.png').default,
     description: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation.",
-    DocLink: '/docs/Ability-Queue-System/AbilityQueueSystem',
+    DocLink: '/docs/Ability-Queue-Task-System/Startup',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
