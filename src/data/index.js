@@ -3,11 +3,12 @@ import { PERSONAL_INFO } from '../constants';
 // Document list for HomepageDocumentPreviews component
 export const DOCUMENT_LIST = [
   {
-    title: "Local Staged Interaction",
-    Img: require('@site/static/img/T_LSI_LocalStagedInteractionThumbanil.png').default,
-    description: "Local Interaction System that uses stages as a way to create complex player interactions with ease.",
-    DocLink: 'docs/Local-Staged-Interaction/AboutLocalStagedInteraction',
-    FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/local-staged-interaction',
+    id: 'StagedInteractionSystem',
+    title: "Staged Interaction System",
+    Img: require('@site/static/img/T_StagedInteractionThumbnail.png').default,
+    description: "Staged Interaction System that uses stages as a way to create complex player interactions with ease.",
+    DocLink: 'docs/Staged-Interaction-System/Overview',
+    FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/staged-interaction-system',
   },
   {
     id: 'EasyTraceTrailSystem',
