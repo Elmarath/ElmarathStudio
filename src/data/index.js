@@ -21,7 +21,7 @@ export const DOCUMENT_LIST = [
     title: "Ability Queue Task System",
     Img: require('@site/static/img/T_AbilityQueueTaskSystemThumbnail.png').default,
     description: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation.",
-    DocLink: '/docs/Ability-Queue-Task-System/Startup',
+    DocLink: '/docs/Ability-Queue-Task-System/Overview',
     FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
   },
   {
