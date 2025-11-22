@@ -20,10 +20,10 @@ const HeaderBox = () => {
                                 rel="noopener noreferrer"
                                 title="Elmarath on Fab"
                                 className={`${pluginStyles.linkButton} ${pluginStyles.fabButton}`}
-                                aria-label="Elmarath on Fab"
+                                aria-label="Elmarath on Fab Vendor"
                             >
-                                <img src="/img/T_Epic_Games_Fab_2024_icon.svg" alt="Fab" className={styles.vendorIcon} />
-                                <span>Fab</span>
+                                <img src="/img/T_Epic_Games_Fab_2024_icon.svg" alt="Fab Vendor" className={styles.vendorIcon} />
+                                <span>Fab Vendor</span>
                             </a>
                         </div>
                 </HeaderCard>
