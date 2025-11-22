@@ -43,7 +43,7 @@ export const DOCUMENT_LIST = [
     title: "Easy Skeletal Mesh Merge Async",
     Img: require('@site/static/img/EasySkeletalMeshMergeAsync.png').default,
     description: "A simple and optimized workflow to create modular characters via skele merging.",
-    DocLink: '/docs/category/easy-skeletal-mesh-merge-async',
+    DocLink: '/docs/Easy-Skeletal-Mesh-Merge-Async/EasySkeletalMeshMergeAsync',
     FabLink: 'https://www.fab.com/listings/616906a0-c73d-4e7a-9002-866a6d9751d5',
     GitHubLink: 'https://github.com/Elmarath/EasySkeletalMeshMergeAsync',
   },
@@ -60,6 +60,7 @@ export const DOCUMENT_LIST = [
     description: "A flexible, runtime input management system that allows dynamic binding and modification of input mappings during gameplay.",
     DocLink: '/docs/Dynamic-Input-System/DynamicInputSystem',
     GitHubLink: 'https://www.fab.com/listings/cdf2ad8e-b9b7-4b4e-87bb-fdcfbe3c3b2b',
+    FabLink: 'https://www.fab.com/listings/cdf2ad8e-b9b7-4b4e-87bb-fdcfbe3c3b2b',
   }
 ];
 

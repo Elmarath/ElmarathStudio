@@ -6,14 +6,14 @@ sidebar_position: 1
 
 import PluginLinks from '@site/src/components/PluginLinks';
 
+<PluginLinks pluginId="Easy Skeletal Mesh Merge Async" />
+
 # Easy Skeletal Mesh Merge Async
 
 **EasySkeletalMeshMergeAsync** is an Unreal Engine plugin that lets you merge skeletal meshes *asynchronously* at runtime, making modular characters easy and efficient.
 
 Many modular character solutions are hard to manage or cause extra draw calls, hurting performance. While Epic's [Skeletal Merging](https://dev.epicgames.com/documentation/en-us/unreal-engine/API/Plugins/SkeletalMerging) plugin solves this, it can be tricky to use and manage hard references or replication.  
 This plugin builds on Epic's system, but offers a much simpler API and workflow.
-
-<PluginLinks pluginId="EasySkeletalMeshMergeAsync" />
 
 ## Video Overview
 
