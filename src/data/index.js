@@ -23,7 +23,7 @@ export const DOCUMENT_LIST = [
     Img: require('@site/static/img/T_AbilityQueueTaskSystemThumbnail.png').default,
     description: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation.",
     DocLink: '/docs/Ability-Queue-Task-System/Overview',
-    FabLink: 'https://www.unrealengine.com/marketplace/en-US/product/ability-queue-system',
+    FabLink: 'https://www.fab.com/listings/554398ff-338b-43da-bf43-b081ef166b92',
   },
   {
     title: "Nested Inventory Architecture",
