@@ -72,7 +72,6 @@ I'm always excited to discuss game development, share knowledge, and explore col
 - Email: toprakdenizhan19@gmail.com
 - LinkedIn: [Denizhan Toprak](https://www.linkedin.com/in/denizhan-toprak-006073193/)
 - GitHub: [Easy Skeletal Mesh Merge Async](https://github.com/Elmarath/EasySkeletalMeshMergeAsync)
-- CV: [View My Professional CV](https://docs.google.com/document/d/1NyO2H-jLeTuhU76wPoMm6xU3kDFCQn3Dn-A5imPmtfA/edit?usp=sharing)
 
 ---
 

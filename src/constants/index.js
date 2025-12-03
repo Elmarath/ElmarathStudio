@@ -10,7 +10,7 @@ export const PERSONAL_INFO = {
   resume: 'https://docs.google.com/document/d/1NyO2H-jLeTuhU76wPoMm6xU3kDFCQn3Dn-A5imPmtfA/edit?tab=t.0',
   resumeUrl: 'https://docs.google.com/document/d/1NyO2H-jLeTuhU76wPoMm6xU3kDFCQn3Dn-A5imPmtfA/edit?tab=t.0',
   avatar: 'https://avatars.githubusercontent.com/u/65414809?v=4',
-  description: 'Professional game developer specializing in Unreal Engine solutions. I have independently developed all the plugins and tools featured on this platform. I would be delighted to discuss potential collaboration opportunities.',
+  description: 'Unreal Engine C++ Developer. Creator of this platform and it\'s listed tools. Let\'s connect!',
   blogPath: '/blog/About Me'
 };
 
