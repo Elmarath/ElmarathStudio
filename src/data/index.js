@@ -78,9 +78,9 @@ export const CONTACT_ITEMS = [
     id: 'resume',
     label: 'Resume/CV',
     value: 'View my professional CV',
-    link: PERSONAL_INFO.resumeUrl,
+    link: '/docs/DenizhanToprak_Resume.pdf',
     icon: 'resume',
-    action: 'external'
+    action: 'resume'
   },
   {
     id: 'linkedin',

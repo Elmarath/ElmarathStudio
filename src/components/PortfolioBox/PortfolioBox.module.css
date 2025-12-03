@@ -1,26 +1,64 @@
 /* PortfolioBox Component Styles */
+.cardWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.crossBand {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 80px 80px 0 0;
+  border-color: #10b981 transparent transparent transparent;
+  z-index: 4;
+}
+
+.crossBand::after {
+  content: 'OPEN TO WORK';
+  position: absolute;
+  top: -65px;
+  left: 8px;
+  color: white;
+  font-size: 9px;
+  font-weight: bold;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transform: rotate(-45deg);
+  white-space: nowrap;
+  line-height: 1;
+}
+
+.crossBand::before {
+  display: none;
+}
+
 .buttonContainer {
   position: absolute;
   top: 12px;
   right: 12px;
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 8px;
   z-index: 3;
 }
 
-.openToWork {
+.contactButton {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 70px;
 }
 
-.openToWork:hover {
+.contactButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
@@ -28,18 +66,39 @@
 .resumeButton {
   background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-dark));
   color: white;
-  padding: 4px 8px;
+  padding: 6px 12px;
   border-radius: 6px;
   font-size: 0.75rem;
   font-weight: 600;
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  min-width: 70px;
 }
 
 .resumeButton:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(var(--ifm-color-primary-rgb), 0.3);
+}
+
+.openToWorkButton {
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-top: 16px;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+
+.openToWorkButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+  background: linear-gradient(135deg, #059669, #047857);
 }
 
 .profilePic {
@@ -96,6 +155,21 @@
 
 /* Mobile: Compact but readable */
 @media screen and (max-width: 767px) {
+  .crossBand {
+    border-width: 65px 65px 0 0;
+  }
+
+  .crossBand::after {
+    top: -52px;
+    left: 6px;
+    font-size: 7px;
+    letter-spacing: 0.3px;
+  }
+
+  .crossBand::before {
+    display: none;
+  }
+
   .profilePic {
     width: 64px;
     height: 64px;
@@ -122,10 +196,17 @@
     gap: 4px;
   }
   
-  .openToWork,
+  .contactButton,
   .resumeButton {
-    padding: 3px 6px;
+    padding: 4px 8px;
     font-size: 0.7rem;
+    min-width: 60px;
+  }
+
+  .openToWorkButton {
+    padding: 10px 20px;
+    font-size: 0.8rem;
+    margin-top: 12px;
   }
 }
 

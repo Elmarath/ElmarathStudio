@@ -9,8 +9,9 @@ import styles from './ContactModal.module.css';
  * ContactModal Component - Displays contact information in a modal
  * @param {boolean} isOpen - Modal open state
  * @param {function} onClose - Function to close modal
+ * @param {function} onResumeClick - Function to open resume modal
  */
-const ContactModal = ({ isOpen, onClose }) => {
+const ContactModal = ({ isOpen, onClose, onResumeClick }) => {
   const { openLink } = useExternalLink();
 
   const handleContactAction = (item) => {
@@ -20,6 +21,12 @@ const ContactModal = ({ isOpen, onClose }) => {
         break;
       case 'navigate':
         window.location.href = item.link;
+        break;
+      case 'resume':
+        if (onResumeClick) {
+          onClose(); // Close contact modal first
+          onResumeClick(); // Open resume modal
+        }
         break;
       case 'link':
       default:

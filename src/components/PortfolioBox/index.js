@@ -30,13 +30,13 @@ const PortfolioBox = () => {
             <HeaderCard onClick={handleCardClick}>
                 <div className={styles.buttonContainer}>
                     <button 
-                        className={styles.openToWork}
+                        className={styles.contactButton}
                         onClick={(e) => {
                             e.stopPropagation();
                             contactModal.open();
                         }}
                     >
-                        Open To Work
+                        Contact
                     </button>
                     
                     <button 
@@ -64,11 +64,22 @@ const PortfolioBox = () => {
                         {PERSONAL_INFO.description}
                     </p>
                 </div>
+                
+                <button 
+                    className={styles.openToWorkButton}
+                    onClick={(e) => {
+                        e.stopPropagation();
+                        contactModal.open();
+                    }}
+                >
+                    Open to Work
+                </button>
             </HeaderCard>
 
             <ContactModal 
                 isOpen={contactModal.isOpen} 
-                onClose={contactModal.close} 
+                onClose={contactModal.close}
+                onResumeClick={resumeModal.open}
             />
             
             <ResumeModal 
