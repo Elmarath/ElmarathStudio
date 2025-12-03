@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { createPortal } from 'react-dom';
 import { CONTACT_ITEMS } from '../../data';
 import { ICON_MAP } from '../Icons';
 import { useExternalLink } from '../../hooks';
-import PDFViewer from '../PDFViewer';
 import styles from './ContactModal.module.css';
 
 /**
@@ -13,7 +12,6 @@ import styles from './ContactModal.module.css';
  */
 const ContactModal = ({ isOpen, onClose }) => {
   const { openLink } = useExternalLink();
-  const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
 
   const handleContactAction = (item) => {
     switch (item.action) {
@@ -22,9 +20,6 @@ const ContactModal = ({ isOpen, onClose }) => {
         break;
       case 'navigate':
         window.location.href = item.link;
-        break;
-      case 'pdf':
-        setPdfViewerOpen(true);
         break;
       case 'link':
       default:
@@ -62,15 +57,9 @@ const ContactModal = ({ isOpen, onClose }) => {
     );
   };
 
-  const handleClosePdfViewer = () => {
-    setPdfViewerOpen(false);
-  };
-
   if (!isOpen) return null;
 
-  return (
-    <>
-      {createPortal(
+  return createPortal(
     <div className={styles.modalOverlay} onClick={onClose}>
       <div className={styles.contactModal} onClick={(e) => e.stopPropagation()}>
         <button className={styles.closeButton} onClick={onClose}>
@@ -98,17 +87,7 @@ const ContactModal = ({ isOpen, onClose }) => {
       </div>
     </div>,
     document.body
-  )}
-  
-  <PDFViewer
-    isOpen={pdfViewerOpen}
-    onClose={handleClosePdfViewer}
-    pdfUrl="/docs/DenizhanToprak_Resume.pdf"
-    title="Denizhan Toprak - Resume"
-    downloadFileName="DenizhanToprak_Resume.pdf"
-  />
-</>
-);
+  );
 };
 
 export default ContactModal;

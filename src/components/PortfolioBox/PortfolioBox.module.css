@@ -20,31 +20,6 @@
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
-.resumeButton {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  margin-top: 36px; /* Position below the hire me button */
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
-  color: white;
-  padding: 4px 8px;
-  border-radius: 6px;
-  font-size: 0.7rem;
-  font-weight: 500;
-  border: none;
-  cursor: pointer;
-  z-index: 3;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.resumeButton:hover {
-  transform: translateY(-1px);
-  box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
-}
-
 .profilePic {
   width: 80px;
   height: 80px;
@@ -124,14 +99,6 @@
     right: 8px;
     padding: 3px 6px;
     font-size: 0.7rem;
-  }
-  
-  .resumeButton {
-    top: 8px;
-    right: 8px;
-    margin-top: 30px;
-    padding: 3px 6px;
-    font-size: 0.65rem;
   }
 }
 
