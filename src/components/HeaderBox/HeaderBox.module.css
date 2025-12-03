@@ -1,17 +1,16 @@
 /* Modern HeaderBox with industry-standard typography */
 .logo {
-  width: 80px;
-  height: 80px;
-  border-radius: 12px;
-  margin-bottom: 16px;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  object-fit: contain;
+    width: 20%;
+    height: 20%;
+    border-radius: 50%;
+    margin-bottom: 25px;
+    border: 4px solid var(--ifm-color-primary-light);
 }
 
 .siteTitle {
-  font-size: 1.5rem;
+  font-size: 1rem;
   font-weight: 700;
-  margin: 0 0 8px 0;
+  margin: 0 0 4px 0;
   color: var(--ifm-font-color-base);
   line-height: 1.2;
 }
@@ -27,14 +26,14 @@
 /* Mobile: Smaller but readable */
 @media screen and (max-width: 767px) {
   .logo {
-    width: 64px;
-    height: 64px;
-    margin-bottom: 12px;
+    width: 32px;
+    height: 32px;
+    margin-bottom: 8px;
   }
   
   .siteTitle {
-    font-size: 1.25rem;
-    margin-bottom: 6px;
+    font-size: 1rem;
+    margin-bottom: 4px;
   }
   
   .description {
@@ -45,9 +44,9 @@
 /* Desktop: Full size */
 @media screen and (min-width: 1024px) {
   .logo {
-    width: 96px;
-    height: 96px;
-    margin-bottom: 20px;
+    width: 72px;
+    height: 72px;
+    margin-bottom: 8px;
   }
   
   .siteTitle {
@@ -58,4 +57,22 @@
   .description {
     font-size: 1rem;
   }
+}
+
+.vendorLinks {
+  margin-top: 12px;
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+}
+
+.vendorIcon {
+  width: 22px;
+  height: 22px;
+  object-fit: contain;
+  transition: transform 0.2s ease;
+}
+
+.vendorIcon:hover {
+  transform: translateY(-4px);
 }

@@ -6,7 +6,7 @@ import PluginLinks from '@site/src/components/PluginLinks';
 
 # Overview of Ability Queue Task System
 
-<PluginLinks pluginId="AbilityQueueSystem" />
+<PluginLinks pluginId="Ability-Queue-Task-System" />
 
 ## Video Overview
 
