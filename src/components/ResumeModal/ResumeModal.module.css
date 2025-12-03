@@ -1,0 +1,177 @@
+/* ResumeModal Component Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  backdrop-filter: blur(4px);
+  isolation: isolate;
+  padding: 20px;
+}
+
+.resumeModal {
+  background: linear-gradient(135deg, 
+    rgba(255, 255, 255, 0.95) 0%, 
+    rgba(255, 255, 255, 0.9) 100%);
+  backdrop-filter: blur(20px);
+  border-radius: 20px;
+  width: 90%;
+  max-width: 900px;
+  height: 90vh;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+  border: 2px solid var(--ifm-color-primary);
+  position: relative;
+  animation: modalSlideIn 0.3s ease-out;
+}
+
+/* Dark theme support for modal background */
+[data-theme='dark'] .resumeModal {
+  background: linear-gradient(135deg, 
+    rgba(30, 30, 30, 0.95) 0%, 
+    rgba(20, 20, 20, 0.9) 100%);
+}
+
+@keyframes modalSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.modalHeader {
+  padding: 24px 30px;
+  border-bottom: 1px solid rgba(var(--ifm-color-emphasis-300-rgb), 0.5);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
+  background: rgba(var(--ifm-background-color-rgb), 0.8);
+}
+
+.modalHeader h2 {
+  margin: 0;
+  color: var(--ifm-font-color-base);
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.modalActions {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.downloadButton {
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-dark));
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(var(--ifm-color-primary-rgb), 0.3);
+}
+
+.downloadButton:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(var(--ifm-color-primary-rgb), 0.4);
+}
+
+.closeButton {
+  background: rgba(var(--ifm-color-content-secondary-rgb), 0.1);
+  border: none;
+  font-size: 1.5rem;
+  color: var(--ifm-color-content-secondary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: rgba(var(--ifm-color-content-secondary-rgb), 0.2);
+  color: var(--ifm-font-color-base);
+  transform: rotate(90deg);
+}
+
+.pdfContainer {
+  flex: 1;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 0 0 20px 20px;
+}
+
+.pdfViewer {
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: white;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 10px;
+  }
+
+  .resumeModal {
+    width: 95%;
+    height: 95vh;
+    border-radius: 15px;
+  }
+
+  .modalHeader {
+    padding: 16px 20px;
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .modalActions {
+    justify-content: space-between;
+  }
+
+  .modalHeader h2 {
+    font-size: 1.25rem;
+    text-align: center;
+  }
+
+  .downloadButton {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+  }
+
+  .pdfContainer {
+    border-radius: 0 0 15px 15px;
+  }
+}
+
+/* Ensure PDF renders properly in dark mode */
+[data-theme='dark'] .pdfContainer {
+  background: rgba(245, 245, 245, 0.95);
+}
+
+[data-theme='dark'] .pdfViewer {
+  background: #f5f5f5;
+}

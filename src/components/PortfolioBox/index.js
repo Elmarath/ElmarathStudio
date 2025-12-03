@@ -1,6 +1,7 @@
 import React from 'react';
 import HeaderCard from '../HeaderCard';
 import ContactModal from '../ContactModal';
+import ResumeModal from '../ResumeModal';
 import { PERSONAL_INFO } from '../../constants';
 import { useModal } from '../../hooks';
 import styles from './PortfolioBox.module.css';
@@ -10,9 +11,10 @@ import styles from './PortfolioBox.module.css';
  */
 const PortfolioBox = () => {
     const contactModal = useModal();
+    const resumeModal = useModal();
 
     const handleCardClick = (e) => {
-        // Only open modal if the click wasn't on the "Open to Work" button
+        // Only open modal if the click wasn't on any button
         if (!e.target.closest('button')) {
             contactModal.open();
         }
@@ -26,15 +28,27 @@ const PortfolioBox = () => {
     return (
         <>
             <HeaderCard onClick={handleCardClick}>
-                <button 
-                    className={styles.openToWork}
-                    onClick={(e) => {
-                        e.stopPropagation();
-                        contactModal.open();
-                    }}
-                >
-                    Open To Work
-                </button>
+                <div className={styles.buttonContainer}>
+                    <button 
+                        className={styles.openToWork}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            contactModal.open();
+                        }}
+                    >
+                        Open To Work
+                    </button>
+                    
+                    <button 
+                        className={styles.resumeButton}
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            resumeModal.open();
+                        }}
+                    >
+                        Resume
+                    </button>
+                </div>
                 
                 <img 
                     src={PERSONAL_INFO.avatar}
@@ -55,6 +69,11 @@ const PortfolioBox = () => {
             <ContactModal 
                 isOpen={contactModal.isOpen} 
                 onClose={contactModal.close} 
+            />
+            
+            <ResumeModal 
+                isOpen={resumeModal.isOpen} 
+                onClose={resumeModal.close} 
             />
         </>
     );

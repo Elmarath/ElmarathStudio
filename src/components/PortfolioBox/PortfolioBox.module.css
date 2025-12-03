@@ -1,8 +1,14 @@
 /* PortfolioBox Component Styles */
-.openToWork {
+.buttonContainer {
   position: absolute;
   top: 12px;
   right: 12px;
+  display: flex;
+  gap: 6px;
+  z-index: 3;
+}
+
+.openToWork {
   background: linear-gradient(135deg, #10b981, #059669);
   color: white;
   padding: 4px 8px;
@@ -11,13 +17,29 @@
   font-weight: 600;
   border: none;
   cursor: pointer;
-  z-index: 3;
   transition: all 0.2s ease;
 }
 
 .openToWork:hover {
   transform: translateY(-1px);
   box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
+}
+
+.resumeButton {
+  background: linear-gradient(135deg, var(--ifm-color-primary), var(--ifm-color-primary-dark));
+  color: white;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.resumeButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(var(--ifm-color-primary-rgb), 0.3);
 }
 
 .profilePic {
@@ -94,9 +116,14 @@
     font-size: 0.8rem;
   }
   
-  .openToWork {
+  .buttonContainer {
     top: 8px;
     right: 8px;
+    gap: 4px;
+  }
+  
+  .openToWork,
+  .resumeButton {
     padding: 3px 6px;
     font-size: 0.7rem;
   }
