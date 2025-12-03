@@ -1,0 +1,185 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  padding: 20px;
+}
+
+.pdfModal {
+  background: var(--ifm-background-color);
+  border-radius: 12px;
+  max-width: 95vw;
+  max-height: 95vh;
+  width: 1200px;
+  height: 800px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px 16px;
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  flex-shrink: 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 1.5rem;
+  color: var(--ifm-color-emphasis-800);
+  font-weight: 600;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.actionButtons {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.downloadButton {
+  background: var(--ifm-color-primary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.downloadButton:hover {
+  background: var(--ifm-color-primary-dark);
+  transform: translateY(-1px);
+}
+
+.shareButton {
+  background: var(--ifm-color-secondary);
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.shareButton:hover {
+  background: var(--ifm-color-secondary-dark);
+  transform: translateY(-1px);
+}
+
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 24px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  cursor: pointer;
+  color: var(--ifm-color-emphasis-600);
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.closeButton:hover {
+  background: var(--ifm-color-emphasis-200);
+  color: var(--ifm-color-emphasis-800);
+}
+
+.pdfContainer {
+  flex: 1;
+  padding: 20px;
+  min-height: 0;
+}
+
+.pdfContainer iframe {
+  border-radius: 8px;
+  background: white;
+}
+
+/* Dark theme adjustments */
+[data-theme='dark'] .pdfModal {
+  border-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .header {
+  border-bottom-color: var(--ifm-color-emphasis-300);
+}
+
+[data-theme='dark'] .pdfContainer iframe {
+  background: #f8f9fa;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .modalOverlay {
+    padding: 10px;
+  }
+  
+  .pdfModal {
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    border-radius: 0;
+  }
+  
+  .header {
+    padding: 16px;
+  }
+  
+  .title {
+    font-size: 1.25rem;
+  }
+  
+  .headerActions {
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+  }
+  
+  .actionButtons {
+    gap: 6px;
+  }
+  
+  .downloadButton,
+  .shareButton {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+  
+  .pdfContainer {
+    padding: 16px;
+  }
+}

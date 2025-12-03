@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import HeaderCard from '../HeaderCard';
 import ContactModal from '../ContactModal';
+import PDFViewer from '../PDFViewer';
 import { PERSONAL_INFO } from '../../constants';
 import { useModal } from '../../hooks';
 import styles from './PortfolioBox.module.css';
@@ -10,9 +11,10 @@ import styles from './PortfolioBox.module.css';
  */
 const PortfolioBox = () => {
     const contactModal = useModal();
+    const [pdfViewerOpen, setPdfViewerOpen] = useState(false);
 
     const handleCardClick = (e) => {
-        // Only open modal if the click wasn't on the "Open to Work" button
+        // Only open modal if the click wasn't on any button
         if (!e.target.closest('button')) {
             contactModal.open();
         }
@@ -21,6 +23,15 @@ const PortfolioBox = () => {
     const handleDescriptionClick = (e) => {
         e.stopPropagation();
         window.location.href = PERSONAL_INFO.blogPath;
+    };
+
+    const handleResumeClick = (e) => {
+        e.stopPropagation();
+        setPdfViewerOpen(true);
+    };
+
+    const handleClosePdfViewer = () => {
+        setPdfViewerOpen(false);
     };
 
     return (
@@ -33,7 +44,14 @@ const PortfolioBox = () => {
                         contactModal.open();
                     }}
                 >
-                    Open To Work
+                    Hire Me
+                </button>
+                
+                <button 
+                    className={styles.resumeButton}
+                    onClick={handleResumeClick}
+                >
+                    📄 View Resume
                 </button>
                 
                 <img 
@@ -55,6 +73,14 @@ const PortfolioBox = () => {
             <ContactModal 
                 isOpen={contactModal.isOpen} 
                 onClose={contactModal.close} 
+            />
+            
+            <PDFViewer
+                isOpen={pdfViewerOpen}
+                onClose={handleClosePdfViewer}
+                pdfUrl="/docs/DenizhanToprak_Resume.pdf"
+                title="Denizhan Toprak - Resume"
+                downloadFileName="DenizhanToprak_Resume.pdf"
             />
         </>
     );
