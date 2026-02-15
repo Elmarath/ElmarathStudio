@@ -1,0 +1,152 @@
+/* Modern DiscordBox following social media card standards */
+
+/* Header with Discord icon */
+.discordHeader {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 20px;
+  position: relative;
+}
+
+.discordIcon {
+  width: 60px;
+  height: 60px;
+  color: #5865F2;
+  transition: transform 0.3s ease;
+}
+
+/* Channel information */
+.serverName {
+  font-size: 1.4rem;
+  font-weight: bold;
+  margin: 0 0 8px 0;
+  color: var(--ifm-font-color-base);
+}
+
+.callToAction {
+  font-size: 0.95rem;
+  color: var(--ifm-color-content-secondary);
+  margin: 0 0 25px 0;
+  line-height: 1.4;
+}
+
+/* Join button */
+.joinButton {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #5865F2, #4752C4);
+  color: white;
+  padding: 12px 20px;
+  border-radius: 25px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(88, 101, 242, 0.3);
+  margin-top: auto;
+}
+
+.chatIcon {
+  width: 18px;
+  height: 18px;
+}
+
+/* Glow effect on hover */
+.glowEffect {
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(88, 101, 242, 0.1) 0%, transparent 70%);
+  opacity: 0;
+  animation: glow 0.6s ease-out;
+}
+
+@keyframes glow {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.2); }
+}
+
+/* Responsive design - Readable text with compact layout */
+@media screen and (max-width: 767px) {
+  .discordIcon {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .serverName {
+    font-size: 0.9rem;
+    line-height: 1.1;
+    margin: 0 0 3px 0;
+  }
+  
+  .callToAction {
+    font-size: 0.65rem;
+    margin: 0 0 8px 0;
+    line-height: 1.2;
+  }
+  
+  .joinButton {
+    padding: 6px 10px;
+    font-size: 0.65rem;
+    gap: 4px;
+    border-radius: 12px;
+  }
+  
+  .chatIcon {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .discordHeader {
+    margin-bottom: 8px;
+  }
+}
+
+/* Tablet */
+@media screen and (min-width: 768px) and (max-width: 1023px) {
+  .discordIcon {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .serverName {
+    font-size: 1.1rem;
+  }
+  
+  .callToAction {
+    font-size: 0.8rem;
+    margin-bottom: 15px;
+  }
+  
+  .joinButton {
+    padding: 10px 16px;
+    font-size: 0.85rem;
+  }
+}
+
+/* Desktop */
+@media screen and (min-width: 1024px) {
+  .discordIcon {
+    width: 60px;
+    height: 60px;
+  }
+  
+  .serverName {
+    font-size: 1.4rem;
+  }
+  
+  .callToAction {
+    font-size: 0.95rem;
+  }
+  
+  .joinButton {
+    padding: 12px 20px;
+    font-size: 0.9rem;
+  }
+}

@@ -11,6 +11,7 @@ import HireBox from '../components/HireBox';
 import PortfolioBox from '../components/PortfolioBox';
 import HeaderBox from '../components/HeaderBox';
 import YouTubeBox from '../components/YouTubeBox';
+import DiscordBox from '../components/DiscordBox';
 
 // Simple animated connector with thin fading line
 function AnimatedConnector() {
@@ -36,6 +37,7 @@ function HomepageHeader() {
         <HeaderBox />
         <PortfolioBox />
         <YouTubeBox />
+        <DiscordBox />
       </div>
     </header>
   );

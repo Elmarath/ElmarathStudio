@@ -40,7 +40,7 @@ Watch this comprehensive tutorial to see **Dynamic Input System** in action:
 ## Support
 
 - [GitHub Issues](https://github.com/Elmarath/DynamicInputSystem/issues)
-- [Discord Community](https://discord.gg/HghXuWHJJx)
+- [Discord Community](https://discord.gg/mUm4hYvG3x)
 
 ---
 

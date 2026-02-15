@@ -29,7 +29,7 @@ const FeatureList = [
     description: (
       <>
         Check out our <a href="https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ">Youtube Channel</a>, <a href="https://twitter.com/denizhan_toprak">Twitter</a> to see what we have been doing!
-        Also join our comminty with joining our <a href="https://discord.gg/HghXuWHJJx">Discord</a>!
+        Also join our comminty with joining our <a href="https://discord.gg/mUm4hYvG3x">Discord</a>!
       </>
     ),
   },

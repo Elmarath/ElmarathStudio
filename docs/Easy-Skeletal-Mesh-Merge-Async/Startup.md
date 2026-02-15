@@ -99,7 +99,7 @@ This example function runs whenever an inventory slot changes content.
 ## Support
 
 - [GitHub Issues](https://github.com/Elmarath/EasySkeletalMeshMergeAsync)
-- [Discord Community](https://discord.gg/HghXuWHJJx)
+- [Discord Community](https://discord.gg/mUm4hYvG3x)
 
 ---
 

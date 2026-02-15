@@ -13,7 +13,7 @@ My Personal request from you is to leave a **Review** about this plug-in in the 
 
 ## Feedback
 
-You can always hop on the  **[Discord](https://discord.gg/HghXuWHJJx)** to ask questions. 
+You can always hop on the  **[Discord](https://discord.gg/mUm4hYvG3x)** to ask questions. 
 
 
 ### All The Plug-ins Aim:

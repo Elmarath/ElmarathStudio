@@ -22,8 +22,7 @@ const YouTubeBox = () => {
       </div>
       
       <h3 className={styles.channelName}>@Elmarath</h3>
-      <p className={styles.channelDescription}>Game Development Journey</p>
-      <p className={styles.callToAction}>Watch my latest devlogs & tutorials</p>
+      <p className={styles.callToAction}>Watch the plugin documentation, showcases, devlogs and more!</p>
       
       <div className={styles.subscribeButton}>
         <svg className={styles.bellIcon} viewBox="0 0 24 24" fill="currentColor">
