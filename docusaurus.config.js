@@ -139,6 +139,15 @@ const config = {
             ],
           },
           {
+            title: 'Legal',
+            items: [
+              {
+                label: 'Privacy Policy',
+                to: '/docs/PrivacyPolicy',
+              },
+            ],
+          },
+          {
             title: 'More',
             items: [
               {
