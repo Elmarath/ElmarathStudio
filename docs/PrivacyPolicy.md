@@ -1,77 +1,75 @@
-# Privacy Policy
+---
+sidebar_position: 9999
+---
+
+# Privacy Policy for Hermods Ride
 
 **Last updated: April 4, 2026**
 
-Elmarath Studio ("we", "our", or "us") operates the ElmarathStudio website (the "Site"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Site and the choices you have associated with that data.
+Elmarath Studio ("we", "our", or "us") operates Hermods Ride, a game that uses Epic Online Services ("EOS") provided by Epic Games, Inc. ("Epic") for authentication, matchmaking, and multiplayer features. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use Hermods Ride.
+
+This privacy policy focuses solely on the data handling within Hermods Ride and our use of EOS. We do not collect, use, or share any personal data beyond what is necessary for the game's functionality through EOS.
 
 ## 1. Information Collection and Use
 
-We collect several different types of information for various purposes to provide and improve our Site to you.
+Hermods Ride integrates with Epic Online Services to provide user authentication, matchmaking, and hosting of game sessions. Epic collects and processes data on our behalf as described in their [Privacy Policy](https://legal.epicgames.com/en-US/epicgames/privacy-policy).
 
-### Types of Data Collected
+### Types of Data Collected by EOS
 
-**Personal Data:**
-- Email address (if you contact us)
-- Name (if provided through contact forms)
-- Any other information you voluntarily provide
+Epic may collect the following types of information when you use Hermods Ride:
 
-**Usage Data:**
-- Browser type and version
-- Pages visited and time spent on pages
-- Referrer URL
-- Device information
-- IP address
-- Cookies and similar tracking technologies
+- **Account Information**: Email address, display name, and other account details associated with your Epic Games account used for login and authentication.
+- **Gameplay Data**: Information about your gameplay, such as match results, session participation, and interactions with other players during multiplayer sessions.
+- **Technical Data**: Device information (e.g., device type, operating system), IP address, and connection details to facilitate matchmaking and game hosting.
+- **Usage Data**: Data on how you interact with the game, including time spent playing and features used, to improve service performance.
+
+We do not collect or access this data directly; it is handled by Epic in accordance with their privacy policy.
 
 ## 2. Use of Data
 
-Elmarath Studio uses the collected data for various purposes:
+The data collected by EOS is used solely for the following purposes:
 
-- To provide and maintain our Site
-- To notify you about changes to our Site
-- To allow you to participate in interactive features of our Site when you choose to do so
-- To provide customer support
-- To gather analysis or valuable information so that we can improve our Site
-- To monitor the usage of our Site
-- To detect, prevent and address technical issues and fraudulent activity
+- To authenticate users and allow login to Hermods Ride.
+- To enable matchmaking and connect players for multiplayer games.
+- To host and manage game sessions, including voice chat and in-game communications where applicable.
+- To ensure fair play, prevent cheating, and maintain the integrity of the game.
+- To comply with legal obligations and enforce Epic's terms of service.
 
-## 3. Security of Data
+We do not use any data for marketing, analytics, or any other purposes beyond providing the game's core functionality.
 
-The security of your data is important to us but remember that no method of transmission over the Internet or method of electronic storage is 100% secure. While we strive to use commercially acceptable means to protect your Personal Data, we cannot guarantee its absolute security.
+## 3. Sharing of Data
 
-## 4. External Links
+Data collected through EOS may be shared as follows:
 
-Our Site may contain links to external sites that are not operated by us. If you click on a third party link, you will be directed to that third party's site. We strongly advise you to review the Privacy Policy and terms and conditions of every site you visit.
+- **With Epic Games**: As necessary for Epic to provide and operate EOS, including authentication, matchmaking, and game services.
+- **With Other Players**: Limited gameplay data (e.g., display names, match statistics) may be shared with other players in the same game session to facilitate multiplayer interactions.
+- **Legal Requirements**: Data may be disclosed if required by law, to protect the rights and safety of users, or to enforce terms of service.
 
-We have no control over and assume no responsibility for the content, privacy policies or practices of any third party sites, products or services.
+We do not share any data with third parties for commercial purposes.
 
-## 5. Cookies
+## 4. Retention of Data
 
-We use cookies and similar tracking technologies to track activity on our Site and hold certain information. You can instruct your browser to refuse all cookies or to indicate when a cookie is being sent. However, if you do not accept cookies, you may not be able to use some portions of our Site.
+Data retention is handled by Epic in accordance with their privacy policy. Generally, data is retained for as long as necessary to provide the services, comply with legal obligations, and resolve disputes. You can request deletion of your Epic account data through Epic's support channels, which may affect your ability to use Hermods Ride.
 
-## 6. Service Providers
+## 5. Security of Data
 
-We may employ third party companies and individuals to facilitate our Site ("Service Providers"), to provide the Site on our behalf, to perform Site-related services or to assist us in analyzing how our Site is used.
+Epic employs industry-standard security measures to protect data processed through EOS. However, no method of transmission over the Internet is 100% secure. We recommend using strong passwords and enabling two-factor authentication on your Epic account.
 
-These third parties have access to your Personal Data only to perform these tasks on our behalf and are obligated not to disclose or use it for any other purpose.
+## 6. Children's Privacy
 
-### Google Analytics
-
-We use Google Analytics to track and analyze the usage of our Site. Google Analytics is a web analytics service offered by Google that tracks and reports website traffic. Google uses the data collected to track and monitor the use of our Site.
-
-For more information on the privacy practices of Google, please visit the Google Privacy & Terms web page: https://policies.google.com/privacy
+Hermods Ride is intended for users of all ages, but EOS includes special protections for children under 13 (or the applicable age in your region). If you are a parent or guardian and believe your child has provided personal information, please contact Epic directly for assistance with account management.
 
 ## 7. Changes to This Privacy Policy
 
-We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date at the top of this Privacy Policy.
+We may update this Privacy Policy from time to time to reflect changes in our practices or EOS. We will notify you of any changes by posting the new Privacy Policy on this page and updating the "Last updated" date.
 
-You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
+You are advised to review this Privacy Policy periodically for any changes.
 
 ## 8. Contact Us
 
-If you have any questions about this Privacy Policy, please contact us at:
+If you have any questions about this Privacy Policy or your data in Hermods Ride, please contact us:
 
 - Email: toprakdenizhan19@gmail.com
 - Discord: https://discord.gg/mUm4hYvG3x
 
----
+For questions specifically about EOS or your Epic account, please refer to Epic's [Privacy Policy](https://legal.epicgames.com/en-US/epicgames/privacy-policy) and contact Epic support.
