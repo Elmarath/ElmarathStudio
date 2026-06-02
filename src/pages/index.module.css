@@ -8,23 +8,54 @@
   text-align: center;
   position: relative;
   overflow: hidden;
+  isolation: isolate;
 }
 
-/* Enhanced Dark Mode Background - Keep original yellowish theme */
+/* Cool, minimal animated background layers */
+.heroBanner::before,
+.heroBanner::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.heroBanner::before {
+  background-image:
+    repeating-linear-gradient(
+      125deg,
+      rgba(255, 221, 122, 0.3) 0px,
+      rgba(255, 221, 122, 0.3) 2px,
+      transparent 2px,
+      transparent 26px
+    );
+  opacity: 0.24;
+  transform: scale(1.18);
+  animation: stripeDrift 26s linear infinite;
+}
+
+.heroBanner::after {
+  background:
+    radial-gradient(circle at 12% 18%, rgba(255, 244, 204, 0.42) 0%, rgba(255, 244, 204, 0) 42%),
+    radial-gradient(circle at 88% 72%, rgba(255, 210, 107, 0.38) 0%, rgba(255, 210, 107, 0) 40%);
+  filter: blur(4px);
+  animation: glowSweep 14s ease-in-out infinite;
+}
+
+/* Dark mode: yellow-forward cinematic tone */
 [data-theme='dark'] .heroBanner {
-  background: linear-gradient(135deg, #ffc480, #F9A826);
-  background-size: 150% 150%;
-  animation: gradientShift 30s ease infinite;
+  background: linear-gradient(140deg, #6a4a16 0%, #d3952c 46%, #ffd36e 100%);
+  background-size: 160% 160%;
+  animation: gradientShift 20s ease-in-out infinite;
 }
 
-/* Enhanced Light Mode Background - Cool neutrals that complement dark mode */
+/* Light mode: soft yellow wash */
 [data-theme='light'] .heroBanner {
-  background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-  background-size: 150% 150%;
-  animation: gradientShift 30s ease infinite;
+  background: linear-gradient(140deg, #fffdf2 0%, #fff0c7 52%, #ffe094 100%);
+  background-size: 160% 160%;
+  animation: gradientShift 20s ease-in-out infinite;
 }
-
-/* Remove texture overlay for better performance */
 
 @keyframes gradientShift {
   0%, 100% {
@@ -32,6 +63,41 @@
   }
   50% {
     background-position: 100% 50%;
+  }
+}
+
+@keyframes stripeDrift {
+  0%,
+  100% {
+    transform: translate3d(-2%, -1%, 0) scale(1.18);
+  }
+  50% {
+    transform: translate3d(2%, 1%, 0) scale(1.18);
+  }
+}
+
+@keyframes glowSweep {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate3d(1.5%, -1.5%, 0);
+    opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .heroBanner,
+  .heroBanner::before,
+  .heroBanner::after {
+    animation: none !important;
+  }
+
+  .heroBanner::before,
+  .heroBanner::after {
+    transform: none !important;
   }
 }
 
