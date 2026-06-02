@@ -62,43 +62,6 @@
   margin-top: 20px; /* Add margin to separate button container from existing buttons */
 }
 
-.headerContainer {
-  display: flex;
-  gap: 2rem;
-  justify-content: center;
-  align-items: stretch;
-  width: 100%;
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 3rem 2rem;
-  position: relative;
-  z-index: 1;
-}
-
-/* Enhanced Mobile Responsive */
-@media (max-width: 768px) {
-  .headerContainer {
-    flex-direction: column;
-    gap: 1.5rem;
-    align-items: center;
-    padding: 2rem 1rem;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .headerContainer {
-    gap: 1.5rem;
-    padding: 2.5rem 1.5rem;
-    max-width: 900px;
-  }
-}
-
-@media (min-width: 1440px) {
-  .headerContainer {
-    gap: 3rem;
-    padding: 4rem 2rem;
-  }
-}
 
 .documentsTitle {
   text-align: center;

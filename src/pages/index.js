@@ -7,11 +7,7 @@ import Heading from '@theme/Heading';
 import styles from './index.module.css';
 import HomepageDocumentPreviews from '../components/HomepageDocumentPreviews';
 import React from 'react';
-import HireBox from '../components/HireBox';
-import PortfolioBox from '../components/PortfolioBox';
-import HeaderBox from '../components/HeaderBox';
-import YouTubeBox from '../components/YouTubeBox';
-import DiscordBox from '../components/DiscordBox';
+import HomepagePanels from '../components/HomepagePanels';
 
 // Simple animated connector with thin fading line
 function AnimatedConnector() {
@@ -33,12 +29,7 @@ function HomepageHeader() {
   const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero', styles.heroBanner)}>
-      <div className={styles.headerContainer}>
-        <HeaderBox />
-        <PortfolioBox />
-        <YouTubeBox />
-        <DiscordBox />
-      </div>
+      <HomepagePanels />
     </header>
   );
 }
