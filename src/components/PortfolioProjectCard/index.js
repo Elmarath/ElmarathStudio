@@ -1,10 +1,9 @@
-import React, {useState} from 'react';
+import React from 'react';
 import Link from '@docusaurus/Link';
 import styles from '../PortfolioListPage/PortfolioListPage.module.css';
 
 export default function PortfolioProjectCard({post}) {
   const image = post.frontMatter.image;
-  const [isPortrait, setIsPortrait] = useState(false);
   const date = new Intl.DateTimeFormat('en-US', {
     month: 'long',
     day: 'numeric',
@@ -17,13 +16,9 @@ export default function PortfolioProjectCard({post}) {
       <Link to={post.permalink} className={styles.imageLink}>
         {image ? (
           <img
-            className={`${styles.image} ${isPortrait ? styles.portraitImage : ''}`}
+            className={styles.image}
             src={image}
             alt={`${post.title} project thumbnail`}
-            onLoad={(event) => {
-              const {naturalWidth, naturalHeight} = event.currentTarget;
-              setIsPortrait(naturalHeight > naturalWidth);
-            }}
           />
         ) : (
           <div className={styles.imagePlaceholder} aria-hidden="true" />
