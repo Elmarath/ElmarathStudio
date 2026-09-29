@@ -8,7 +8,6 @@ import styles from './index.module.css';
 import HomepageDocumentPreviews from '../components/HomepageDocumentPreviews';
 import React from 'react';
 import HomepagePanels from '../components/HomepagePanels';
-import HomepagePortfolioPreview from '../components/HomepagePortfolioPreview';
 
 // Simple animated connector with thin fading line
 function AnimatedConnector() {
@@ -44,7 +43,6 @@ export default function Home() {
       <HomepageHeader />
       <AnimatedConnector />
       <main>
-        <HomepagePortfolioPreview />
         <HomepageDocumentPreviews />
         <hr />
         <HomepageFeatures />

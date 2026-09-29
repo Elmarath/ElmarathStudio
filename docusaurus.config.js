@@ -80,7 +80,6 @@ const config = {
             position: 'left',
             label: 'Plug-in Tutorials',
           },
-          { to: '/portfolio', label: 'Portfolio', position: 'right' },
           { to: '/blog', label: 'About Me', position: 'right' },
           {
             href: 'https://github.com/Elmarath',
@@ -152,10 +151,6 @@ const config = {
             title: 'More',
             items: [
               {
-                label: 'Portfolio',
-                to: '/portfolio',
-              },
-              {
                 label: 'Blog',
                 to: '/blog',
               },
@@ -177,22 +172,6 @@ const config = {
       },
     }),
   plugins: [
-    './plugins/portfolio-home-data',
-    [
-      '@docusaurus/plugin-content-blog',
-      {
-        id: 'portfolio',
-        path: './portfolio',
-        routeBasePath: 'portfolio',
-        blogListComponent: '@site/src/components/PortfolioListPage',
-        blogTitle: 'Portfolio',
-        blogDescription: 'Selected projects and the stories behind them.',
-        authorsMapPath: '../blog/authors.yml',
-        blogSidebarTitle: 'Recent projects',
-        blogSidebarCount: 0,
-        showReadingTime: false,
-      },
-    ],
     [
       '@docusaurus/plugin-google-gtag',
       {
