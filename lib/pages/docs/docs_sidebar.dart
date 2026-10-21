@@ -75,6 +75,14 @@ class _SidebarCategoryState extends State<_SidebarCategory> {
     }
   }
 
+  /// Expanding a folder opens its first page, unless you're already reading
+  /// one of its pages. Collapsing just collapses.
+  void _onExpansionChanged(bool expanded) {
+    if (!expanded || _containsActive) return;
+    final first = widget.category.allPages.firstOrNull;
+    if (first != null) context.go(first.route);
+  }
+
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
@@ -85,6 +93,7 @@ class _SidebarCategoryState extends State<_SidebarCategory> {
       key: PageStorageKey('docs-${widget.category.id}'),
       controller: _controller,
       initiallyExpanded: _containsActive,
+      onExpansionChanged: _onExpansionChanged,
       dense: true,
       visualDensity: VisualDensity.compact,
       tilePadding: EdgeInsets.only(left: 12.0 + widget.depth * 12, right: 4),
@@ -132,7 +141,11 @@ class _SidebarLink extends StatelessWidget {
         borderRadius: Radii.smAll,
         child: InkWell(
           borderRadius: Radii.smAll,
-          onTap: () => context.go(route),
+          onTap: () {
+            // On phones the sidebar is a drawer: close it so the page is visible.
+            Scaffold.maybeOf(context)?.closeDrawer();
+            context.go(route);
+          },
           child: Padding(
             padding: EdgeInsets.fromLTRB(12.0 + depth * 12 + (depth > 0 ? 8 : 0), 9, 10, 9),
             child: Row(

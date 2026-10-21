@@ -9,6 +9,7 @@ import 'package:elmarath_dev_website/pages/about_page.dart';
 import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
 import 'package:elmarath_dev_website/pages/blog/featured_post.dart';
 import 'package:elmarath_dev_website/pages/docs/doc_toc.dart';
+import 'package:elmarath_dev_website/pages/docs/docs_sidebar.dart';
 import 'package:elmarath_dev_website/pages/home/home_page.dart';
 import 'package:elmarath_dev_website/pages/home/sections/hero_section.dart';
 import 'package:elmarath_dev_website/theme/app_theme.dart';
@@ -187,6 +188,38 @@ void main() {
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 500));
     expect(find.byType(CvViewer), findsNothing);
+    await tearDownSite(tester);
+  });
+
+  testWidgets('expanding a docs folder in the sidebar opens its first page', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    String location() =>
+        GoRouter.of(tester.element(find.byType(SiteShell).first)).routerDelegate.currentConfiguration.uri.path;
+    Finder folder(String label) => find.descendant(of: find.byType(DocsSidebar), matching: find.text(label));
+    final plugin = content.plugins.firstWhere((c) => c.allPages.length > 1);
+    final first = plugin.allPages.first;
+    final second = plugin.allPages.elementAt(1);
+
+    await visit(tester, '/docs');
+    await tester.tap(folder(plugin.label));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(location(), first.route);
+
+    // Collapsing doesn't navigate.
+    await tester.tap(folder(plugin.label));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(location(), first.route);
+
+    // Expanding the folder you're already reading in keeps you on your page.
+    await visit(tester, second.route);
+    await tester.tap(folder(plugin.label)); // collapse
+    await tester.pump(const Duration(seconds: 1));
+    await tester.tap(folder(plugin.label)); // expand again
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(location(), second.route);
     await tearDownSite(tester);
   });
 
