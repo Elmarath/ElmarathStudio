@@ -73,9 +73,16 @@ GoRoute _docRoute(int depth) {
   );
 }
 
+/// go_router keys pages by route pattern (`/docs/:p1/:p2`), so two docs would
+/// share one page and its state (scroll position, table of contents). Keying by
+/// the location this route matched gives every URL a fresh page, while parent
+/// routes in the stack (`/docs`, `/docs/<plugin>`) keep distinct keys.
+/// Query changes (`?tag=`) keep the page.
+LocalKey _pageKey(GoRouterState state) => ValueKey<String>(state.matchedLocation);
+
 Page<void> _fade(GoRouterState state, Widget child) {
   return CustomTransitionPage<void>(
-    key: state.pageKey,
+    key: _pageKey(state),
     child: child,
     transitionDuration: const Duration(milliseconds: 220),
     reverseTransitionDuration: const Duration(milliseconds: 160),
@@ -86,4 +93,4 @@ Page<void> _fade(GoRouterState state, Widget child) {
   );
 }
 
-Page<void> _instant(GoRouterState state, Widget child) => NoTransitionPage<void>(key: state.pageKey, child: child);
+Page<void> _instant(GoRouterState state, Widget child) => NoTransitionPage<void>(key: _pageKey(state), child: child);

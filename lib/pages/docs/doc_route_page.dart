@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../app_scope.dart';
@@ -50,6 +51,7 @@ class _DocPageViewState extends State<DocPageView> {
   final _scroll = ScrollController();
   late Map<String, GlobalKey> _keys;
   final _active = ValueNotifier<String?>(null);
+  String? _scrollingTo;
 
   List<MdHeading> get _headings => widget.doc.parsed.headings;
 
@@ -71,20 +73,29 @@ class _DocPageViewState extends State<DocPageView> {
     super.dispose();
   }
 
-  void _scrollTo(String id, {bool animate = true}) {
+  Future<void> _scrollTo(String id, {bool animate = true}) async {
     final target = _keys[id]?.currentContext;
     if (target == null) return;
-    Scrollable.ensureVisible(
-      target,
-      duration: animate ? Motion.slow : Duration.zero,
-      curve: Motion.curve,
-    );
+    // Keep the clicked heading highlighted while the scroll animates past others.
+    _scrollingTo = id;
     _active.value = id;
+    final box = target.findRenderObject();
+    if (box != null && _scroll.hasClients) {
+      // Land a little below the top edge so the heading has room to breathe.
+      final reveal = RenderAbstractViewport.of(box).getOffsetToReveal(box, 0).offset - Insets.lg;
+      final offset = reveal.clamp(0.0, _scroll.position.maxScrollExtent);
+      if (animate) {
+        await _scroll.animateTo(offset, duration: Motion.slow, curve: Motion.curve);
+      } else {
+        _scroll.jumpTo(offset);
+      }
+    }
+    if (_scrollingTo == id) _scrollingTo = null;
   }
 
   /// Highlights the last heading that has scrolled past the top of the view.
   void _updateActive() {
-    if (_headings.isEmpty || !_scroll.hasClients) return;
+    if (_scrollingTo != null || _headings.isEmpty || !_scroll.hasClients) return;
     final position = _scroll.position;
     if (position.pixels >= position.maxScrollExtent - 4) {
       _active.value = widget.doc.parsed.headings.last.id;
@@ -93,11 +104,13 @@ class _DocPageViewState extends State<DocPageView> {
     final viewport = context.findRenderObject() as RenderBox?;
     if (viewport == null) return;
     final top = viewport.localToGlobal(Offset.zero).dy;
+    // A heading counts as "being read" once it's in the top 30% of the view.
+    final readingLine = position.viewportDimension * 0.3;
     String? current;
     for (final h in widget.doc.parsed.headings) {
       final box = _keys[h.id]?.currentContext?.findRenderObject() as RenderBox?;
       if (box == null || !box.attached) continue;
-      if (box.localToGlobal(Offset.zero).dy - top <= 140) {
+      if (box.localToGlobal(Offset.zero).dy - top <= readingLine) {
         current = h.id;
       } else {
         break;
