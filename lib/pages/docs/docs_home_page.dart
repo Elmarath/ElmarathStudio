@@ -23,7 +23,7 @@ class DocsHomePage extends StatelessWidget {
 
     return PageTitle(
       title: 'Documentation',
-      child: SingleChildScrollView(
+      child: ContentScrollView(
         child: ContentWidth(
           maxWidth: 1040,
           child: Padding(

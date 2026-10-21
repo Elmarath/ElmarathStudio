@@ -38,7 +38,8 @@ class MarkdownImage extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: Radii.mdAll,
-                child: AppImage(source, fit: BoxFit.contain, semanticLabel: alt),
+                // Animated GIFs repaint every frame; keep that to the image itself.
+                child: RepaintBoundary(child: AppImage(source, fit: BoxFit.contain, semanticLabel: alt)),
               ),
             ),
           ),

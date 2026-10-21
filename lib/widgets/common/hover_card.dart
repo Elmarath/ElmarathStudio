@@ -36,37 +36,37 @@ class _HoverCardState extends State<HoverCard> {
   Widget build(BuildContext context) {
     final p = context.palette;
     final active = _hovered && widget.onTap != null;
-    return Semantics(
-      button: widget.onTap != null,
-      label: widget.semanticLabel,
-      child: AnimatedContainer(
-        duration: Motion.normal,
-        curve: Motion.curve,
-        transform: Matrix4.translationValues(0, active ? -3 : 0, 0),
-        decoration: BoxDecoration(
-          color: widget.color ?? p.surface,
-          borderRadius: widget.borderRadius,
-          border: Border.all(color: active ? p.textPrimary.withValues(alpha: 0.28) : p.border),
-          boxShadow: [
-            if (active)
-              BoxShadow(
-                color: Colors.black.withValues(alpha: p.isDark ? 0.45 : 0.12),
-                blurRadius: 28,
-                offset: const Offset(0, 14),
-              ),
-          ],
-        ),
-        child: Material(
-          type: MaterialType.transparency,
-          child: InkWell(
-            onTap: widget.onTap,
-            onHover: (h) => setState(() => _hovered = h),
+    // Its own layer, so the hover animation doesn't redraw the rest of the page.
+    return RepaintBoundary(
+      child: Semantics(
+        button: widget.onTap != null,
+        label: widget.semanticLabel,
+        child: AnimatedContainer(
+          duration: Motion.normal,
+          curve: Motion.curve,
+          transform: Matrix4.translationValues(0, active ? -3 : 0, 0),
+          decoration: BoxDecoration(
+            color: widget.color ?? p.surface,
             borderRadius: widget.borderRadius,
-            child: ClipRRect(
+            border: Border.all(color: active ? p.textPrimary.withValues(alpha: 0.28) : p.border),
+            boxShadow: [
+              if (active)
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: p.isDark ? 0.45 : 0.12),
+                  blurRadius: 28,
+                  offset: const Offset(0, 14),
+                ),
+            ],
+          ),
+          child: Material(
+            type: MaterialType.transparency,
+            child: InkWell(
+              onTap: widget.onTap,
+              onHover: (h) => setState(() => _hovered = h),
               borderRadius: widget.borderRadius,
-              child: Padding(
-                padding: widget.padding,
-                child: widget.builder(context, active),
+              child: ClipRRect(
+                borderRadius: widget.borderRadius,
+                child: Padding(padding: widget.padding, child: widget.builder(context, active)),
               ),
             ),
           ),
@@ -85,11 +85,6 @@ class HoverZoom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedScale(
-      scale: hovered ? 1.04 : 1,
-      duration: Motion.slow,
-      curve: Motion.curve,
-      child: child,
-    );
+    return AnimatedScale(scale: hovered ? 1.04 : 1, duration: Motion.slow, curve: Motion.curve, child: child);
   }
 }

@@ -38,30 +38,46 @@ class _FeaturedPostState extends State<FeaturedPost> {
       onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: _open,
-        child: DecoratedBox(
-          decoration: BoxDecoration(
-            borderRadius: radius,
-            boxShadow: [
-              BoxShadow(
-                color: p.accent.withValues(alpha: p.isDark ? 0.28 : 0.2),
-                blurRadius: 140,
-                spreadRadius: 6,
-              ),
-            ],
-          ),
-          child: ClipRRect(
-            borderRadius: radius,
-            child: AspectRatio(
-              aspectRatio: 16 / 9,
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  HoverZoom(hovered: _hovered, child: PostCover(post: post)),
-                  Positioned(left: 20, right: 20, bottom: 20, child: PostBadges(post: post)),
-                ],
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            // Soft glow behind the cover. A gradient instead of a big blurred
+            // shadow: same look, but cheap to draw while scrolling.
+            Positioned.fill(
+              left: -120,
+              right: -120,
+              top: -120,
+              bottom: -120,
+              child: IgnorePointer(
+                child: DecoratedBox(
+                  decoration: BoxDecoration(
+                    gradient: RadialGradient(
+                      radius: 0.62,
+                      colors: [
+                        p.accent.withValues(alpha: p.isDark ? 0.26 : 0.18),
+                        p.accent.withValues(alpha: 0),
+                      ],
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+            RepaintBoundary(
+              child: ClipRRect(
+                borderRadius: radius,
+                child: AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      HoverZoom(hovered: _hovered, child: PostCover(post: post)),
+                      Positioned(left: 20, right: 20, bottom: 20, child: PostBadges(post: post)),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

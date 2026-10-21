@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,27 +22,64 @@ class SpotlightSection extends StatefulWidget {
 class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerProviderStateMixin {
   static const _interval = Duration(seconds: 7);
 
-  late final AnimationController _progress =
-      AnimationController(vsync: this, duration: _interval)
-        ..addStatusListener((status) {
-          if (status == AnimationStatus.completed) _select(_index + 1);
-        })
-        ..forward();
+  late final AnimationController _progress = AnimationController(vsync: this, duration: _interval)
+    ..addStatusListener((status) {
+      if (status == AnimationStatus.completed) _select(_index + 1);
+    });
 
   int _index = 0;
+  bool _hovered = false;
+  bool _onScreen = false;
+  ScrollPosition? _scrollPosition;
 
   List<DocCategory> get _items => context.content.featuredPlugins;
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _checkOnScreen());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final position = Scrollable.maybeOf(context)?.position;
+    if (position != _scrollPosition) {
+      _scrollPosition?.removeListener(_checkOnScreen);
+      _scrollPosition = position?..addListener(_checkOnScreen);
+    }
+  }
+
+  /// The timer only runs while the carousel is visible: an animation that
+  /// never stops keeps the browser drawing frames even when nothing changes.
+  void _checkOnScreen() {
+    final box = context.findRenderObject() as RenderBox?;
+    if (!mounted || box == null || !box.attached || !box.hasSize) return;
+    final top = box.localToGlobal(Offset.zero).dy;
+    final onScreen = top < MediaQuery.sizeOf(context).height && top + box.size.height > 0;
+    if (onScreen != _onScreen) {
+      _onScreen = onScreen;
+      _updatePlayback();
+    }
+  }
+
+  void _updatePlayback() => _onScreen && !_hovered ? _progress.forward() : _progress.stop();
 
   void _select(int index) {
     if (_items.isEmpty) return;
     setState(() => _index = index % _items.length);
-    _progress.forward(from: 0);
+    _progress.value = 0;
+    _updatePlayback();
   }
 
-  void _pause(bool paused) => paused ? _progress.stop() : _progress.forward();
+  void _pause(bool paused) {
+    _hovered = paused;
+    _updatePlayback();
+  }
 
   @override
   void dispose() {
+    _scrollPosition?.removeListener(_checkOnScreen);
     _progress.dispose();
     super.dispose();
   }
@@ -56,26 +91,28 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
     final size = ScreenSize.of(context);
     final current = items[_index.clamp(0, items.length - 1)];
 
-    final banner = AnimatedSwitcher(
-      duration: Motion.slow,
-      switchInCurve: Curves.easeOut,
-      switchOutCurve: Curves.easeIn,
-      // Next to the tab list the banner has a fixed height; on its own it grows with its text.
-      layoutBuilder:
-          (current, previous) => Stack(
-            fit: size.isExpanded ? StackFit.expand : StackFit.loose,
-            alignment: Alignment.topCenter,
-            children: [...previous, if (current != null) current],
-          ),
-      child: _Banner(
-        key: ValueKey(current.id),
-        plugin: current,
-        compact: size.isCompact,
-        minHeight: switch (size) {
-          ScreenSize.compact => 560,
-          ScreenSize.medium => 420,
-          ScreenSize.expanded => 0,
-        },
+    final banner = RepaintBoundary(
+      child: AnimatedSwitcher(
+        duration: Motion.slow,
+        switchInCurve: Curves.easeOut,
+        switchOutCurve: Curves.easeIn,
+        // Next to the tab list the banner has a fixed height; on its own it grows with its text.
+        layoutBuilder:
+            (current, previous) => Stack(
+              fit: size.isExpanded ? StackFit.expand : StackFit.loose,
+              alignment: Alignment.topCenter,
+              children: [...previous, if (current != null) current],
+            ),
+        child: _Banner(
+          key: ValueKey(current.id),
+          plugin: current,
+          compact: size.isCompact,
+          minHeight: switch (size) {
+            ScreenSize.compact => 560,
+            ScreenSize.medium => 420,
+            ScreenSize.expanded => 0,
+          },
+        ),
       ),
     );
 
@@ -216,12 +253,9 @@ class _Banner extends StatelessWidget {
           children: [
             const Positioned.fill(child: ColoredBox(color: Color(0xFF0B0B0E))),
             if (thumbnail != null)
-              Positioned.fill(
-                child: ImageFiltered(
-                  imageFilter: ImageFilter.blur(sigmaX: 50, sigmaY: 50, tileMode: TileMode.clamp),
-                  child: Transform.scale(scale: 1.3, child: AppImage(thumbnail)),
-                ),
-              ),
+              // A tiny copy of the thumbnail stretched over the banner reads as a soft
+              // blur, without a live blur filter that costs every frame on the web.
+              Positioned.fill(child: AppImage(thumbnail, cacheWidth: 24, filterQuality: FilterQuality.high)),
             Positioned.fill(
               child: DecoratedBox(
                 decoration: BoxDecoration(
@@ -277,14 +311,16 @@ class _Tab extends StatelessWidget {
             children: [
               if (active)
                 Positioned.fill(
-                  child: AnimatedBuilder(
-                    animation: progress,
-                    builder:
-                        (context, _) => FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: progress.value,
-                          child: ColoredBox(color: p.surfaceRaised),
-                        ),
+                  child: RepaintBoundary(
+                    child: AnimatedBuilder(
+                      animation: progress,
+                      builder:
+                          (context, _) => FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: progress.value,
+                            child: ColoredBox(color: p.surfaceRaised),
+                          ),
+                    ),
                   ),
                 ),
               Padding(
@@ -323,32 +359,34 @@ class _Dot extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
-    return GestureDetector(
-      onTap: onTap,
-      child: Padding(
-        padding: const EdgeInsets.all(6),
-        child: AnimatedContainer(
-          duration: Motion.normal,
-          width: active ? 28 : 8,
-          height: 8,
-          decoration: BoxDecoration(
-            color: active ? p.surfaceRaised : p.textMuted.withValues(alpha: 0.4),
-            borderRadius: BorderRadius.circular(4),
-          ),
-          child:
-              active
-                  ? AnimatedBuilder(
-                    animation: progress,
-                    builder:
-                        (context, _) => FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: progress.value,
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(4)),
+    return RepaintBoundary(
+      child: GestureDetector(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(6),
+          child: AnimatedContainer(
+            duration: Motion.normal,
+            width: active ? 28 : 8,
+            height: 8,
+            decoration: BoxDecoration(
+              color: active ? p.surfaceRaised : p.textMuted.withValues(alpha: 0.4),
+              borderRadius: BorderRadius.circular(4),
+            ),
+            child:
+                active
+                    ? AnimatedBuilder(
+                      animation: progress,
+                      builder:
+                          (context, _) => FractionallySizedBox(
+                            alignment: Alignment.centerLeft,
+                            widthFactor: progress.value,
+                            child: DecoratedBox(
+                              decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(4)),
+                            ),
                           ),
-                        ),
-                  )
-                  : null,
+                    )
+                    : null,
+          ),
         ),
       ),
     );

@@ -5,13 +5,26 @@ import '../../theme/app_palette.dart';
 /// Shows an image from the asset bundle (`content/...`, `assets/...`) or a URL,
 /// with a fade-in and a quiet placeholder when it can't be loaded.
 class AppImage extends StatelessWidget {
-  const AppImage(this.source, {super.key, this.fit = BoxFit.cover, this.width, this.height, this.semanticLabel});
+  const AppImage(
+    this.source, {
+    super.key,
+    this.fit = BoxFit.cover,
+    this.width,
+    this.height,
+    this.semanticLabel,
+    this.cacheWidth,
+    this.filterQuality = FilterQuality.medium,
+  });
 
   final String source;
   final BoxFit fit;
   final double? width;
   final double? height;
   final String? semanticLabel;
+
+  /// Decode the image at this pixel width (smaller is cheaper; tiny values look blurred).
+  final int? cacheWidth;
+  final FilterQuality filterQuality;
 
   bool get isNetwork => source.startsWith('http://') || source.startsWith('https://');
 
@@ -32,6 +45,8 @@ class AppImage extends StatelessWidget {
     if (isNetwork) {
       return Image.network(
         source,
+        cacheWidth: cacheWidth,
+        filterQuality: filterQuality,
         fit: fit,
         width: width,
         height: height,
@@ -44,6 +59,8 @@ class AppImage extends StatelessWidget {
     }
     return Image.asset(
       source,
+      cacheWidth: cacheWidth,
+      filterQuality: filterQuality,
       fit: fit,
       width: width,
       height: height,

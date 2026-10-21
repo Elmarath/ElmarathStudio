@@ -26,6 +26,21 @@ class ContentWidth extends StatelessWidget {
   }
 }
 
+/// A vertical scroll view whose content is drawn once and then only moved while
+/// scrolling. A plain [SingleChildScrollView] redraws all of its content on
+/// every scroll frame, which makes long pages stutter on the web.
+class ContentScrollView extends StatelessWidget {
+  const ContentScrollView({super.key, required this.child, this.controller});
+
+  final Widget child;
+  final ScrollController? controller;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(controller: controller, child: RepaintBoundary(child: child));
+  }
+}
+
 /// A scrolling page: [children] stacked vertically with the footer at the end.
 class PageScroll extends StatelessWidget {
   const PageScroll({super.key, required this.children, this.controller, this.showFooter = true});
@@ -36,7 +51,7 @@ class PageScroll extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
+    return ContentScrollView(
       controller: controller,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,

@@ -178,7 +178,7 @@ class _DocPageViewState extends State<DocPageView> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded(
-            child: SingleChildScrollView(
+            child: ContentScrollView(
               controller: _scroll,
               child: ContentWidth(
                 maxWidth: ContentWidths.reading,
@@ -325,7 +325,7 @@ class CategoryPage extends StatelessWidget {
 
     return PageTitle(
       title: category.label,
-      child: SingleChildScrollView(
+      child: ContentScrollView(
         child: ContentWidth(
           maxWidth: 960,
           child: Padding(
