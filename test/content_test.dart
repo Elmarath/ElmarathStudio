@@ -120,12 +120,16 @@ Intro
     test('internal doc links point at real pages', () {
       final missing = <String>[];
       final link = RegExp(r'(?<!!)\[[^\]]*\]\(([^)\s]+)\)');
-      for (final doc in content.docPages) {
-        for (final m in link.allMatches(doc.body)) {
-          final route = content.internalRoute(m.group(1)!, sourcePath: doc.assetPath);
+      final sources = [
+        for (final d in content.docPages) (d.assetPath, d.body),
+        for (final p in content.pages.values) (p.assetPath, p.body),
+      ];
+      for (final (assetPath, body) in sources) {
+        for (final m in link.allMatches(body)) {
+          final route = content.internalRoute(m.group(1)!, sourcePath: assetPath);
           if (route == null || !route.startsWith('/docs/')) continue;
           final id = route.substring('/docs/'.length).split('#').first;
-          if (content.doc(id) == null && content.category(id) == null) missing.add('${doc.assetPath} → $route');
+          if (content.doc(id) == null && content.category(id) == null) missing.add('$assetPath → $route');
         }
       }
       expect(missing, isEmpty);

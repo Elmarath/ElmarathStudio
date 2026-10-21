@@ -16,7 +16,9 @@ Everything you write is plain Markdown in `content/`. Rebuilding the site never 
 flutter run -d chrome
 ```
 
-Drafts (`draft: true`) show only while running locally. After editing Markdown, press `R` in the terminal for a hot restart.
+Drafts (`draft: true`) show only while running locally.
+
+Markdown files are bundled as assets, and on the web a hot restart doesn't reload them. After editing content, stop the app and run it again (in VS Code: Shift+F5, then F5). Dart code changes only need a hot restart.
 
 ## Write a blog post
 
@@ -103,6 +105,7 @@ Run the draft post **Markdown cheat sheet** locally to see every option rendered
 | Spacing, radii, breakpoints | `lib/theme/tokens.dart` |
 | Home page section order | `HomePage.sections` in `lib/pages/home/home_page.dart` |
 | About page text | `content/pages/about.md` |
+| Your CV (Resume buttons) | Replace `web/files/DenizhanToprak_Resume.pdf` |
 
 ## Project layout
 

@@ -36,8 +36,8 @@ abstract final class SiteConfig {
   );
 
   static const String email = 'toprakdenizhan19@gmail.com';
-  static const String resumeUrl =
-      'https://docs.google.com/document/d/1NyO2H-jLeTuhU76wPoMm6xU3kDFCQn3Dn-A5imPmtfA/edit?tab=t.0';
+  /// Files in `web/files/` are served as-is; replace the PDF there to update your CV.
+  static const String resumeUrl = '/files/DenizhanToprak_Resume.pdf';
 
   /// Repository for "Edit this page" links on docs, e.g.
   /// 'https://github.com/Elmarath/ElmarathDev_Website/edit/main/'.

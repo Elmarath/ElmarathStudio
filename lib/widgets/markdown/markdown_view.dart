@@ -94,7 +94,7 @@ class MarkdownView extends StatelessWidget {
       ),
       onTapLink: (text, href, title) {
         if (href == null) return;
-        if (isExternalLink(href)) {
+        if (isExternalLink(href) || isFileLink(href)) {
           openLink(context, href);
           return;
         }
