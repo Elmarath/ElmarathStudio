@@ -101,6 +101,7 @@ authors: [denizhan]
 tags: [$tagList]
 description: One or two sentences shown on the post card.
 # image: cover.jpg   # optional cover, relative to this file
+# featured: true     # pin as the big post at the top of the blog
 draft: true          # visible only while running locally; delete this line to publish
 ---
 

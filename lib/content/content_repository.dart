@@ -45,6 +45,7 @@ class ContentRepository {
 
   DocPage? doc(String id) => _docsById[id];
   DocCategory? category(String id) => _categoriesById[id];
+  Iterable<DocCategory> get categories => _categoriesById.values;
 
   BlogPost? post(String slug) => posts.where((p) => p.slug == slug).firstOrNull;
 
@@ -244,6 +245,7 @@ class ContentRepository {
         assetPath: path,
         image: image == null ? null : resolveAsset(path, image),
         draft: draft,
+        featured: fm.flag('featured'),
         readingMinutes: (words / 220).ceil().clamp(1, 999),
       ));
     }

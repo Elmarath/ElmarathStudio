@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../config/site_config.dart';
 import '../../content/content_repository.dart';
 import '../../content/models.dart';
 import '../../theme/app_palette.dart';
@@ -8,84 +9,53 @@ import '../../theme/tokens.dart';
 import '../common/app_image.dart';
 import '../common/hover_card.dart';
 
-/// A blog post preview. [featured] makes it a wide, side-by-side card.
+/// A blog post preview in the style of the Unreal Engine feed: an inset cover
+/// with badges, then the date, title and excerpt.
 class PostCard extends StatelessWidget {
-  const PostCard({super.key, required this.post, this.featured = false});
+  const PostCard({super.key, required this.post});
 
   final BlogPost post;
-  final bool featured;
-
-  @override
-  Widget build(BuildContext context) {
-    return HoverCard(
-      semanticLabel: post.title,
-      onTap: () => context.go(post.route),
-      builder: (context, hovered) {
-        final cover = HoverZoom(hovered: hovered, child: PostCover(post: post));
-        final details = _Details(post: post, featured: featured);
-        if (featured) {
-          return IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(flex: 6, child: AspectRatio(aspectRatio: 16 / 9, child: cover)),
-                Expanded(flex: 5, child: details),
-              ],
-            ),
-          );
-        }
-        return Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            AspectRatio(aspectRatio: 16 / 9, child: cover),
-            Expanded(child: details),
-          ],
-        );
-      },
-    );
-  }
-}
-
-class _Details extends StatelessWidget {
-  const _Details({required this.post, required this.featured});
-
-  final BlogPost post;
-  final bool featured;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = Theme.of(context).textTheme;
-    return Padding(
-      padding: EdgeInsets.all(featured ? Insets.xl : Insets.lg - 4),
-      child: Column(
+    return HoverCard(
+      semanticLabel: post.title,
+      onTap: () => context.go(post.route),
+      borderRadius: Radii.lgAll,
+      padding: const EdgeInsets.all(18),
+      builder: (context, hovered) => Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: featured ? MainAxisAlignment.center : MainAxisAlignment.start,
         children: [
-          if (post.tags.isNotEmpty)
-            Text(
-              post.tags.take(2).join(' · ').toUpperCase(),
-              style: text.labelSmall?.copyWith(color: p.accent),
+          ClipRRect(
+            borderRadius: Radii.mdAll,
+            child: AspectRatio(
+              aspectRatio: 16 / 9,
+              child: Stack(
+                fit: StackFit.expand,
+                children: [
+                  HoverZoom(hovered: hovered, child: PostCover(post: post)),
+                  Positioned(left: 12, right: 12, bottom: 12, child: PostBadges(post: post)),
+                ],
+              ),
             ),
-          const SizedBox(height: Insets.sm),
+          ),
+          const SizedBox(height: Insets.md + 2),
+          Text(formatDate(post.date), style: text.bodyMedium?.copyWith(color: p.textMuted)),
+          const SizedBox(height: 6),
           Text(
             post.title,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: featured ? text.headlineMedium : text.titleLarge,
+            style: text.titleMedium?.copyWith(fontSize: 17, fontWeight: FontWeight.w700),
           ),
           const SizedBox(height: Insets.sm),
-          Text(post.excerpt, maxLines: featured ? 4 : 3, overflow: TextOverflow.ellipsis, style: text.bodyMedium),
-          if (featured) const SizedBox(height: Insets.lg) else const Spacer(),
-          if (!featured) const SizedBox(height: Insets.md),
-          Row(
-            children: [
-              Text('${formatDate(post.date)}  ·  ${post.readingMinutes} min read', style: text.bodySmall),
-              if (post.draft) ...[
-                const SizedBox(width: Insets.sm),
-                const DraftBadge(),
-              ],
-            ],
+          Text(
+            post.excerpt,
+            maxLines: 4,
+            overflow: TextOverflow.ellipsis,
+            style: text.bodyMedium?.copyWith(height: 1.7),
           ),
         ],
       ),
@@ -93,7 +63,59 @@ class _Details extends StatelessWidget {
   }
 }
 
-/// The post's cover image, or a generated gradient when it has none.
+/// "★ Featured", the first tag and "Draft", shown over a post's cover.
+class PostBadges extends StatelessWidget {
+  const PostBadges({super.key, required this.post});
+
+  final BlogPost post;
+
+  @override
+  Widget build(BuildContext context) {
+    return Wrap(
+      spacing: 6,
+      runSpacing: 6,
+      children: [
+        if (post.featured) const PostBadge(label: 'Featured', icon: Icons.star_border_rounded),
+        if (post.tags.isNotEmpty) PostBadge(label: post.tags.first),
+        if (post.draft) const PostBadge(label: 'Draft', icon: Icons.edit_outlined),
+      ],
+    );
+  }
+}
+
+/// A dark pill that stays readable on any image, in every theme.
+class PostBadge extends StatelessWidget {
+  const PostBadge({super.key, required this.label, this.icon});
+
+  final String label;
+  final IconData? icon;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 5),
+      decoration: BoxDecoration(
+        color: const Color(0xD916161A),
+        borderRadius: BorderRadius.circular(99),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          if (icon != null) ...[
+            Icon(icon, size: 15, color: Colors.white),
+            const SizedBox(width: 5),
+          ],
+          Text(
+            label,
+            style: Theme.of(context).textTheme.labelMedium?.copyWith(color: Colors.white, letterSpacing: 0.2),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The post's cover image, or a branded gradient when it has none.
 class PostCover extends StatelessWidget {
   const PostCover({super.key, required this.post});
 
@@ -103,19 +125,21 @@ class PostCover extends StatelessWidget {
   Widget build(BuildContext context) {
     if (post.image != null) return AppImage(post.image!);
     final p = context.palette;
-    return Container(
+    return DecoratedBox(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [p.heroGlow, p.accent.withValues(alpha: 0.55), p.surface],
-          stops: const [0, 0.55, 1],
+        gradient: RadialGradient(
+          center: const Alignment(-0.6, -0.8),
+          radius: 1.4,
+          colors: [p.heroGlow, const Color(0xFF0B0B0E)],
         ),
       ),
-      alignment: Alignment.center,
-      child: Text(
-        post.title.characters.first.toUpperCase(),
-        style: Theme.of(context).textTheme.displayLarge?.copyWith(color: Colors.white.withValues(alpha: 0.85)),
+      child: LayoutBuilder(
+        builder: (context, constraints) => Center(
+          child: Opacity(
+            opacity: 0.9,
+            child: Image.asset(SiteConfig.logoAsset, height: constraints.maxHeight * 0.36),
+          ),
+        ),
       ),
     );
   }

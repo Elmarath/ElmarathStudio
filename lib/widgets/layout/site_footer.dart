@@ -14,7 +14,6 @@ class SiteFooter extends StatelessWidget {
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = Theme.of(context).textTheme;
-    final compact = ScreenSize.of(context).isCompact;
 
     final brand = SizedBox(
       width: 300,
@@ -81,14 +80,18 @@ class SiteFooter extends StatelessWidget {
             const SizedBox(height: Insets.xl),
             Divider(color: p.border),
             const SizedBox(height: Insets.md),
-            Flex(
-              direction: compact ? Axis.vertical : Axis.horizontal,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('© ${DateTime.now().year} ${SiteConfig.ownerName}. Built with Flutter.', style: text.bodySmall),
-                if (!compact) const Spacer() else const SizedBox(height: Insets.xs),
-                Text('Unreal Engine is a trademark of Epic Games, Inc.', style: text.bodySmall),
-              ],
+            // Full width so the two lines sit at opposite ends; they stack when there's no room.
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                spacing: Insets.lg,
+                runSpacing: Insets.xs,
+                children: [
+                  Text('© ${DateTime.now().year} ${SiteConfig.ownerName}. Built with Flutter.', style: text.bodySmall),
+                  Text('Unreal Engine is a trademark of Epic Games, Inc.', style: text.bodySmall),
+                ],
+              ),
             ),
           ],
         ),

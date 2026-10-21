@@ -20,24 +20,22 @@ class AboutPage extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final compact = ScreenSize.of(context).isCompact;
 
-    final intro = [
+    final avatar = [
       ClipOval(child: AppImage(SiteConfig.avatarUrl, width: 112, height: 112)),
       const SizedBox(width: Insets.xl, height: Insets.lg),
-      Flexible(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Eyebrow(SiteConfig.role),
-            const SizedBox(height: Insets.sm),
-            Text(SiteConfig.ownerName, style: compact ? text.headlineLarge : text.displaySmall),
-            if (page?.description != null) ...[
-              const SizedBox(height: Insets.sm),
-              Text(page!.description!, style: text.bodyLarge),
-            ],
-          ],
-        ),
-      ),
     ];
+    final details = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Eyebrow(SiteConfig.role),
+        const SizedBox(height: Insets.sm),
+        Text(SiteConfig.ownerName, style: compact ? text.headlineLarge : text.displaySmall),
+        if (page?.description != null) ...[
+          const SizedBox(height: Insets.sm),
+          Text(page!.description!, style: text.bodyLarge),
+        ],
+      ],
+    );
 
     return PageTitle(
       title: 'About',
@@ -51,9 +49,9 @@ class AboutPage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   if (compact)
-                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: intro)
+                    Column(crossAxisAlignment: CrossAxisAlignment.start, children: [...avatar, details])
                   else
-                    Row(children: intro),
+                    Row(children: [...avatar, Flexible(child: details)]),
                   const SizedBox(height: Insets.lg),
                   Wrap(
                     spacing: Insets.sm,

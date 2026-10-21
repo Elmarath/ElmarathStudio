@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -16,6 +17,9 @@ import '../widgets/layout/site_shell.dart';
 ///
 /// Every page is wrapped in [SiteShell] (nav bar). Docs pages are additionally
 /// wrapped in [DocsShell] (sidebar), which stays put while you move between docs.
+///
+/// Switching between top-level sections (Home, Docs, Blog, About) uses Material's
+/// fade-through transition; moving between doc pages is instant, like a docs site.
 GoRouter buildRouter() {
   return GoRouter(
     errorBuilder: (context, state) => SiteShell(location: state.uri.path, child: const NotFoundPage()),
@@ -23,22 +27,24 @@ GoRouter buildRouter() {
       ShellRoute(
         builder: (context, state, child) => SiteShell(location: state.uri.path, child: child),
         routes: [
-          GoRoute(path: '/', pageBuilder: (context, state) => _fade(state, const HomePage())),
+          GoRoute(path: '/', pageBuilder: (context, state) => _page(state, const HomePage())),
           GoRoute(
             path: '/blog',
             pageBuilder: (context, state) =>
-                _fade(state, BlogListPage(tag: state.uri.queryParameters['tag'])),
+                _page(state, BlogListPage(tag: state.uri.queryParameters['tag'])),
             routes: [
               GoRoute(
                 path: ':slug',
                 pageBuilder: (context, state) =>
-                    _fade(state, BlogPostPage(slug: state.pathParameters['slug']!)),
+                    _page(state, BlogPostPage(slug: state.pathParameters['slug']!)),
               ),
             ],
           ),
-          GoRoute(path: '/about', pageBuilder: (context, state) => _fade(state, const AboutPage())),
+          GoRoute(path: '/about', pageBuilder: (context, state) => _page(state, const AboutPage())),
           ShellRoute(
-            builder: (context, state, child) => DocsShell(location: state.uri.path, child: child),
+            // One stable page for the whole docs section, so the sidebar keeps its state.
+            pageBuilder: (context, state, child) =>
+                _page(state, DocsShell(location: state.uri.path, child: child), key: state.pageKey),
             routes: [
               GoRoute(
                 path: '/docs',
@@ -51,7 +57,7 @@ GoRouter buildRouter() {
           GoRoute(
             path: '/:slug',
             pageBuilder: (context, state) =>
-                _fade(state, MarkdownPageView(slug: state.pathParameters['slug']!)),
+                _page(state, MarkdownPageView(slug: state.pathParameters['slug']!)),
           ),
         ],
       ),
@@ -80,14 +86,17 @@ GoRoute _docRoute(int depth) {
 /// Query changes (`?tag=`) keep the page.
 LocalKey _pageKey(GoRouterState state) => ValueKey<String>(state.matchedLocation);
 
-Page<void> _fade(GoRouterState state, Widget child) {
+/// Material fade-through: the old page fades out, then the new one fades and zooms in.
+Page<void> _page(GoRouterState state, Widget child, {LocalKey? key}) {
   return CustomTransitionPage<void>(
-    key: _pageKey(state),
+    key: key ?? _pageKey(state),
     child: child,
-    transitionDuration: const Duration(milliseconds: 220),
-    reverseTransitionDuration: const Duration(milliseconds: 160),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeTransition(
-      opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+    transitionDuration: const Duration(milliseconds: 300),
+    reverseTransitionDuration: const Duration(milliseconds: 300),
+    transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeThroughTransition(
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      fillColor: Colors.transparent,
       child: child,
     ),
   );

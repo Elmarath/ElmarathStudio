@@ -78,7 +78,7 @@ class _FeatureCard extends StatelessWidget {
           const SizedBox(height: Insets.lg - 4),
           Row(
             children: [
-              Text(feature.linkLabel, style: text.labelLarge?.copyWith(color: p.accent)),
+              Flexible(child: Text(feature.linkLabel, style: text.labelLarge?.copyWith(color: p.accent))),
               const SizedBox(width: 6),
               AnimatedSlide(
                 offset: Offset(hovered ? 0.3 : 0, 0),

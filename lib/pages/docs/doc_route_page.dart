@@ -302,27 +302,25 @@ class CategoryPage extends StatelessWidget {
     final text = Theme.of(context).textTheme;
     final compact = ScreenSize.of(context).isCompact;
 
-    final header = [
+    final details = Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(category.label, style: compact ? text.headlineLarge : text.displaySmall),
+        if (category.pitch.isNotEmpty) ...[
+          const SizedBox(height: Insets.sm),
+          Text(category.pitch, style: text.bodyLarge),
+        ],
+        if (category.links.isNotEmpty) ...[
+          const SizedBox(height: Insets.md),
+          PluginLinks(links: category.links),
+        ],
+      ],
+    );
+    final thumbnail = [
       if (category.thumbnail != null) ...[
         PluginThumbnail(category: category, size: compact ? 96 : 120),
-        SizedBox(width: Insets.lg, height: Insets.lg),
+        const SizedBox(width: Insets.lg, height: Insets.lg),
       ],
-      Flexible(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(category.label, style: compact ? text.headlineLarge : text.displaySmall),
-            if (category.pitch.isNotEmpty) ...[
-              const SizedBox(height: Insets.sm),
-              Text(category.pitch, style: text.bodyLarge),
-            ],
-            if (category.links.isNotEmpty) ...[
-              const SizedBox(height: Insets.md),
-              PluginLinks(links: category.links),
-            ],
-          ],
-        ),
-      ),
     ];
 
     return PageTitle(
@@ -338,9 +336,9 @@ class CategoryPage extends StatelessWidget {
                 DocBreadcrumbs(category: category.parent),
                 const SizedBox(height: Insets.lg),
                 if (compact)
-                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: header)
+                  Column(crossAxisAlignment: CrossAxisAlignment.start, children: [...thumbnail, details])
                 else
-                  Row(crossAxisAlignment: CrossAxisAlignment.center, children: header),
+                  Row(children: [...thumbnail, Flexible(child: details)]),
                 const SizedBox(height: Insets.xxl),
                 ResponsiveGrid(
                   minItemWidth: 320,

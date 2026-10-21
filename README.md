@@ -4,7 +4,7 @@ Portfolio, dev blog and Docusaurus-style plugin documentation for Elmarath, buil
 
 - **Home**: hero, site features, a featured-plugin spotlight, latest posts, and a contact section
 - **Docs** (`/docs`): sidebar tree, "On this page" table of contents, breadcrumbs, previous/next links
-- **Blog** (`/blog`): tag filters, post cards, reading time, author card
+- **Blog** (`/blog`): laid out like the Unreal Engine feed, with tag pills, tag search, a featured post and a card grid with "Load more"
 - **About** and standalone pages (`/about`, `/privacy-policy`)
 - **Search** across everything (⌘K / Ctrl K), and **themes** you can switch from the nav bar
 
@@ -19,6 +19,14 @@ flutter run -d chrome
 Drafts (`draft: true`) show only while running locally.
 
 Markdown files are bundled as assets, and on the web a hot restart doesn't reload them. After editing content, stop the app and run it again (in VS Code: Shift+F5, then F5). Dart code changes only need a hot restart.
+
+## Test
+
+```bash
+flutter test
+```
+
+Besides the content tests, `test/site_test.dart` renders every page at phone, tablet and desktop sizes in every theme, and checks search and the "On this page" table of contents. Run it after adding a page or changing a layout: it fails on any overflow or layout error.
 
 ## Write a blog post
 
@@ -35,6 +43,7 @@ authors: [denizhan]          # from content/blog/authors.yaml
 tags: [Unreal, Devlog]
 description: Shown on the post card. Falls back to the text above <!-- truncate -->.
 image: cover.jpg             # optional cover, relative to this file
+featured: true               # optional: pin as the big post at the top of /blog
 draft: true                  # remove to publish
 ---
 

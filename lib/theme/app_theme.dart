@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -10,8 +11,12 @@ import 'tokens.dart';
 /// standard Flutter widget picks up the site's look automatically.
 abstract final class AppTheme {
   /// Monospace style for code. Change the font here to change it everywhere.
-  static TextStyle code({double fontSize = 13.5, Color? color}) =>
-      GoogleFonts.jetBrainsMono(fontSize: fontSize, height: 1.6, color: color);
+  static TextStyle code({double fontSize = 13.5, Color? color}) => useGoogleFonts
+      ? GoogleFonts.jetBrainsMono(fontSize: fontSize, height: 1.6, color: color)
+      : TextStyle(fontFamily: 'monospace', fontSize: fontSize, height: 1.6, color: color);
+
+  /// Tests turn this off: they can't download fonts.
+  static bool useGoogleFonts = true;
 
   /// Fetches the fonts before the first frame, so text never renders (and gets
   /// measured) with a fallback font first. Gives up after a few seconds offline.
@@ -70,6 +75,10 @@ abstract final class AppTheme {
       focusColor: p.accent.withValues(alpha: 0.16),
       splashFactory: InkSparkle.splashFactory,
       extensions: [p],
+      // Default for any route that doesn't set its own transition (e.g. the 404 page).
+      pageTransitionsTheme: PageTransitionsTheme(builders: {
+        for (final platform in TargetPlatform.values) platform: const FadeThroughPageTransitionsBuilder(),
+      }),
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: p.accent,
         selectionColor: p.accent.withValues(alpha: 0.3),
@@ -211,7 +220,7 @@ abstract final class AppTheme {
   }
 
   static TextTheme _textTheme(TextTheme base, AppPalette p) {
-    final inter = GoogleFonts.interTextTheme(base);
+    final inter = useGoogleFonts ? GoogleFonts.interTextTheme(base) : base;
     TextStyle? heading(TextStyle? s, double size, {double spacing = -0.5}) => s?.copyWith(
           fontSize: size,
           fontWeight: FontWeight.w800,

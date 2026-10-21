@@ -22,6 +22,7 @@ class BlogPost {
     required this.assetPath,
     required this.image,
     required this.draft,
+    required this.featured,
     required this.readingMinutes,
   });
 
@@ -39,6 +40,9 @@ class BlogPost {
   /// Cover image: an asset path or a URL.
   final String? image;
   final bool draft;
+
+  /// `featured: true` in front matter: pinned as the blog's hero and badged.
+  final bool featured;
   final int readingMinutes;
 
   String get route => '/blog/$slug';

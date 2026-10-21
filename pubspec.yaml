@@ -48,6 +48,7 @@ dependencies:
   highlight: ^0.7.0
   font_awesome_flutter: ^10.9.1
   web: ^1.1.1
+  animations: ^2.1.0
 
 dev_dependencies:
   flutter_test:

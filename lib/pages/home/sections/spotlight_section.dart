@@ -24,11 +24,12 @@ class SpotlightSection extends StatefulWidget {
 class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerProviderStateMixin {
   static const _interval = Duration(seconds: 7);
 
-  late final AnimationController _progress = AnimationController(vsync: this, duration: _interval)
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) _select(_index + 1);
-    })
-    ..forward();
+  late final AnimationController _progress =
+      AnimationController(vsync: this, duration: _interval)
+        ..addStatusListener((status) {
+          if (status == AnimationStatus.completed) _select(_index + 1);
+        })
+        ..forward();
 
   int _index = 0;
 
@@ -59,8 +60,23 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
       duration: Motion.slow,
       switchInCurve: Curves.easeOut,
       switchOutCurve: Curves.easeIn,
-      layoutBuilder: (current, previous) => Stack(fit: StackFit.expand, children: [...previous, if (current != null) current]),
-      child: _Banner(key: ValueKey(current.id), plugin: current, compact: size.isCompact),
+      // Next to the tab list the banner has a fixed height; on its own it grows with its text.
+      layoutBuilder:
+          (current, previous) => Stack(
+            fit: size.isExpanded ? StackFit.expand : StackFit.loose,
+            alignment: Alignment.topCenter,
+            children: [...previous, if (current != null) current],
+          ),
+      child: _Banner(
+        key: ValueKey(current.id),
+        plugin: current,
+        compact: size.isCompact,
+        minHeight: switch (size) {
+          ScreenSize.compact => 560,
+          ScreenSize.medium => 420,
+          ScreenSize.expanded => 0,
+        },
+      ),
     );
 
     return Padding(
@@ -106,7 +122,7 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
                   ),
                 )
               else ...[
-                SizedBox(height: size.isCompact ? 580 : 420, child: banner),
+                banner,
                 const SizedBox(height: Insets.md),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -125,10 +141,11 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
 }
 
 class _Banner extends StatelessWidget {
-  const _Banner({super.key, required this.plugin, required this.compact});
+  const _Banner({super.key, required this.plugin, required this.compact, required this.minHeight});
 
   final DocCategory plugin;
   final bool compact;
+  final double minHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -136,18 +153,19 @@ class _Banner extends StatelessWidget {
     final thumbnail = plugin.thumbnail;
     final fab = plugin.links['fab'];
 
-    final art = thumbnail == null
-        ? const SizedBox.shrink()
-        : Container(
-            decoration: BoxDecoration(
-              borderRadius: Radii.lgAll,
-              boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 40, offset: Offset(0, 20))],
-            ),
-            child: ClipRRect(
-              borderRadius: Radii.lgAll,
-              child: AppImage(thumbnail, width: compact ? 120 : 280, height: compact ? 120 : 280),
-            ),
-          );
+    final art =
+        thumbnail == null
+            ? const SizedBox.shrink()
+            : Container(
+              decoration: BoxDecoration(
+                borderRadius: Radii.lgAll,
+                boxShadow: const [BoxShadow(color: Colors.black54, blurRadius: 40, offset: Offset(0, 20))],
+              ),
+              child: ClipRRect(
+                borderRadius: Radii.lgAll,
+                child: AppImage(thumbnail, width: compact ? 120 : 280, height: compact ? 120 : 280),
+              ),
+            );
 
     final details = Column(
       mainAxisSize: MainAxisSize.min,
@@ -157,6 +175,8 @@ class _Banner extends StatelessWidget {
         const SizedBox(height: Insets.sm),
         Text(
           plugin.label,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: (compact ? text.headlineLarge : text.displaySmall)?.copyWith(color: Colors.white),
         ),
         const SizedBox(height: Insets.md),
@@ -189,41 +209,43 @@ class _Banner extends StatelessWidget {
 
     return ClipRRect(
       borderRadius: Radii.lgAll,
-      child: Stack(
-        fit: StackFit.expand,
-        children: [
-          const ColoredBox(color: Color(0xFF0B0B0E)),
-          if (thumbnail != null)
-            ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 50, sigmaY: 50, tileMode: TileMode.clamp),
-              child: Transform.scale(scale: 1.3, child: AppImage(thumbnail)),
-            ),
-          DecoratedBox(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: compact ? Alignment.bottomCenter : Alignment.centerLeft,
-                end: compact ? Alignment.topCenter : Alignment.centerRight,
-                colors: [Colors.black.withValues(alpha: 0.82), Colors.black.withValues(alpha: 0.35)],
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: minHeight),
+        child: Stack(
+          alignment: compact ? Alignment.bottomLeft : Alignment.centerLeft,
+          children: [
+            const Positioned.fill(child: ColoredBox(color: Color(0xFF0B0B0E))),
+            if (thumbnail != null)
+              Positioned.fill(
+                child: ImageFiltered(
+                  imageFilter: ImageFilter.blur(sigmaX: 50, sigmaY: 50, tileMode: TileMode.clamp),
+                  child: Transform.scale(scale: 1.3, child: AppImage(thumbnail)),
+                ),
+              ),
+            Positioned.fill(
+              child: DecoratedBox(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: compact ? Alignment.bottomCenter : Alignment.centerLeft,
+                    end: compact ? Alignment.topCenter : Alignment.centerRight,
+                    colors: [Colors.black.withValues(alpha: 0.82), Colors.black.withValues(alpha: 0.35)],
+                  ),
+                ),
               ),
             ),
-          ),
-          Padding(
-            padding: EdgeInsets.all(compact ? Insets.lg : Insets.xxl),
-            child: compact
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [art, const SizedBox(height: Insets.lg), details],
-                  )
-                : Row(
-                    children: [
-                      Expanded(child: details),
-                      const SizedBox(width: Insets.xl),
-                      art,
-                    ],
-                  ),
-          ),
-        ],
+            Padding(
+              padding: EdgeInsets.all(compact ? Insets.lg : Insets.xxl),
+              child:
+                  compact
+                      ? Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [art, const SizedBox(height: Insets.lg), details],
+                      )
+                      : Row(children: [Expanded(child: details), const SizedBox(width: Insets.xl), art]),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -251,16 +273,18 @@ class _Tab extends StatelessWidget {
         child: InkWell(
           onTap: onTap,
           child: Stack(
+            alignment: AlignmentDirectional.centerStart,
             children: [
               if (active)
                 Positioned.fill(
                   child: AnimatedBuilder(
                     animation: progress,
-                    builder: (context, _) => FractionallySizedBox(
-                      alignment: Alignment.centerLeft,
-                      widthFactor: progress.value,
-                      child: ColoredBox(color: p.surfaceRaised),
-                    ),
+                    builder:
+                        (context, _) => FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: progress.value,
+                          child: ColoredBox(color: p.surfaceRaised),
+                        ),
                   ),
                 ),
               Padding(
@@ -268,10 +292,7 @@ class _Tab extends StatelessWidget {
                 child: Row(
                   children: [
                     if (plugin.thumbnail != null)
-                      ClipRRect(
-                        borderRadius: Radii.smAll,
-                        child: AppImage(plugin.thumbnail!, width: 48, height: 48),
-                      ),
+                      ClipRRect(borderRadius: Radii.smAll, child: AppImage(plugin.thumbnail!, width: 48, height: 48)),
                     const SizedBox(width: 14),
                     Expanded(
                       child: Text(
@@ -314,18 +335,20 @@ class _Dot extends StatelessWidget {
             color: active ? p.surfaceRaised : p.textMuted.withValues(alpha: 0.4),
             borderRadius: BorderRadius.circular(4),
           ),
-          child: active
-              ? AnimatedBuilder(
-                  animation: progress,
-                  builder: (context, _) => FractionallySizedBox(
-                    alignment: Alignment.centerLeft,
-                    widthFactor: progress.value,
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(4)),
-                    ),
-                  ),
-                )
-              : null,
+          child:
+              active
+                  ? AnimatedBuilder(
+                    animation: progress,
+                    builder:
+                        (context, _) => FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: progress.value,
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(color: p.accent, borderRadius: BorderRadius.circular(4)),
+                          ),
+                        ),
+                  )
+                  : null,
         ),
       ),
     );
