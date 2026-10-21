@@ -4,11 +4,15 @@
 import 'package:elmarath_dev_website/app.dart';
 import 'package:elmarath_dev_website/content/content_repository.dart';
 import 'package:elmarath_dev_website/content/text_utils.dart';
+import 'package:elmarath_dev_website/pages/about_page.dart';
+import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
 import 'package:elmarath_dev_website/pages/blog/featured_post.dart';
 import 'package:elmarath_dev_website/pages/docs/doc_toc.dart';
+import 'package:elmarath_dev_website/pages/home/home_page.dart';
 import 'package:elmarath_dev_website/theme/app_theme.dart';
 import 'package:elmarath_dev_website/theme/app_themes.dart';
 import 'package:elmarath_dev_website/theme/theme_controller.dart';
+import 'package:elmarath_dev_website/widgets/layout/site_nav_bar.dart';
 import 'package:elmarath_dev_website/widgets/layout/site_shell.dart';
 import 'package:elmarath_dev_website/widgets/markdown/markdown_view.dart';
 import 'package:flutter/material.dart';
@@ -124,6 +128,37 @@ void main() {
       final shown = find.text(post.title).evaluate().isNotEmpty;
       expect(shown, post.tags.contains(tag), reason: '${post.title} with tag filter "$tag"');
     }
+    await tearDownSite(tester);
+  });
+
+  testWidgets('nav tabs slide toward their side; other navigation does not slide', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    Finder tab(String label) => find.descendant(of: find.byType(SiteNavBar), matching: find.text(label));
+    double leftOf(Type page) => tester.getTopLeft(find.byType(page)).dx;
+    // Mid-slide a page is hundreds of pixels off; fade-through only zooms (a few dozen).
+    final slid = sizes['desktop']!.width * 0.2;
+
+    // Home → Blog (a tab to the right): Blog comes in from the right.
+    await tester.tap(tab('Blog'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(BlogListPage), greaterThan(slid));
+    await tester.pump(const Duration(seconds: 1));
+    expect(leftOf(BlogListPage), 0);
+
+    // Blog → Home (a tab to the left): Home comes in from the left.
+    await tester.tap(tab('Home'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(HomePage), lessThan(-slid));
+    await tester.pump(const Duration(seconds: 1));
+
+    // Any other navigation (here a link straight to About) keeps the fade.
+    GoRouter.of(tester.element(find.byType(SiteShell).first)).go('/about');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(AboutPage).abs(), lessThan(slid));
+    await tester.pump(const Duration(seconds: 1));
     await tearDownSite(tester);
   });
 

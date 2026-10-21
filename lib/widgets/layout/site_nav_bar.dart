@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_scope.dart';
 import '../../config/site_config.dart';
+import '../../router/tab_slide.dart';
 import '../../theme/app_palette.dart';
 import '../../theme/app_themes.dart';
 import '../../theme/tokens.dart';
@@ -10,6 +11,18 @@ import '../common/links.dart';
 
 bool _isActive(String location, String path) =>
     path == '/' ? location == '/' : location == path || location.startsWith('$path/');
+
+/// Opens a nav tab, sliding the page in from the side the tab sits on
+/// relative to the current one.
+void _openTab(BuildContext context, String location, NavItem item) {
+  if (!isExternalLink(item.path)) {
+    final items = SiteConfig.navItems;
+    final from = items.indexWhere((i) => _isActive(location, i.path));
+    final to = items.indexOf(item);
+    TabSlide.prepare(direction: from < 0 ? 1 : (to - from).sign, target: Uri.parse(item.path).path);
+  }
+  openLink(context, item.path);
+}
 
 class SiteNavBar extends StatelessWidget {
   const SiteNavBar({super.key, required this.location, required this.search});
@@ -34,7 +47,11 @@ class SiteNavBar extends StatelessWidget {
           if (!size.isCompact) ...[
             const SizedBox(width: Insets.xl),
             for (final item in SiteConfig.navItems)
-              _NavLink(item: item, active: _isActive(location, item.path)),
+              _NavLink(
+                item: item,
+                active: _isActive(location, item.path),
+                onTap: () => _openTab(context, location, item),
+              ),
           ],
           const Spacer(),
           search,
@@ -99,10 +116,11 @@ class SiteLogo extends StatelessWidget {
 }
 
 class _NavLink extends StatefulWidget {
-  const _NavLink({required this.item, required this.active});
+  const _NavLink({required this.item, required this.active, required this.onTap});
 
   final NavItem item;
   final bool active;
+  final VoidCallback onTap;
 
   @override
   State<_NavLink> createState() => _NavLinkState();
@@ -116,7 +134,7 @@ class _NavLinkState extends State<_NavLink> {
     final p = context.palette;
     final highlighted = widget.active || _hovered;
     return InkWell(
-      onTap: () => openLink(context, widget.item.path),
+      onTap: widget.onTap,
       onHover: (h) => setState(() => _hovered = h),
       borderRadius: Radii.smAll,
       child: Container(
@@ -228,7 +246,7 @@ class SiteNavDrawer extends StatelessWidget {
                 selected: _isActive(location, item.path),
                 onTap: () {
                   Navigator.of(context).pop();
-                  openLink(context, item.path);
+                  _openTab(context, location, item);
                 },
               ),
             const SizedBox(height: Insets.md),

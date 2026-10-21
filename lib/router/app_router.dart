@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -12,16 +11,18 @@ import '../pages/home/home_page.dart';
 import '../pages/markdown_page_view.dart';
 import '../pages/not_found_page.dart';
 import '../widgets/layout/site_shell.dart';
+import 'tab_slide.dart';
 
 /// All routes of the site.
 ///
 /// Every page is wrapped in [SiteShell] (nav bar). Docs pages are additionally
 /// wrapped in [DocsShell] (sidebar), which stays put while you move between docs.
 ///
-/// Switching between top-level sections (Home, Docs, Blog, About) uses Material's
-/// fade-through transition; moving between doc pages is instant, like a docs site.
+/// Pressing a nav bar tab slides pages sideways ([TabSlide]); other navigation
+/// between top-level pages uses Material's fade-through; moving between doc
+/// pages is instant, like a docs site.
 GoRouter buildRouter() {
-  return GoRouter(
+  final router = GoRouter(
     errorBuilder: (context, state) => SiteShell(location: state.uri.path, child: const NotFoundPage()),
     routes: [
       ShellRoute(
@@ -63,6 +64,10 @@ GoRouter buildRouter() {
       ),
     ],
   );
+  router.routerDelegate.addListener(
+    () => TabSlide.onLocationChanged(router.routerDelegate.currentConfiguration.uri.path),
+  );
+  return router;
 }
 
 /// `/docs/a`, `/docs/a/b`, `/docs/a/b/c`, `/docs/a/b/c/d`: doc ids can be nested folders.
@@ -86,19 +91,15 @@ GoRoute _docRoute(int depth) {
 /// Query changes (`?tag=`) keep the page.
 LocalKey _pageKey(GoRouterState state) => ValueKey<String>(state.matchedLocation);
 
-/// Material fade-through: the old page fades out, then the new one fades and zooms in.
+/// A top-level page: slides after a nav tab press, fades through otherwise.
+/// Both directions use the same duration so the two pages move in step.
 Page<void> _page(GoRouterState state, Widget child, {LocalKey? key}) {
   return CustomTransitionPage<void>(
     key: key ?? _pageKey(state),
     child: child,
-    transitionDuration: const Duration(milliseconds: 300),
-    reverseTransitionDuration: const Duration(milliseconds: 300),
-    transitionsBuilder: (context, animation, secondaryAnimation, child) => FadeThroughTransition(
-      animation: animation,
-      secondaryAnimation: secondaryAnimation,
-      fillColor: Colors.transparent,
-      child: child,
-    ),
+    transitionDuration: const Duration(milliseconds: 350),
+    reverseTransitionDuration: const Duration(milliseconds: 350),
+    transitionsBuilder: tabSlideOrFadeThrough,
   );
 }
 
