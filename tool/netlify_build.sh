@@ -11,7 +11,6 @@ if [ ! -x "$FLUTTER_DIR/bin/flutter" ]; then
 fi
 export PATH="$FLUTTER_DIR/bin:$PATH"
 
-flutter config --no-analytics --enable-web
 flutter pub get
 # No offline service worker: visitors always get the newest posts and docs.
 flutter build web --release --pwa-strategy=none

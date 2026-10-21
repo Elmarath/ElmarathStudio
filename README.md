@@ -135,13 +135,12 @@ Packages: `go_router` (routing), `pdfrx` (the CV viewer, rendered with PDFium), 
 
 ## Deploy (Netlify, elmarath.com)
 
-elmarath.com is hosted on Netlify. This repository is ready for it:
+elmarath.com is hosted on Netlify and deploys this repository (GitHub `Elmarath/ElmarathStudio`):
 
-- `netlify.toml` builds the site on Netlify (`tool/netlify_build.sh` downloads Flutter 3.29.3 and runs the release build) and publishes `build/web`.
+- **Every push to `master` goes live.** Netlify reads `netlify.toml`: `tool/netlify_build.sh` downloads Flutter 3.29.3, makes the release build and publishes `build/web`. If a build fails, the previous version stays online.
+- **Pull requests get a preview** (Netlify deploy preview), so you can check a change before merging.
 - `web/_redirects` sends every address of the old Docusaurus site to its new page with a 301 (Fab listings, search results and the CV keep working), then hands all other paths to the app.
 - The build has no offline cache (`--pwa-strategy=none`), so visitors always get the newest content.
-
-**Switch the live site over** (once this repository is on GitHub): in Netlify, open the elmarath.com site → *Site configuration* → *Build & deploy* → *Link repository*, and pick this repository. Netlify reads `netlify.toml` and deploys on every push to `main`. The domain and HTTPS stay as they are.
 
 **Or deploy by hand** from your machine:
 
