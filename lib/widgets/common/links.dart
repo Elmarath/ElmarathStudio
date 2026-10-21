@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../../config/site_config.dart';
+import '../cv/cv_viewer.dart';
+
 bool isExternalLink(String href) => RegExp(r'^[a-z][a-z0-9+.-]*:', caseSensitive: false).hasMatch(href);
 
 /// A path to a downloadable file in `web/` (e.g. `/files/cv.pdf`) rather than a page.
@@ -9,9 +12,14 @@ bool isFileLink(String href) =>
     RegExp(r'\.(pdf|zip|png|jpe?g|gif|webp|mp4)$', caseSensitive: false).hasMatch(Uri.parse(href).path);
 
 /// Opens an internal route with go_router, or an external URL or file in a new tab.
+/// CV links ([SiteConfig.resumeUrl]) open the CV viewer window.
 Future<void> openLink(BuildContext context, String href) async {
-  if (isExternalLink(href)) {
-    await launchUrl(Uri.parse(href), webOnlyWindowName: href.startsWith('mailto:') ? '_self' : '_blank');
+  if (href == SiteConfig.resumeUrl) {
+    await showCvViewer(context);
+  } else if (isExternalLink(href)) {
+    // Email and phone links hand off to an app; everything else opens in a new tab.
+    final handOff = href.startsWith('mailto:') || href.startsWith('tel:');
+    await launchUrl(Uri.parse(href), webOnlyWindowName: handOff ? '_self' : '_blank');
   } else if (isFileLink(href)) {
     // Relative to the page's <base href>, so it still works when hosted under a sub path.
     await launchUrl(Uri.parse(href.replaceFirst(RegExp(r'^/'), '')), webOnlyWindowName: '_blank');

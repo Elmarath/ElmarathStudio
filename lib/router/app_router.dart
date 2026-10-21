@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../pages/about_page.dart';
 import '../pages/blog/blog_list_page.dart';
 import '../pages/blog/blog_post_page.dart';
+import '../pages/cv_page.dart';
 import '../pages/docs/doc_route_page.dart';
 import '../pages/docs/docs_home_page.dart';
 import '../pages/docs/docs_shell.dart';
@@ -54,6 +55,7 @@ GoRouter buildRouter() {
               ),
             ],
           ),
+          GoRoute(path: '/cv', pageBuilder: (context, state) => _page(state, const CvPage())),
           // Standalone pages from content/pages/<slug>.md, e.g. /privacy-policy.
           GoRoute(
             path: '/:slug',

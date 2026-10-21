@@ -5,7 +5,7 @@ Portfolio, dev blog and Docusaurus-style plugin documentation for Elmarath, buil
 - **Home**: hero, site features, a featured-plugin spotlight, latest posts, and a contact section
 - **Docs** (`/docs`): sidebar tree, "On this page" table of contents, breadcrumbs, previous/next links
 - **Blog** (`/blog`): laid out like the Unreal Engine feed, with tag pills, tag search, a featured post and a card grid with "Load more"
-- **About** and standalone pages (`/about`, `/privacy-policy`)
+- **About** and standalone pages (`/about`, `/privacy-policy`), plus a built-in **CV viewer** (a window from "View CV", or the page `/cv`)
 - **Search** across everything (⌘K / Ctrl K), and **themes** you can switch from the nav bar
 
 Everything you write is plain Markdown in `content/`. Rebuilding the site never means touching Dart code.
@@ -114,7 +114,7 @@ Run the draft post **Markdown cheat sheet** locally to see every option rendered
 | Spacing, radii, breakpoints | `lib/theme/tokens.dart` |
 | Home page section order | `HomePage.sections` in `lib/pages/home/home_page.dart` |
 | About page text | `content/pages/about.md` |
-| Your CV (Resume buttons) | Replace `web/files/DenizhanToprak_Resume.pdf` |
+| Your CV (shown in the CV viewer and at `/cv`) | Replace `assets/files/DenizhanToprak_Resume.pdf` |
 
 ## Project layout
 
@@ -132,7 +132,7 @@ tool/content.dart   Authoring CLI
 test/               Content parsing tests
 ```
 
-Packages: `go_router` (routing), `flutter_markdown_plus` (the maintained successor of the discontinued `flutter_markdown`), `flutter_highlight` (code), `google_fonts`, `flutter_animate`, `shared_preferences` (remembers the theme), `url_launcher`, `font_awesome_flutter` (brand icons).
+Packages: `go_router` (routing), `pdfrx` (the CV viewer, rendered with PDFium), `flutter_markdown_plus` (the maintained successor of the discontinued `flutter_markdown`), `flutter_highlight` (code), `google_fonts`, `flutter_animate`, `shared_preferences` (remembers the theme), `url_launcher`, `font_awesome_flutter` (brand icons).
 
 ## Deploy
 

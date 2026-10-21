@@ -123,35 +123,56 @@ class HeroSection extends StatelessWidget {
   }
 }
 
-class _OwnerChip extends StatelessWidget {
+/// Avatar, name and role. Opens the About page.
+class _OwnerChip extends StatefulWidget {
   const _OwnerChip();
+
+  @override
+  State<_OwnerChip> createState() => _OwnerChipState();
+}
+
+class _OwnerChipState extends State<_OwnerChip> {
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = Theme.of(context).textTheme;
-    return Container(
-      padding: const EdgeInsets.fromLTRB(4, 4, 14, 4),
-      decoration: BoxDecoration(
-        color: p.surface.withValues(alpha: 0.75),
-        borderRadius: BorderRadius.circular(40),
-        border: Border.all(color: p.border),
-      ),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          ClipOval(child: AppImage(SiteConfig.avatarUrl, width: 30, height: 30)),
-          const SizedBox(width: 10),
-          Text(SiteConfig.ownerName, style: text.labelLarge),
-          Flexible(
-            child: Text(
-              '  ·  ${SiteConfig.role}',
-              style: text.labelMedium,
-              maxLines: 1,
-              overflow: TextOverflow.ellipsis,
-            ),
+    final shape = StadiumBorder(
+      side: BorderSide(color: _hovered ? p.textPrimary.withValues(alpha: 0.4) : p.border),
+    );
+    return Material(
+      color: (_hovered ? p.surfaceRaised : p.surface).withValues(alpha: 0.75),
+      shape: shape,
+      child: InkWell(
+        customBorder: shape,
+        onTap: () => context.go('/about'),
+        onHover: (hovered) => setState(() => _hovered = hovered),
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(4, 4, 12, 4),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              ClipOval(child: AppImage(SiteConfig.avatarUrl, width: 30, height: 30)),
+              const SizedBox(width: 10),
+              Text(SiteConfig.ownerName, style: text.labelLarge),
+              Flexible(
+                child: Text(
+                  '  ·  ${SiteConfig.role}',
+                  style: text.labelMedium,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              const SizedBox(width: Insets.sm),
+              AnimatedSlide(
+                offset: Offset(_hovered ? 0.25 : 0, 0),
+                duration: Motion.fast,
+                child: Icon(Icons.arrow_forward, size: 16, color: p.textSecondary),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

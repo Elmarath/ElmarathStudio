@@ -2,6 +2,7 @@
 // every theme, plus the interactive pieces (search, table of contents).
 // Any overflow or exception while building a page fails the test.
 import 'package:elmarath_dev_website/app.dart';
+import 'package:elmarath_dev_website/config/site_config.dart';
 import 'package:elmarath_dev_website/content/content_repository.dart';
 import 'package:elmarath_dev_website/content/text_utils.dart';
 import 'package:elmarath_dev_website/pages/about_page.dart';
@@ -9,9 +10,11 @@ import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
 import 'package:elmarath_dev_website/pages/blog/featured_post.dart';
 import 'package:elmarath_dev_website/pages/docs/doc_toc.dart';
 import 'package:elmarath_dev_website/pages/home/home_page.dart';
+import 'package:elmarath_dev_website/pages/home/sections/hero_section.dart';
 import 'package:elmarath_dev_website/theme/app_theme.dart';
 import 'package:elmarath_dev_website/theme/app_themes.dart';
 import 'package:elmarath_dev_website/theme/theme_controller.dart';
+import 'package:elmarath_dev_website/widgets/cv/cv_viewer.dart';
 import 'package:elmarath_dev_website/widgets/layout/site_nav_bar.dart';
 import 'package:elmarath_dev_website/widgets/layout/site_shell.dart';
 import 'package:elmarath_dev_website/widgets/markdown/markdown_view.dart';
@@ -159,6 +162,31 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     expect(leftOf(AboutPage).abs(), lessThan(slid));
     await tester.pump(const Duration(seconds: 1));
+    await tearDownSite(tester);
+  });
+
+  testWidgets('the name chip on the home page opens About', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    await tester.tap(find.descendant(of: find.byType(HeroSection), matching: find.text(SiteConfig.ownerName)));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(AboutPage), findsOneWidget);
+    await tearDownSite(tester);
+  });
+
+  testWidgets('"View CV" on the About page opens the CV window', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    await visit(tester, '/about');
+    await tester.tap(find.text('View CV'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.descendant(of: find.byType(Dialog), matching: find.byType(CvViewer)), findsOneWidget);
+    expect(find.text('Curriculum Vitae'), findsOneWidget);
+
+    await tester.tap(find.byTooltip('Close'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 500));
+    expect(find.byType(CvViewer), findsNothing);
     await tearDownSite(tester);
   });
 

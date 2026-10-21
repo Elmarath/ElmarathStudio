@@ -36,8 +36,11 @@ abstract final class SiteConfig {
   );
 
   static const String email = 'toprakdenizhan19@gmail.com';
-  /// Files in `web/files/` are served as-is; replace the PDF there to update your CV.
-  static const String resumeUrl = '/files/DenizhanToprak_Resume.pdf';
+  /// Your CV. Replace this PDF to update it everywhere.
+  static const String cvAsset = 'assets/files/DenizhanToprak_Resume.pdf';
+
+  /// Links to this path open the CV viewer window (and `/cv` shows it as a page).
+  static const String resumeUrl = '/cv';
 
   /// Repository for "Edit this page" links on docs, e.g.
   /// 'https://github.com/Elmarath/ElmarathDev_Website/edit/main/'.

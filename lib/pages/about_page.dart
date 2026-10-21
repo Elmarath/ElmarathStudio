@@ -57,6 +57,11 @@ class AboutPage extends StatelessWidget {
                     spacing: Insets.sm,
                     runSpacing: Insets.sm,
                     children: [
+                      FilledButton.icon(
+                        onPressed: () => openLink(context, SiteConfig.resumeUrl),
+                        icon: const Icon(Icons.description_outlined, size: 18),
+                        label: const Text('View CV'),
+                      ),
                       for (final s in SiteConfig.socials)
                         OutlinedButton.icon(
                           onPressed: () => openLink(context, s.url),
