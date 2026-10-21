@@ -1,0 +1,8 @@
+label: "Dynamic Input System"
+position: 9
+summary: "A flexible runtime input system that allows dynamic binding and modification of input mappings during gameplay."
+description: "A dynamic, flexible input system for Unreal Engine that allows runtime input binding and management."
+thumbnail: thumbnail.png
+featured: false
+links:
+  fab: https://www.fab.com/listings/cdf2ad8e-b9b7-4b4e-87bb-fdcfbe3c3b2b

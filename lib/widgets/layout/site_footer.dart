@@ -1,0 +1,90 @@
+import 'package:flutter/material.dart';
+
+import '../../config/site_config.dart';
+import '../../theme/app_palette.dart';
+import '../../theme/tokens.dart';
+import '../common/links.dart';
+import 'content_width.dart';
+import 'site_nav_bar.dart';
+
+class SiteFooter extends StatelessWidget {
+  const SiteFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final p = context.palette;
+    final text = Theme.of(context).textTheme;
+
+    final brand = SizedBox(
+      width: 300,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const SiteLogo(),
+          const SizedBox(height: Insets.md),
+          Text('${SiteConfig.role}. Plugins, documentation and devlogs for Unreal Engine.', style: text.bodyMedium),
+          const SizedBox(height: Insets.md),
+          Wrap(
+            spacing: 2,
+            children: [
+              for (final s in SiteConfig.socials)
+                IconButton(tooltip: s.label, icon: Icon(s.icon, size: 18), onPressed: () => openLink(context, s.url)),
+            ],
+          ),
+        ],
+      ),
+    );
+
+    final columns = [
+      for (final column in SiteConfig.footerColumns)
+        SizedBox(
+          width: 170,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(column.title.toUpperCase(), style: text.labelSmall),
+              const SizedBox(height: Insets.md),
+              for (final link in column.links)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: InlineLink(
+                    label: link.label,
+                    href: link.path,
+                    style: text.bodyMedium?.copyWith(color: p.textSecondary),
+                  ),
+                ),
+            ],
+          ),
+        ),
+    ];
+
+    return Container(
+      decoration: BoxDecoration(color: p.surface, border: Border(top: BorderSide(color: p.border))),
+      padding: const EdgeInsets.symmetric(vertical: Insets.xxl),
+      child: ContentWidth(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Wrap(spacing: Insets.xxl, runSpacing: Insets.xl, children: [brand, ...columns]),
+            const SizedBox(height: Insets.xl),
+            Divider(color: p.border),
+            const SizedBox(height: Insets.md),
+            // Full width so the two lines sit at opposite ends; they stack when there's no room.
+            SizedBox(
+              width: double.infinity,
+              child: Wrap(
+                alignment: WrapAlignment.spaceBetween,
+                spacing: Insets.lg,
+                runSpacing: Insets.xs,
+                children: [
+                  Text('© ${DateTime.now().year} ${SiteConfig.ownerName}. Built with Flutter.', style: text.bodySmall),
+                  Text('Denizhan Toprak Portfolio', style: text.bodySmall),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}

@@ -1,0 +1,9 @@
+label: "Easy Skeletal Mesh Merge Async"
+position: 7
+summary: "A simple and optimized workflow to create modular characters via skeletal mesh merging."
+description: "Learn how to use Easy Skeletal Mesh Merge Async!"
+thumbnail: thumbnail.png
+featured: false
+links:
+  fab: https://www.fab.com/listings/616906a0-c73d-4e7a-9002-866a6d9751d5
+  github: https://github.com/Elmarath/EasySkeletalMeshMergeAsync

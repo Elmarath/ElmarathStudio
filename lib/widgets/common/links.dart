@@ -1,0 +1,81 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../../config/site_config.dart';
+import '../cv/cv_viewer.dart';
+
+bool isExternalLink(String href) => RegExp(r'^[a-z][a-z0-9+.-]*:', caseSensitive: false).hasMatch(href);
+
+/// A path to a downloadable file in `web/` (e.g. `/files/cv.pdf`) rather than a page.
+bool isFileLink(String href) =>
+    RegExp(r'\.(pdf|zip|png|jpe?g|gif|webp|mp4)$', caseSensitive: false).hasMatch(Uri.parse(href).path);
+
+/// Opens an internal route with go_router, or an external URL or file in a new tab.
+/// CV links ([SiteConfig.resumeUrl]) open the CV viewer window.
+Future<void> openLink(BuildContext context, String href) async {
+  if (href == SiteConfig.resumeUrl) {
+    await showCvViewer(context);
+  } else if (isExternalLink(href)) {
+    // Email and phone links hand off to an app; everything else opens in a new tab.
+    final handOff = href.startsWith('mailto:') || href.startsWith('tel:');
+    await launchUrl(Uri.parse(href), webOnlyWindowName: handOff ? '_self' : '_blank');
+  } else if (isFileLink(href)) {
+    // Relative to the page's <base href>, so it still works when hosted under a sub path.
+    await launchUrl(Uri.parse(href.replaceFirst(RegExp(r'^/'), '')), webOnlyWindowName: '_blank');
+  } else {
+    context.go(href);
+  }
+}
+
+/// A text link that underlines on hover.
+class InlineLink extends StatefulWidget {
+  const InlineLink({super.key, required this.label, required this.href, this.style, this.trailingIcon});
+
+  final String label;
+  final String href;
+  final TextStyle? style;
+  final IconData? trailingIcon;
+
+  @override
+  State<InlineLink> createState() => _InlineLinkState();
+}
+
+class _InlineLinkState extends State<InlineLink> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final style = (widget.style ?? Theme.of(context).textTheme.labelLarge)!;
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
+      child: GestureDetector(
+        onTap: () => openLink(context, widget.href),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Flexible(
+              child: Text(
+                widget.label,
+                style: style.copyWith(
+                  decoration: _hovered ? TextDecoration.underline : TextDecoration.none,
+                  decorationColor: style.color,
+                ),
+              ),
+            ),
+            if (widget.trailingIcon != null) ...[
+              const SizedBox(width: 6),
+              AnimatedSlide(
+                offset: Offset(_hovered ? 0.25 : 0, 0),
+                duration: const Duration(milliseconds: 150),
+                child: Icon(widget.trailingIcon, size: (style.fontSize ?? 14) + 2, color: style.color),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
