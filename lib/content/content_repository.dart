@@ -10,11 +10,7 @@ import 'text_utils.dart';
 /// * `content/docs/**`                                          → documentation tree
 /// * `content/pages/*.md`                                       → standalone pages (`/about`, …)
 class ContentRepository {
-  ContentRepository._({
-    required this.posts,
-    required this.docsRoot,
-    required this.pages,
-  }) {
+  ContentRepository._({required this.posts, required this.docsRoot, required this.pages}) {
     docPages = docsRoot.allPages.toList();
     for (final page in docPages) {
       _docsById[page.id] = page;
@@ -101,6 +97,76 @@ class ContentRepository {
     return hits.take(limit).toList();
   }
 
+  /// Every route on the site, for telling real pages from old addresses.
+  late final Set<String> _routes = {
+    '/',
+    '/docs',
+    '/blog',
+    '/about',
+    '/cv',
+    for (final d in docPages) d.route,
+    for (final c in categories) c.route,
+    for (final p in posts) p.route,
+    for (final slug in pages.keys) '/$slug',
+  };
+
+  /// Whether [path] is a page on this site.
+  bool isRoute(String path) => _routes.contains(path);
+
+  late final Map<String, String> _routesByLooseKey = {for (final r in _routes) _looseKey(r): r};
+
+  /// Old folder name (slug) → the folder's current name, from `aliases:` in `_category_.yaml`.
+  late final Map<String, String> _folderAliases = {
+    for (final c in categories)
+      for (final alias in c.aliases) slugify(alias): c.id.split('/').last,
+  };
+
+  /// Letters and digits only, lowercased: `/docs/Decide%20Montages` and
+  /// `/docs/decide-montages` look the same.
+  static String _looseKey(String path) {
+    var s = path;
+    try {
+      s = Uri.decodeFull(s);
+    } catch (_) {}
+    return s.toLowerCase().replaceAll(RegExp(r'[^a-z0-9]'), '');
+  }
+
+  /// Where an old address (e.g. from the previous Docusaurus site) lives now,
+  /// or null when [uri] is already a page here or nothing matches.
+  ///
+  /// [moved] lists pages that moved somewhere else entirely. Everything else is
+  /// matched loosely: letter case, spaces and dashes, `.html` endings, Docusaurus
+  /// `/docs/category/...` overviews, `/blog/tags/...` and renamed folders.
+  String? legacyRoute(Uri uri, {Map<String, String> moved = const {}}) {
+    var path = uri.path;
+    try {
+      path = Uri.decodeFull(path);
+    } catch (_) {}
+    path = path.replaceFirst(RegExp(r'\.html$'), '');
+    if (path.length > 1) path = path.replaceFirst(RegExp(r'/+$'), '');
+    if (_routes.contains(path)) return null;
+
+    final fragment = uri.fragment.isEmpty ? '' : '#${uri.fragment}';
+    final key = _looseKey(path);
+    for (final entry in moved.entries) {
+      if (_looseKey(entry.key) == key) return entry.value;
+    }
+
+    final segments = path.split('/').where((s) => s.isNotEmpty).toList();
+    final section = segments.firstOrNull?.toLowerCase();
+    if (section == 'blog' && segments.length >= 3 && segments[1].toLowerCase() == 'tags') {
+      return '/blog?tag=${Uri.encodeQueryComponent(slugify(segments[2]))}';
+    }
+    if (section == 'docs' && segments.length == 3 && segments[1].toLowerCase() == 'category') {
+      final wanted = slugify(segments[2]);
+      final match = categories.where((c) => slugify(c.label) == wanted || c.id.split('/').last == wanted).firstOrNull;
+      if (match != null) return match.route;
+    }
+    final renamed = [for (final s in segments) _folderAliases[slugify(s)] ?? s];
+    final match = _routesByLooseKey[_looseKey('/${renamed.join('/')}')];
+    return match == null ? null : '$match$fragment';
+  }
+
   /// Resolves an image path written in Markdown, relative to the file it's in.
   ///
   /// Returns a URL unchanged, `/assets/x.png` as the asset `assets/x.png`,
@@ -137,7 +203,10 @@ class ContentRepository {
 
     if (!link.startsWith('/')) {
       final asset = resolveAsset(sourcePath, link);
-      link = asset.startsWith('content/pages/') ? asset.substring('content/pages'.length) : asset.substring('content'.length);
+      link =
+          asset.startsWith('content/pages/')
+              ? asset.substring('content/pages'.length)
+              : asset.substring('content'.length);
     }
 
     final segments = link.split('/').where((s) => s.isNotEmpty).toList();
@@ -217,12 +286,13 @@ class ContentRepository {
       if (draft && !kDebugMode) continue;
 
       final nameMatch = RegExp(r'^(\d{4}-\d{2}-\d{2})[-_]?(.*)$').firstMatch(baseName);
-      final date = DateTime.tryParse(fm.string('date') ?? '') ??
-          DateTime.tryParse(nameMatch?.group(1) ?? '') ??
-          DateTime(2000);
+      final date =
+          DateTime.tryParse(fm.string('date') ?? '') ?? DateTime.tryParse(nameMatch?.group(1) ?? '') ?? DateTime(2000);
       final (h1, body) = _extractTitle(fm.body);
       final title = fm.string('title') ?? h1 ?? humanize(nameMatch?.group(2) ?? baseName);
-      final slug = slugify(fm.string('slug') ?? (nameMatch?.group(2)?.isNotEmpty == true ? nameMatch!.group(2)! : title));
+      final slug = slugify(
+        fm.string('slug') ?? (nameMatch?.group(2)?.isNotEmpty == true ? nameMatch!.group(2)! : title),
+      );
 
       var excerpt = fm.string('description');
       if (excerpt == null) {
@@ -234,20 +304,22 @@ class ContentRepository {
 
       final words = plainText(body).split(' ').length;
       final image = fm.string('image');
-      posts.add(BlogPost(
-        slug: slug,
-        title: title,
-        date: date,
-        authors: fm.list('authors').map((id) => authors[id] ?? Author(id: id, name: id)).toList(),
-        tags: fm.list('tags'),
-        excerpt: excerpt,
-        body: body,
-        assetPath: path,
-        image: image == null ? null : resolveAsset(path, image),
-        draft: draft,
-        featured: fm.flag('featured'),
-        readingMinutes: (words / 220).ceil().clamp(1, 999),
-      ));
+      posts.add(
+        BlogPost(
+          slug: slug,
+          title: title,
+          date: date,
+          authors: fm.list('authors').map((id) => authors[id] ?? Author(id: id, name: id)).toList(),
+          tags: fm.list('tags'),
+          excerpt: excerpt,
+          body: body,
+          assetPath: path,
+          image: image == null ? null : resolveAsset(path, image),
+          draft: draft,
+          featured: fm.flag('featured'),
+          readingMinutes: (words / 220).ceil().clamp(1, 999),
+        ),
+      );
     }
     posts.sort((a, b) => b.date.compareTo(a.date));
     return posts;
@@ -281,6 +353,7 @@ class ContentRepository {
         thumbnail: thumbnail == null ? null : resolveAsset('$dir/_category_.yaml', thumbnail),
         featured: m['featured'] == true,
         links: links is Map ? links.map((k, v) => MapEntry(k.toString(), v.toString())) : const {},
+        aliases: m['aliases'] is List ? [for (final a in m['aliases'] as List) a.toString()] : const [],
       )..parent = parent == root ? null : parent;
       parent.children.add(category);
       byDir[dir] = category;
@@ -297,7 +370,8 @@ class ContentRepository {
       final (h1, body) = _extractTitle(fm.body);
       final title = fm.string('title') ?? h1 ?? humanize(file);
       final isIndex = category != root && RegExp(r'^(index|readme)\.mdx?$', caseSensitive: false).hasMatch(file);
-      final slug = slugify(fm.string('slug') ?? file);
+      // Like Docusaurus: `slug`, else `id`, else the file name sets the URL.
+      final slug = slugify(fm.string('slug') ?? fm.string('id') ?? file);
       final page = DocPage(
         id: isIndex ? category.id : [if (category.id.isNotEmpty) category.id, slug].join('/'),
         title: title,

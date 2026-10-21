@@ -108,6 +108,7 @@ class DocCategory extends DocNode {
     this.thumbnail,
     this.featured = false,
     this.links = const {},
+    this.aliases = const [],
   });
 
   @override
@@ -130,6 +131,9 @@ class DocCategory extends DocNode {
 
   /// External links such as `fab` and `github`.
   final Map<String, String> links;
+
+  /// Old folder names (`aliases:` in `_category_.yaml`); links using them still resolve.
+  final List<String> aliases;
 
   final List<DocNode> children = [];
   DocCategory? parent;

@@ -117,14 +117,17 @@ void main() {
     await tearDownSite(tester);
   });
 
-  testWidgets('blog features the pinned post and filters by tag', (tester) async {
+  testWidgets('blog leads with the pinned (or newest) post and filters by tag', (tester) async {
     await pumpSite(tester, sizes['desktop']!);
     await visit(tester, '/blog');
-    final featured = content.posts.firstWhere((p) => p.featured);
+    final featured = content.posts.where((p) => p.featured).firstOrNull ?? content.posts.first;
     expect(find.descendant(of: find.byType(FeaturedPost), matching: find.text(featured.title)), findsOneWidget);
 
     // Pick a tag that only some posts have, then check the page shows exactly those.
-    final tag = content.tags.firstWhere((t) => content.posts.where((p) => p.tags.contains(t)).length < content.posts.length);
+    final tag = content.tags.firstWhere(
+      (t) => content.posts.where((p) => p.tags.contains(t)).length < content.posts.length,
+      orElse: () => content.tags.first,
+    );
     await tester.tap(find.widgetWithText(ChoiceChip, tag));
     await tester.pump();
     await tester.pump(const Duration(seconds: 1));

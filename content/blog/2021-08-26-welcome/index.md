@@ -1,5 +1,6 @@
 ---
 title: Welcome to Elmarath Studio
+slug: Welcome to Elmarath Studio
 authors: [denizhan]
 tags: [Hermod's Ride, Game Development, Indie]
 image: hermods-ride.jpeg

@@ -19,7 +19,7 @@ class ElmarathApp extends StatefulWidget {
 }
 
 class _ElmarathAppState extends State<ElmarathApp> {
-  late final GoRouter _router = buildRouter();
+  late final GoRouter _router = buildRouter(widget.content);
 
   @override
   void dispose() {

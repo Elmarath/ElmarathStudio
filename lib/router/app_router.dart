@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../config/site_config.dart';
+import '../content/content_repository.dart';
 import '../pages/about_page.dart';
 import '../pages/blog/blog_list_page.dart';
 import '../pages/blog/blog_post_page.dart';
@@ -22,8 +24,10 @@ import 'tab_slide.dart';
 /// Pressing a nav bar tab slides pages sideways ([TabSlide]); other navigation
 /// between top-level pages uses Material's fade-through; moving between doc
 /// pages is instant, like a docs site.
-GoRouter buildRouter() {
+GoRouter buildRouter(ContentRepository content) {
   final router = GoRouter(
+    // Old links (the previous site, the CV, Fab listings) land on today's pages.
+    redirect: (context, state) => content.legacyRoute(state.uri, moved: SiteConfig.movedPages),
     errorBuilder: (context, state) => SiteShell(location: state.uri.path, child: const NotFoundPage()),
     routes: [
       ShellRoute(

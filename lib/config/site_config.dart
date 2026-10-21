@@ -47,6 +47,21 @@ abstract final class SiteConfig {
   /// Leave null to hide the link.
   static const String? editBaseUrl = null;
 
+  /// Old addresses that moved somewhere else entirely, so links to them keep
+  /// working. Letter case, spaces and dashes don't matter. Old docs and blog
+  /// URLs from the Docusaurus site are matched automatically.
+  static const Map<String, String> movedPages = {
+    '/docs/PrivacyPolicy': '/privacy-policy',
+    '/blog/About Me': '/about',
+    '/blog/archive': '/blog',
+    '/blog/authors': '/blog',
+    '/blog/tags': '/blog',
+    '/docs/Ability-Queue-Task-System/UseCaseExample copy': '/docs/ability-queue-task-system/use-case-example',
+    // Docusaurus template pages.
+    '/helloReact': '/',
+    '/markdown-page': '/',
+  };
+
   /// Social links: shown in the footer, the About page and the contact section.
   static const List<ExternalLink> socials = [
     ExternalLink(label: 'GitHub', url: 'https://github.com/Elmarath', icon: FontAwesomeIcons.github),

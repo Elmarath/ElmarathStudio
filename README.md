@@ -93,7 +93,6 @@ Standard GitHub-flavored Markdown (tables, task lists, strikethrough, fenced cod
 | `![Alt](./img/shot.png)` | Image next to the file; click to zoom |
 | `[Setup](./Setup.md)` | Link to another doc by file |
 
-Run the draft post **Markdown cheat sheet** locally to see every option rendered.
 
 ## Content commands
 
@@ -134,13 +133,25 @@ test/               Content parsing tests
 
 Packages: `go_router` (routing), `pdfrx` (the CV viewer, rendered with PDFium), `flutter_markdown_plus` (the maintained successor of the discontinued `flutter_markdown`), `flutter_highlight` (code), `google_fonts`, `flutter_animate`, `shared_preferences` (remembers the theme), `url_launcher`, `font_awesome_flutter` (brand icons).
 
-## Deploy
+## Deploy (Netlify, elmarath.com)
+
+elmarath.com is hosted on Netlify. This repository is ready for it:
+
+- `netlify.toml` builds the site on Netlify (`tool/netlify_build.sh` downloads Flutter 3.29.3 and runs the release build) and publishes `build/web`.
+- `web/_redirects` sends every address of the old Docusaurus site to its new page with a 301 (Fab listings, search results and the CV keep working), then hands all other paths to the app.
+- The build has no offline cache (`--pwa-strategy=none`), so visitors always get the newest content.
+
+**Switch the live site over** (once this repository is on GitHub): in Netlify, open the elmarath.com site → *Site configuration* → *Build & deploy* → *Link repository*, and pick this repository. Netlify reads `netlify.toml` and deploys on every push to `main`. The domain and HTTPS stay as they are.
+
+**Or deploy by hand** from your machine:
 
 ```bash
-flutter build web --release
+flutter build web --release --pwa-strategy=none
+```
+```bash
+npx netlify-cli deploy --dir build/web --prod
 ```
 
-Upload `build/web/`. The site uses clean URLs (`/docs/intro`), so the host must serve `index.html` for unknown paths:
+Old addresses: pages that moved somewhere new are listed in `SiteConfig.movedPages`; everything else from the old site is matched automatically. `test/content_test.dart` checks every URL from the old sitemap (`test/fixtures/old_site_urls.txt`).
 
-- **GitHub Pages**: copy `build/web/index.html` to `build/web/404.html`. For a project page (`username.github.io/repo/`), build with `--base-href /repo/`.
-- **Firebase Hosting / Netlify / Vercel**: add a rewrite of `**` to `/index.html`.
+Analytics: `web/index.html` loads Google Analytics with the same property as the old site (not on localhost). Delete that block to turn it off.

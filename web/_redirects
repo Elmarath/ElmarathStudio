@@ -1,0 +1,57 @@
+# Netlify redirects.
+#
+# Old elmarath.com (Docusaurus) addresses answer with a permanent redirect to
+# their new page, so links from Fab, search engines and the CV keep working.
+# Addresses that only differ in letter case are left to the app, which
+# resolves those too (ContentRepository.legacyRoute). test/content_test.dart
+# checks that every target here is a real page.
+
+/blog/About%20Me  /about  301
+/blog/archive  /blog  301
+/blog/authors  /blog  301
+/blog/tags  /blog  301
+/blog/Welcome%20to%20Elmarath%20Studio  /blog/welcome-to-elmarath-studio  301
+/helloReact  /  301
+/markdown-page  /  301
+/docs/Ability-Queue-Task-System/AddAbilitiesToTheQueue  /docs/ability-queue-task-system/add-abilities-to-the-queue  301
+/docs/Ability-Queue-Task-System/UseCaseExample  /docs/ability-queue-task-system/use-case-example  301
+/docs/Ability-Queue-Task-System/UseCaseExample%20copy  /docs/ability-queue-task-system/use-case-example  301
+/docs/category/ability-queue-task-system  /docs/ability-queue-task-system  301
+/docs/category/actions  /docs/modular-action-system/actions  301
+/docs/category/data-structure  /docs/nested-inventory-architecture/data-structure  301
+/docs/category/decide-montages  /docs/modular-action-system/decide-montages  301
+/docs/category/dynamic-input-system  /docs/dynamic-input-system  301
+/docs/category/easy-ability-set-system  /docs/easy-ability-set-system  301
+/docs/category/easy-skeletal-mesh-merge-async  /docs/easy-skeletal-mesh-merge-async  301
+/docs/category/easy-trace-trail-system  /docs/easy-trace-trail-system  301
+/docs/category/modular-action-system  /docs/modular-action-system  301
+/docs/category/nested-equipment-module  /docs/nested-inventory-architecture/nested-equipment-module  301
+/docs/category/nested-inventory-architecture  /docs/nested-inventory-architecture  301
+/docs/category/staged-interaction-system  /docs/staged-interaction-system  301
+/docs/Dynamic-Input-System/DynamicInputSystem  /docs/dynamic-input-system/dynamic-input-system  301
+/docs/Easy-Ability-Set-System/AbilitToInputSettings  /docs/easy-ability-set-system/abilit-to-input-settings  301
+/docs/Easy-Ability-Set-System/AbilitySets  /docs/easy-ability-set-system/ability-sets  301
+/docs/Easy-Ability-Set-System/EasyAbilitySetSystemStartup  /docs/easy-ability-set-system/easy-ability-set-system-startup  301
+/docs/Easy-Skeletal-Mesh-Merge-Async/EasySkeletalMeshMergeAsync  /docs/easy-skeletal-mesh-merge-async/easy-skeletal-mesh-merge-async  301
+/docs/Easy-Trace-Trail-System/CreatingHitTrails  /docs/easy-trace-trail-system/creating-hit-trails  301
+/docs/Easy-Trace-Trail-System/EasyTraceTrailSystem  /docs/easy-trace-trail-system/easy-trace-trail-system  301
+/docs/Easy-Trace-Trail-System/FinalNotes  /docs/easy-trace-trail-system/final-notes  301
+/docs/Easy-Trace-Trail-System/ManagingTraceTrailTasks  /docs/easy-trace-trail-system/managing-trace-trail-tasks  301
+/docs/Modular-Action-System/Actions/How%20To%20Create%20And%20Use%20Actions  /docs/modular-action-system/actions/how-to-create-and-use-actions  301
+/docs/Modular-Action-System/Decide%20Montages/How%20To%20Create%20And%20Use%20DecideMontages  /docs/modular-action-system/decide-montages/how-to-create-and-use-decide-montages  301
+/docs/Modular-Action-System/Decide%20Montages/WhatAreDecideMontages  /docs/modular-action-system/decide-montages/what-are-decide-montages  301
+/docs/Nested-Invnetory-Architecture/AboutNestedInventoryArchitecture  /docs/nested-inventory-architecture/about-nested-inventory-architecture  301
+/docs/Nested-Invnetory-Architecture/Data-Structure/ItemStaticDataAsset  /docs/nested-inventory-architecture/data-structure/item-static-data-asset  301
+/docs/Nested-Invnetory-Architecture/Data-Structure/ObjectHierarchy  /docs/nested-inventory-architecture/data-structure/object-hierarchy  301
+/docs/Nested-Invnetory-Architecture/Data-Structure/PayloadTemplateDataAsset  /docs/nested-inventory-architecture/data-structure/payload-template-data-asset  301
+/docs/Nested-Invnetory-Architecture/Helper-Blueprint-Function-Library  /docs/nested-inventory-architecture/helper-blueprint-function-library  301
+/docs/Nested-Invnetory-Architecture/Nested-Equipment-Module/PayloadTemplateDataAsset  /docs/nested-inventory-architecture/nested-equipment-module/payload-template-data-asset  301
+/docs/Nested-Invnetory-Architecture/Quick-Start-To-NIA  /docs/nested-inventory-architecture/quick-start-to-nia  301
+/docs/PrivacyPolicy  /privacy-policy  301
+/docs/Staged-Interaction-System/FinalWords  /docs/staged-interaction-system/final-words  301
+/docs/Staged-Interaction-System/HandlingTheInteractionResults  /docs/staged-interaction-system/handling-the-interaction-results  301
+/docs/Staged-Interaction-System/UsingStageInteraction  /docs/staged-interaction-system/using-stage-interaction  301
+/blog/tags/:tag  /blog?tag=:tag  301
+
+# Everything else is the Flutter app, which handles its own routes.
+/*  /index.html  200
