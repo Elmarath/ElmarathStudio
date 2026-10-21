@@ -1,0 +1,8 @@
+label: "Ability Queue Task System"
+position: 4
+summary: "Extension of Epic's Gameplay Ability System. Enables queueable abilities with priority-based activation."
+description: "Learn how to use Ability Queue Task System!"
+thumbnail: thumbnail.png
+featured: true
+links:
+  fab: https://www.fab.com/listings/554398ff-338b-43da-bf43-b081ef166b92
