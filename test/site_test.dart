@@ -9,6 +9,7 @@ import 'package:elmarath_dev_website/pages/about_page.dart';
 import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
 import 'package:elmarath_dev_website/pages/blog/featured_post.dart';
 import 'package:elmarath_dev_website/pages/docs/doc_toc.dart';
+import 'package:elmarath_dev_website/pages/docs/docs_home_page.dart';
 import 'package:elmarath_dev_website/pages/docs/docs_sidebar.dart';
 import 'package:elmarath_dev_website/pages/home/home_page.dart';
 import 'package:elmarath_dev_website/pages/home/sections/hero_section.dart';
@@ -166,6 +167,30 @@ void main() {
     await tester.pump(const Duration(milliseconds: 100));
     expect(leftOf(AboutPage).abs(), lessThan(slid));
     await tester.pump(const Duration(seconds: 1));
+    await tearDownSite(tester);
+  });
+
+  testWidgets('the home page counts open the docs and the blog', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    Finder count(String label) => find.descendant(of: find.byType(HeroSection), matching: find.text(label));
+    final posts = content.posts.length == 1 ? 'BLOG POST' : 'BLOG POSTS';
+    await tester.pump(const Duration(seconds: 1)); // let the hero slide in
+    expect(find.descendant(of: find.byType(HeroSection), matching: find.text('${content.plugins.length}')), findsOneWidget);
+
+    await tester.ensureVisible(count('PLUGINS'));
+    await tester.pump();
+    await tester.tap(count('PLUGINS'));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(DocsHomePage), findsOneWidget);
+
+    await visit(tester, '/');
+    await tester.ensureVisible(count(posts));
+    await tester.pump();
+    await tester.tap(count(posts));
+    await tester.pump();
+    await tester.pump(const Duration(seconds: 1));
+    expect(find.byType(BlogListPage), findsOneWidget);
     await tearDownSite(tester);
   });
 

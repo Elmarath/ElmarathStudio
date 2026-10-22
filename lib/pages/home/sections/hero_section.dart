@@ -102,12 +102,15 @@ class HeroSection extends StatelessWidget {
                       ),
                       const SizedBox(height: Insets.xxl),
                       Wrap(
-                        spacing: Insets.xxl,
-                        runSpacing: Insets.md,
+                        spacing: Insets.md,
+                        runSpacing: Insets.sm,
                         children: [
-                          _Stat(value: '${content.plugins.length}', label: 'Unreal plugins'),
-                          _Stat(value: '${content.docPages.length}', label: 'Doc pages'),
-                          _Stat(value: '${content.posts.length}', label: 'Blog posts'),
+                          _Stat(value: content.plugins.length, label: 'Plugins', route: '/docs'),
+                          _Stat(
+                            value: content.posts.length,
+                            label: content.posts.length == 1 ? 'Blog post' : 'Blog posts',
+                            route: '/blog',
+                          ),
                         ],
                       ),
                     ]
@@ -178,22 +181,64 @@ class _OwnerChipState extends State<_OwnerChip> {
   }
 }
 
-class _Stat extends StatelessWidget {
-  const _Stat({required this.value, required this.label});
+/// A count that opens its page: "8 Plugins →" goes to the docs.
+class _Stat extends StatefulWidget {
+  const _Stat({required this.value, required this.label, required this.route});
 
-  final String value;
+  final int value;
   final String label;
+  final String route;
+
+  @override
+  State<_Stat> createState() => _StatState();
+}
+
+class _StatState extends State<_Stat> {
+  bool _hovered = false;
+
+  /// The button's inner padding; the row is shifted left by this much so the
+  /// numbers still line up with the text above.
+  static const _inset = 12.0;
 
   @override
   Widget build(BuildContext context) {
+    final p = context.palette;
     final text = Theme.of(context).textTheme;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(value, style: text.headlineLarge),
-        const SizedBox(height: 2),
-        Text(label.toUpperCase(), style: text.labelSmall),
-      ],
+    final color = _hovered ? p.textPrimary : p.textMuted;
+    return Transform.translate(
+      offset: const Offset(-_inset, 0),
+      child: Material(
+        color: _hovered ? p.surface.withValues(alpha: 0.7) : Colors.transparent,
+        borderRadius: Radii.mdAll,
+        child: InkWell(
+          borderRadius: Radii.mdAll,
+          onTap: () => context.go(widget.route),
+          onHover: (hovered) => setState(() => _hovered = hovered),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(_inset, 8, _inset + 4, 8),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('${widget.value}', style: text.headlineLarge),
+                const SizedBox(height: 2),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(widget.label.toUpperCase(), style: text.labelSmall?.copyWith(color: color)),
+                    const SizedBox(width: 6),
+                    AnimatedSlide(
+                      offset: Offset(_hovered ? 0.3 : 0, 0),
+                      duration: Motion.fast,
+                      child: Icon(Icons.arrow_forward, size: 14, color: _hovered ? p.accent : color),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
