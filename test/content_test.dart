@@ -1,11 +1,17 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:elmarath_dev_website/config/site_config.dart';
 import 'package:elmarath_dev_website/content/content_repository.dart';
 import 'package:elmarath_dev_website/content/markdown_blocks.dart';
 import 'package:elmarath_dev_website/content/text_utils.dart';
+import 'package:elmarath_dev_website/theme/app_theme.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+// ignore: implementation_imports
+import 'package:google_fonts/src/google_fonts_base.dart' as google_fonts;
+import 'package:http/http.dart' as http;
+import 'package:http/testing.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -179,5 +185,34 @@ Intro
       }
       expect(missing, isEmpty);
     });
+  });
+
+  test('web/index.html preloads exactly the font files the site gets from Google Fonts', () async {
+    final requested = <String>{};
+    google_fonts.httpClient = MockClient((request) async {
+      requested.add(request.url.toString());
+      return http.Response('', 404);
+    });
+    // Every font then fails to load, which google_fonts reports loudly; that's expected here.
+    await runZonedGuarded(
+      () async {
+        await AppTheme.preloadFonts();
+        await pumpEventQueue();
+      },
+      (error, stack) {},
+      zoneSpecification: ZoneSpecification(print: (self, parent, zone, line) {}),
+    );
+    final html = File('web/index.html').readAsStringSync();
+    final preloaded = {
+      for (final m in RegExp(r'<link rel="preload" href="(https://fonts\.gstatic\.com/[^"]+)"').allMatches(html)) m[1]!,
+    };
+    expect(requested, isNotEmpty);
+    expect(
+      preloaded,
+      requested,
+      reason:
+          'Update the font <link rel="preload"> lines in web/index.html to:\n'
+          '${(requested.toList()..sort()).map((url) => '  <link rel="preload" href="$url" as="fetch" crossorigin>').join('\n')}',
+    );
   });
 }

@@ -1,7 +1,10 @@
+import 'dart:async';
 import 'dart:math' as math;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app_scope.dart';
@@ -10,6 +13,7 @@ import '../../../theme/app_palette.dart';
 import '../../../theme/tokens.dart';
 import '../../../widgets/common/app_image.dart';
 import '../../../widgets/common/blurred_image.dart';
+import '../../../widgets/common/browser.dart';
 import '../../../widgets/common/links.dart';
 import '../../../widgets/common/section_header.dart';
 import '../../../widgets/layout/content_width.dart';
@@ -24,6 +28,13 @@ import '../../../widgets/layout/content_width.dart';
 class SpotlightSection extends StatefulWidget {
   const SpotlightSection({super.key});
 
+  /// Whether the progress bar moves in steps instead of every frame: in
+  /// Safari, which struggles to redraw the whole visible page for every frame
+  /// of an animation that runs for as long as the carousel is on screen.
+  /// Other browsers move it smoothly.
+  @visibleForTesting
+  static bool steppedProgress = isSafariEngine;
+
   @override
   State<SpotlightSection> createState() => _SpotlightSectionState();
 }
@@ -31,10 +42,14 @@ class SpotlightSection extends StatefulWidget {
 class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerProviderStateMixin {
   static const _interval = Duration(seconds: 7);
 
-  late final AnimationController _progress = AnimationController(vsync: this, duration: _interval)
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) _next();
-    });
+  /// How far apart the steps are when [SpotlightSection.steppedProgress] is on.
+  static const _step = Duration(milliseconds: 50);
+
+  /// How much of the current plugin's [_interval] has gone by, from 0 to 1.
+  final _progress = ValueNotifier<double>(0);
+  Timer? _timer;
+  Ticker? _ticker;
+  Duration _lastFrame = Duration.zero;
 
   /// Page p shows plugin p % n, with no first or last page, so swiping goes
   /// round and round. Made once the plugins can be read from [context].
@@ -90,10 +105,34 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
 
   void _updatePlayback() {
     // The timer also waits while the banner is being dragged.
-    if (_paused || !_onScreen || _drag != null) return _progress.stop();
+    if (_paused || !_onScreen || _drag != null) return _stopClock();
     // Still full after a drag that was let go without changing plugin.
-    if (_progress.isCompleted) _progress.value = 0;
-    _progress.forward();
+    if (_progress.value >= 1) _progress.value = 0;
+    if (SpotlightSection.steppedProgress) {
+      _timer ??= Timer.periodic(_step, (_) => _advance(_step));
+    } else if (!(_ticker?.isActive ?? false)) {
+      _lastFrame = Duration.zero;
+      (_ticker ??= createTicker(_onFrame)).start();
+    }
+  }
+
+  void _stopClock() {
+    _timer?.cancel();
+    _timer = null;
+    _ticker?.stop();
+  }
+
+  void _onFrame(Duration elapsed) {
+    _advance(elapsed - _lastFrame);
+    _lastFrame = elapsed;
+  }
+
+  void _advance(Duration by) {
+    _progress.value = math.min(1, _progress.value + by.inMicroseconds / _interval.inMicroseconds);
+    if (_progress.value < 1) return;
+    // Starts again once the next plugin is up.
+    _stopClock();
+    _next();
   }
 
   void _togglePaused() {
@@ -155,6 +194,8 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
 
   @override
   void dispose() {
+    _timer?.cancel();
+    _ticker?.dispose();
     _scrollPosition?.removeListener(_checkOnScreen);
     _pages?.dispose();
     _progress.dispose();
@@ -412,17 +453,20 @@ class _Tab extends StatelessWidget {
 
   final DocCategory plugin;
   final bool active;
-  final Animation<double> progress;
+  final ValueListenable<double> progress;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = Theme.of(context).textTheme;
-    Widget thumbnail(double side) =>
+    Widget thumbnail(double side, {double opacity = 1}) =>
         plugin.thumbnail == null
             ? SizedBox.square(dimension: side)
-            : ClipRRect(borderRadius: Radii.smAll, child: AppImage(plugin.thumbnail!, width: side, height: side));
+            : ClipRRect(
+              borderRadius: Radii.smAll,
+              child: AppImage(plugin.thumbnail!, width: side, height: side, opacity: opacity),
+            );
 
     return Material(
       color: active ? p.surface : Colors.transparent,
@@ -452,12 +496,7 @@ class _Tab extends StatelessWidget {
                 if (constraints.maxWidth < _minWidthForName) {
                   return Tooltip(
                     message: plugin.label,
-                    child: Center(
-                      child: Opacity(
-                        opacity: active ? 1 : 0.6,
-                        child: thumbnail(math.min(48, constraints.maxWidth - 12)),
-                      ),
-                    ),
+                    child: Center(child: thumbnail(math.min(48, constraints.maxWidth - 12), opacity: active ? 1 : 0.6)),
                   );
                 }
                 return Padding(

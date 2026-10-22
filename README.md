@@ -84,6 +84,8 @@ The docs were ported from the Docusaurus site, so old links such as `/docs/Easy-
 
 Standard GitHub-flavored Markdown (tables, task lists, strikethrough, fenced code with syntax highlighting), plus:
 
+Code is coloured for C++, C#, JSON, INI, Python, Bash, PowerShell, YAML, XML, JavaScript, TypeScript, CSS, Markdown, Dart, CMake, GLSL, Lua, SQL and diffs. Other languages show as plain text; to colour one, add it to the list at the top of `lib/widgets/markdown/code_block.dart`.
+
 | Write | Get |
 | --- | --- |
 | `:::note Optional title` … `:::` | Callout. Types: `note`, `tip`, `info`, `warning`, `danger` |

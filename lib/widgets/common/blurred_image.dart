@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -19,8 +20,8 @@ class BlurredImage extends StatefulWidget {
   /// Blurs [source] ahead of time, so it shows right away when it's needed.
   static void precache(String source) => _blurred(source);
 
-  // The image is shrunk to this width before blurring: plenty for something
-  // this soft, and quick to blur.
+  // The image is drawn this wide when it's blurred: plenty for something this
+  // soft, and quick to blur.
   static const _width = 128;
   static const _sigma = 6.0;
 
@@ -35,9 +36,11 @@ class BlurredImage extends StatefulWidget {
     }
   });
 
+  /// Gets the image the same way [AppImage] does, so the two share one download
+  /// and one decoded copy.
   static Future<ui.Image> _decode(ImageProvider provider) {
     final completer = Completer<ui.Image>();
-    final stream = ResizeImage(provider, width: _width).resolve(ImageConfiguration.empty);
+    final stream = provider.resolve(ImageConfiguration.empty);
     late final ImageStreamListener listener;
     listener = ImageStreamListener(
       (info, _) {
@@ -56,12 +59,14 @@ class BlurredImage extends StatefulWidget {
   }
 
   static Future<ui.Image> _blur(ui.Image image) async {
+    final height = (_width * image.height / image.width).roundToDouble();
     // The edges are cut off: blurring there mixes in the empty space around the image.
     const margin = _sigma * 2;
     final recorder = ui.PictureRecorder();
-    Canvas(recorder).drawImage(
+    Canvas(recorder).drawImageRect(
       image,
-      const Offset(-margin, -margin),
+      Rect.fromLTWH(0, 0, image.width.toDouble(), image.height.toDouble()),
+      Rect.fromLTWH(-margin, -margin, _width.toDouble(), height),
       Paint()
         ..filterQuality = FilterQuality.medium
         ..imageFilter = ui.ImageFilter.blur(sigmaX: _sigma, sigmaY: _sigma),
@@ -69,8 +74,8 @@ class BlurredImage extends StatefulWidget {
     final picture = recorder.endRecording();
     try {
       return await picture.toImage(
-        (image.width - margin * 2).round().clamp(1, _width),
-        (image.height - margin * 2).round().clamp(1, image.height),
+        (_width - margin * 2).round(),
+        math.max(1, (height - margin * 2).round()),
       );
     } finally {
       picture.dispose();
@@ -112,8 +117,9 @@ class _BlurredImageState extends State<BlurredImage> {
       opacity: _image == null ? 0 : 1,
       duration: const Duration(milliseconds: 300),
       curve: Curves.easeOut,
-      // Smooth (cubic) scaling: the blurred copy is small and drawn much larger.
-      child: RawImage(image: _image, fit: BoxFit.cover, filterQuality: FilterQuality.high),
+      // Plain (bilinear) scaling is enough for something already this soft, and
+      // much cheaper to draw on every frame than smoother (cubic) scaling.
+      child: RawImage(image: _image, fit: BoxFit.cover, filterQuality: FilterQuality.medium),
     );
   }
 }

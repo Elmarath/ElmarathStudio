@@ -230,42 +230,49 @@ void main() {
     await tearDownSite(tester);
   });
 
-  testWidgets('the plugin carousel plays on until it is paused', (tester) async {
-    final c = await Carousel.open(tester, sizes['desktop']!);
+  // Safari gets a progress bar that moves in steps; other browsers a smooth one.
+  for (final stepped in [false, true]) {
+    testWidgets('the plugin carousel plays on until it is paused${stepped ? ' (stepped, as in Safari)' : ''}', (
+      tester,
+    ) async {
+      SpotlightSection.steppedProgress = stepped;
+      addTearDown(() => SpotlightSection.steppedProgress = false);
+      final c = await Carousel.open(tester, sizes['desktop']!);
 
-    // Resting the mouse on it doesn't stop it.
-    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
-    await mouse.addPointer(location: tester.getCenter(c.pitch(0)));
-    await c.wait(7000);
-    expect(c.showing(1), isTrue);
+      // Resting the mouse on it doesn't stop it.
+      final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await mouse.addPointer(location: tester.getCenter(c.pitch(0)));
+      await c.wait(7000);
+      expect(c.showing(1), isTrue);
 
-    // A tab shows its plugin, which gets the usual 7 s.
-    await tester.tap(c.text(c.items[3].label));
-    await c.wait(7600);
-    expect(c.showing(4), isTrue);
+      // A tab shows its plugin, which gets the usual 7 s.
+      await tester.tap(c.text(c.items[3].label));
+      await c.wait(7600);
+      expect(c.showing(4), isTrue);
 
-    // A narrower window swaps the list for dots and stays on the same plugin.
-    tester.view.physicalSize = sizes['tablet']!;
-    await c.wait(500);
-    expect(c.showing(4), isTrue);
-    tester.view.physicalSize = sizes['desktop']!;
-    await c.wait(500);
-    expect(c.showing(4), isTrue);
+      // A narrower window swaps the list for dots and stays on the same plugin.
+      tester.view.physicalSize = sizes['tablet']!;
+      await c.wait(500);
+      expect(c.showing(4), isTrue);
+      tester.view.physicalSize = sizes['desktop']!;
+      await c.wait(500);
+      expect(c.showing(4), isTrue);
 
-    await tester.tap(find.byTooltip('Pause'));
-    await c.wait(20000);
-    expect(c.showing(4), isTrue);
-    await tester.tap(find.byTooltip('Play'));
-    await c.wait(7500);
-    expect(c.showing(5), isTrue);
+      await tester.tap(find.byTooltip('Pause'));
+      await c.wait(20000);
+      expect(c.showing(4), isTrue);
+      await tester.tap(find.byTooltip('Play'));
+      await c.wait(7500);
+      expect(c.showing(5), isTrue);
 
-    // Next to the list it doesn't move with a swipe.
-    await tester.fling(c.pitch(5), const Offset(-500, 0), 1000);
-    await c.wait(1000);
-    expect(c.showing(5), isTrue);
-    await mouse.removePointer();
-    await tearDownSite(tester);
-  });
+      // Next to the list it doesn't move with a swipe.
+      await tester.fling(c.pitch(5), const Offset(-500, 0), 1000);
+      await c.wait(1000);
+      expect(c.showing(5), isTrue);
+      await mouse.removePointer();
+      await tearDownSite(tester);
+    });
+  }
 
   testWidgets('on small screens the plugin carousel has previews below and follows a swipe or a mouse drag', (
     tester,
