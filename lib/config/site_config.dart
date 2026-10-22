@@ -79,38 +79,6 @@ abstract final class SiteConfig {
     ExternalLink(label: 'X', url: 'https://twitter.com/denizhan_toprak', icon: FontAwesomeIcons.xTwitter),
   ];
 
-  /// "What you'll find here" cards on the home page.
-  static const List<SiteFeature> features = [
-    SiteFeature(
-      icon: Icons.menu_book_outlined,
-      title: 'Plugin documentation',
-      description: 'Step-by-step guides for every plugin: setup, examples and the reasoning behind the design.',
-      link: '/docs',
-      linkLabel: 'Browse the docs',
-    ),
-    SiteFeature(
-      icon: Icons.edit_note_outlined,
-      title: 'Dev blog',
-      description: "Devlogs from Hermod's Ride, deep dives into Unreal systems and lessons from shipping tools.",
-      link: '/blog',
-      linkLabel: 'Read the blog',
-    ),
-    SiteFeature(
-      icon: Icons.person_outline,
-      title: 'About me',
-      description: 'Who I am, what I work on, and what kind of roles and collaborations I am open to.',
-      link: '/about',
-      linkLabel: 'Get to know me',
-    ),
-    SiteFeature(
-      icon: Icons.forum_outlined,
-      title: 'Community',
-      description: 'Questions about a plugin? Join the Discord, where bugs get fixed and features get requested.',
-      link: 'https://discord.gg/mUm4hYvG3x',
-      linkLabel: 'Join the Discord',
-    ),
-  ];
-
   /// Footer link columns.
   static const List<FooterColumn> footerColumns = [
     FooterColumn(title: 'Explore', links: [
@@ -143,22 +111,6 @@ class ExternalLink {
   final String label;
   final String url;
   final IconData icon;
-}
-
-class SiteFeature {
-  const SiteFeature({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.link,
-    required this.linkLabel,
-  });
-
-  final IconData icon;
-  final String title;
-  final String description;
-  final String link;
-  final String linkLabel;
 }
 
 class FooterColumn {
