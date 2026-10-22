@@ -4,6 +4,7 @@
 import 'package:elmarath_dev_website/app.dart';
 import 'package:elmarath_dev_website/config/site_config.dart';
 import 'package:elmarath_dev_website/content/content_repository.dart';
+import 'package:elmarath_dev_website/content/models.dart';
 import 'package:elmarath_dev_website/content/text_utils.dart';
 import 'package:elmarath_dev_website/pages/about_page.dart';
 import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
@@ -13,6 +14,7 @@ import 'package:elmarath_dev_website/pages/docs/docs_home_page.dart';
 import 'package:elmarath_dev_website/pages/docs/docs_sidebar.dart';
 import 'package:elmarath_dev_website/pages/home/home_page.dart';
 import 'package:elmarath_dev_website/pages/home/sections/hero_section.dart';
+import 'package:elmarath_dev_website/pages/home/sections/spotlight_section.dart';
 import 'package:elmarath_dev_website/theme/app_theme.dart';
 import 'package:elmarath_dev_website/theme/app_themes.dart';
 import 'package:elmarath_dev_website/theme/theme_controller.dart';
@@ -20,6 +22,7 @@ import 'package:elmarath_dev_website/widgets/cv/cv_viewer.dart';
 import 'package:elmarath_dev_website/widgets/layout/site_nav_bar.dart';
 import 'package:elmarath_dev_website/widgets/layout/site_shell.dart';
 import 'package:elmarath_dev_website/widgets/markdown/markdown_view.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -28,25 +31,21 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 late ContentRepository content;
 
-const sizes = {
-  'phone': Size(375, 812),
-  'tablet': Size(900, 1100),
-  'desktop': Size(1440, 900),
-};
+const sizes = {'phone': Size(375, 812), 'tablet': Size(900, 1100), 'desktop': Size(1440, 900)};
 
 List<String> allRoutes() => [
-      '/',
-      '/docs',
-      for (final c in content.categories) c.route,
-      for (final d in content.docPages) d.route,
-      '/blog',
-      for (final t in content.tags) '/blog?tag=${slugify(t)}',
-      for (final p in content.posts) p.route,
-      '/about',
-      for (final slug in content.pages.keys) '/$slug',
-      '/this-page-does-not-exist',
-      '/docs/no-such-plugin/no-such-page',
-    ];
+  '/',
+  '/docs',
+  for (final c in content.categories) c.route,
+  for (final d in content.docPages) d.route,
+  '/blog',
+  for (final t in content.tags) '/blog?tag=${slugify(t)}',
+  for (final p in content.posts) p.route,
+  '/about',
+  for (final slug in content.pages.keys) '/$slug',
+  '/this-page-does-not-exist',
+  '/docs/no-such-plugin/no-such-page',
+];
 
 Future<ThemeController> pumpSite(WidgetTester tester, Size size) async {
   // Tests have no network, so remote images (YouTube posters, avatars) always fail.
@@ -75,6 +74,36 @@ Future<void> visit(WidgetTester tester, String route) async {
 }
 
 void Function()? _restoreErrorHandler;
+
+/// Drives the home page's plugin carousel.
+class Carousel {
+  Carousel(this.tester) : items = content.featuredPlugins;
+
+  final WidgetTester tester;
+  final List<DocCategory> items;
+
+  Finder text(String text) => find.descendant(of: find.byType(SpotlightSection), matching: find.text(text));
+
+  /// Only the banner shows a plugin's pitch, so it tells which one is up.
+  Finder pitch(int i) => text(items[i % items.length].pitch);
+  bool showing(int i) => pitch(i).evaluate().isNotEmpty;
+
+  /// Small steps, so timers and the progress bar run the way they do in a browser.
+  Future<void> wait(int milliseconds) async {
+    for (var t = 0; t < milliseconds; t += 100) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+  }
+
+  static Future<Carousel> open(WidgetTester tester, Size size) async {
+    await pumpSite(tester, size);
+    final carousel = Carousel(tester);
+    await tester.ensureVisible(find.byType(SpotlightSection));
+    await carousel.wait(1000);
+    expect(carousel.showing(0), isTrue);
+    return carousel;
+  }
+}
 
 Future<void> tearDownSite(WidgetTester tester) async {
   await tester.pumpWidget(const SizedBox());
@@ -174,7 +203,10 @@ void main() {
     await pumpSite(tester, sizes['desktop']!);
     Finder count(String label) => find.descendant(of: find.byType(HeroSection), matching: find.text(label));
     final posts = content.posts.length == 1 ? 'BLOG POST' : 'BLOG POSTS';
-    expect(find.descendant(of: find.byType(HeroSection), matching: find.text('${content.plugins.length}')), findsOneWidget);
+    expect(
+      find.descendant(of: find.byType(HeroSection), matching: find.text('${content.plugins.length}')),
+      findsOneWidget,
+    );
 
     // The counts slide in last: their animation starts on a timer, a frame after
     // it fires. Until it has run they sit below where taps are looked for.
@@ -195,6 +227,89 @@ void main() {
     await visit(tester, '/');
     await tapCount(posts);
     expect(find.byType(BlogListPage), findsOneWidget);
+    await tearDownSite(tester);
+  });
+
+  testWidgets('the plugin carousel plays on until it is paused', (tester) async {
+    final c = await Carousel.open(tester, sizes['desktop']!);
+
+    // Resting the mouse on it doesn't stop it.
+    final mouse = await tester.createGesture(kind: PointerDeviceKind.mouse);
+    await mouse.addPointer(location: tester.getCenter(c.pitch(0)));
+    await c.wait(7000);
+    expect(c.showing(1), isTrue);
+
+    // A tab shows its plugin, which gets the usual 7 s.
+    await tester.tap(c.text(c.items[3].label));
+    await c.wait(7600);
+    expect(c.showing(4), isTrue);
+
+    // A narrower window swaps the list for dots and stays on the same plugin.
+    tester.view.physicalSize = sizes['tablet']!;
+    await c.wait(500);
+    expect(c.showing(4), isTrue);
+    tester.view.physicalSize = sizes['desktop']!;
+    await c.wait(500);
+    expect(c.showing(4), isTrue);
+
+    await tester.tap(find.byTooltip('Pause'));
+    await c.wait(20000);
+    expect(c.showing(4), isTrue);
+    await tester.tap(find.byTooltip('Play'));
+    await c.wait(7500);
+    expect(c.showing(5), isTrue);
+
+    // Next to the list it doesn't move with a swipe.
+    await tester.fling(c.pitch(5), const Offset(-500, 0), 1000);
+    await c.wait(1000);
+    expect(c.showing(5), isTrue);
+    await mouse.removePointer();
+    await tearDownSite(tester);
+  });
+
+  testWidgets('on small screens the plugin carousel has previews below and follows a swipe or a mouse drag', (
+    tester,
+  ) async {
+    final c = await Carousel.open(tester, sizes['phone']!);
+    double pageScroll() =>
+        tester
+            .state<ScrollableState>(find.ancestor(of: find.byType(SpotlightSection), matching: find.byType(Scrollable)))
+            .position
+            .pixels;
+
+    await tester.fling(c.pitch(0), const Offset(-200, 0), 1000);
+    await c.wait(1000);
+    expect(c.showing(1), isTrue);
+    expect(c.showing(0), isFalse);
+
+    // Back twice: past the first plugin round to the last one.
+    await tester.fling(c.pitch(1), const Offset(200, 0), 1000);
+    await c.wait(1000);
+    await tester.fling(c.pitch(0), const Offset(200, 0), 1000);
+    await c.wait(1000);
+    expect(c.showing(-1), isTrue);
+
+    await tester.drag(c.pitch(-1), const Offset(-250, 0), kind: PointerDeviceKind.mouse);
+    await c.wait(1000);
+    expect(c.showing(0), isTrue);
+
+    // The wheel (or a trackpad) scrolls the page, even with a little sideways movement in it.
+    final before = pageScroll();
+    await tester.sendEventToBinding(
+      PointerScrollEvent(position: tester.getCenter(c.pitch(0)), scrollDelta: const Offset(4, 120)),
+    );
+    await c.wait(1000);
+    expect(pageScroll(), greaterThan(before));
+    expect(c.showing(0), isTrue);
+
+    // Below the banner, a preview of every plugin, together exactly as wide as the banner.
+    final banner = tester.getRect(find.byType(PageView));
+    expect(tester.getRect(find.byTooltip(c.items.first.label)).left, banner.left);
+    expect(tester.getRect(find.byTooltip(c.items.last.label)).right, banner.right);
+    await tester.ensureVisible(find.byTooltip(c.items[2].label));
+    await tester.tap(find.byTooltip(c.items[2].label));
+    await c.wait(1000);
+    expect(c.showing(2), isTrue);
     await tearDownSite(tester);
   });
 

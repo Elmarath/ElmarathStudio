@@ -26,7 +26,12 @@ class AppImage extends StatelessWidget {
   final int? cacheWidth;
   final FilterQuality filterQuality;
 
-  bool get isNetwork => source.startsWith('http://') || source.startsWith('https://');
+  bool get isNetwork => _isUrl(source);
+
+  static bool _isUrl(String source) => source.startsWith('http://') || source.startsWith('https://');
+
+  /// The image provider for an asset path or URL, for widgets that draw the image themselves.
+  static ImageProvider providerFor(String source) => _isUrl(source) ? NetworkImage(source) : AssetImage(source);
 
   @override
   Widget build(BuildContext context) {
