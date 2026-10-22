@@ -20,7 +20,8 @@ abstract final class SiteConfig {
       'plugins for Unreal Engine, and document every one of them here.';
   static const String heroImage = 'assets/images/hero.jpeg';
 
-  /// Main navigation, left to right.
+  /// Main navigation, left to right. Each tab opens a section of the site, in
+  /// the same order as the sections in `lib/router/app_router.dart`.
   static const List<NavItem> navItems = [
     NavItem(label: 'Home', path: '/'),
     NavItem(label: 'Docs', path: '/docs'),

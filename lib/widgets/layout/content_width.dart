@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../config/site_config.dart';
 import '../../theme/tokens.dart';
@@ -73,12 +74,18 @@ class PageTitle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // A page that is animating out must not overwrite the new page's title.
-    if (!(ModalRoute.of(context)?.isCurrent ?? true)) return child;
-    return Title(
-      title: title == null ? '${SiteConfig.siteName} · Unreal Engine tools & devlog' : '$title · ${SiteConfig.siteName}',
-      color: Theme.of(context).colorScheme.primary,
-      child: child,
-    );
+    // Only the page showing sets the title: not one on its way out, nor one in
+    // a section that's hidden. A section coming back into view rebuilds this
+    // (TickerMode turns on), which puts its title back. The page itself always
+    // stays in the same place in the tree, so it's never rebuilt for this.
+    if ((ModalRoute.of(context)?.isCurrent ?? true) && TickerMode.of(context)) {
+      SystemChrome.setApplicationSwitcherDescription(
+        ApplicationSwitcherDescription(
+          label: title == null ? '${SiteConfig.siteName} · Unreal Engine tools & devlog' : '$title · ${SiteConfig.siteName}',
+          primaryColor: Theme.of(context).colorScheme.primary.toARGB32(),
+        ),
+      );
+    }
+    return child;
   }
 }
