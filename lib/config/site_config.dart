@@ -16,7 +16,7 @@ abstract final class SiteConfig {
   static const String heroEyebrow = 'Unreal Engine · C++ · Gameplay tools';
   static const String heroTitle = 'Gameplay systems,\nbuilt for Unreal Engine.';
   static const String heroSubtitle =
-      "I'm Denizhan, a C++ gameplay programmer. I build modular, production-ready "
+      "I'm Denizhan, a C++ gameplay programmer. I build games and modular, production-ready "
       'plugins for Unreal Engine, and document every one of them here.';
   static const String heroImage = 'assets/images/hero.jpeg';
 
@@ -36,6 +36,7 @@ abstract final class SiteConfig {
   );
 
   static const String email = 'toprakdenizhan19@gmail.com';
+
   /// Your CV. Replace this PDF to update it everywhere.
   static const String cvAsset = 'assets/files/DenizhanToprak_Resume.pdf';
 
@@ -81,19 +82,23 @@ abstract final class SiteConfig {
 
   /// Footer link columns.
   static const List<FooterColumn> footerColumns = [
-    FooterColumn(title: 'Explore', links: [
-      NavItem(label: 'Documentation', path: '/docs'),
-      NavItem(label: 'Blog', path: '/blog'),
-      NavItem(label: 'About me', path: '/about'),
-    ]),
-    FooterColumn(title: 'Contact', links: [
-      NavItem(label: 'Email', path: 'mailto:$email'),
-      NavItem(label: 'Resume / CV', path: resumeUrl),
-      NavItem(label: 'Fab Store', path: 'https://www.fab.com/sellers/Elmarath'),
-    ]),
-    FooterColumn(title: 'Legal', links: [
-      NavItem(label: 'Privacy Policy', path: '/privacy-policy'),
-    ]),
+    FooterColumn(
+      title: 'Explore',
+      links: [
+        NavItem(label: 'Documentation', path: '/docs'),
+        NavItem(label: 'Blog', path: '/blog'),
+        NavItem(label: 'About me', path: '/about'),
+      ],
+    ),
+    FooterColumn(
+      title: 'Contact',
+      links: [
+        NavItem(label: 'Email', path: 'mailto:$email'),
+        NavItem(label: 'Resume / CV', path: resumeUrl),
+        NavItem(label: 'Fab Store', path: 'https://www.fab.com/sellers/Elmarath'),
+      ],
+    ),
+    FooterColumn(title: 'Legal', links: [NavItem(label: 'Privacy Policy', path: '/privacy-policy')]),
   ];
 }
 

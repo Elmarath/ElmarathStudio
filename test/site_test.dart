@@ -174,22 +174,26 @@ void main() {
     await pumpSite(tester, sizes['desktop']!);
     Finder count(String label) => find.descendant(of: find.byType(HeroSection), matching: find.text(label));
     final posts = content.posts.length == 1 ? 'BLOG POST' : 'BLOG POSTS';
-    await tester.pump(const Duration(seconds: 1)); // let the hero slide in
     expect(find.descendant(of: find.byType(HeroSection), matching: find.text('${content.plugins.length}')), findsOneWidget);
 
-    await tester.ensureVisible(count('PLUGINS'));
-    await tester.pump();
-    await tester.tap(count('PLUGINS'));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    // The counts slide in last: their animation starts on a timer, a frame after
+    // it fires. Until it has run they sit below where taps are looked for.
+    Future<void> tapCount(String label) async {
+      for (var i = 0; i < 3; i++) {
+        await tester.pump(const Duration(milliseconds: 600));
+      }
+      await tester.ensureVisible(count(label));
+      await tester.pump();
+      await tester.tap(count(label));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+    }
+
+    await tapCount('PLUGINS');
     expect(find.byType(DocsHomePage), findsOneWidget);
 
     await visit(tester, '/');
-    await tester.ensureVisible(count(posts));
-    await tester.pump();
-    await tester.tap(count(posts));
-    await tester.pump();
-    await tester.pump(const Duration(seconds: 1));
+    await tapCount(posts);
     expect(find.byType(BlogListPage), findsOneWidget);
     await tearDownSite(tester);
   });
