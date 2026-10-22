@@ -135,10 +135,9 @@ class PostCover extends StatelessWidget {
       ),
       child: LayoutBuilder(
         builder: (context, constraints) => Center(
-          child: Image.asset(
-            SiteConfig.logoAsset,
-            height: constraints.maxHeight * 0.36,
-            opacity: const AlwaysStoppedAnimation(0.9),
+          child: Opacity(
+            opacity: 0.9,
+            child: Image.asset(SiteConfig.logoAsset, height: constraints.maxHeight * 0.36),
           ),
         ),
       ),

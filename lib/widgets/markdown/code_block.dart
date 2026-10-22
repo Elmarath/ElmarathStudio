@@ -1,28 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_markdown_plus/flutter_markdown_plus.dart';
-import 'package:highlight/highlight_core.dart' show Highlight, Node;
-import 'package:highlight/languages/bash.dart' as bash_lang;
-import 'package:highlight/languages/cmake.dart' as cmake_lang;
-import 'package:highlight/languages/cpp.dart' as cpp_lang;
-import 'package:highlight/languages/cs.dart' as cs_lang;
-import 'package:highlight/languages/css.dart' as css_lang;
-import 'package:highlight/languages/dart.dart' as dart_lang;
-import 'package:highlight/languages/diff.dart' as diff_lang;
-import 'package:highlight/languages/glsl.dart' as glsl_lang;
-import 'package:highlight/languages/ini.dart' as ini_lang;
-import 'package:highlight/languages/javascript.dart' as javascript_lang;
-import 'package:highlight/languages/json.dart' as json_lang;
-import 'package:highlight/languages/lua.dart' as lua_lang;
-import 'package:highlight/languages/markdown.dart' as markdown_lang;
-import 'package:highlight/languages/plaintext.dart' as plaintext_lang;
-import 'package:highlight/languages/powershell.dart' as powershell_lang;
-import 'package:highlight/languages/python.dart' as python_lang;
-import 'package:highlight/languages/shell.dart' as shell_lang;
-import 'package:highlight/languages/sql.dart' as sql_lang;
-import 'package:highlight/languages/typescript.dart' as typescript_lang;
-import 'package:highlight/languages/xml.dart' as xml_lang;
-import 'package:highlight/languages/yaml.dart' as yaml_lang;
+import 'package:highlight/highlight.dart' show highlight, Node;
 import 'package:markdown/markdown.dart' as md;
 
 import '../../theme/app_palette.dart';
@@ -49,34 +28,6 @@ class CodeBlockBuilder extends MarkdownElementBuilder {
     return CodeBlock(code: element.textContent.replaceFirst(RegExp(r'\n$'), ''), language: language);
   }
 }
-
-/// The languages code blocks are coloured for. Only these are built into the
-/// site (the highlighter knows 190, which made the site's script much bigger);
-/// a block in any other language shows as plain text. Add one here to colour it.
-final _highlighter =
-    Highlight()..registerLanguages({
-      'bash': bash_lang.bash,
-      'cmake': cmake_lang.cmake,
-      'cpp': cpp_lang.cpp,
-      'cs': cs_lang.cs,
-      'css': css_lang.css,
-      'dart': dart_lang.dart,
-      'diff': diff_lang.diff,
-      'glsl': glsl_lang.glsl,
-      'ini': ini_lang.ini,
-      'javascript': javascript_lang.javascript,
-      'json': json_lang.json,
-      'lua': lua_lang.lua,
-      'markdown': markdown_lang.markdown,
-      'plaintext': plaintext_lang.plaintext,
-      'powershell': powershell_lang.powershell,
-      'python': python_lang.python,
-      'shell': shell_lang.shell,
-      'sql': sql_lang.sql,
-      'typescript': typescript_lang.typescript,
-      'xml': xml_lang.xml,
-      'yaml': yaml_lang.yaml,
-    });
 
 /// Short names people type after ``` mapped to highlight.js language ids.
 const _aliases = {
@@ -141,7 +92,7 @@ class _CodeBlockState extends State<CodeBlock> {
       return [TextSpan(text: widget.code)];
     }
     try {
-      final nodes = _highlighter.parse(widget.code, language: language).nodes ?? const [];
+      final nodes = highlight.parse(widget.code, language: language).nodes ?? const [];
       return _toSpans(nodes, theme);
     } catch (_) {
       return [TextSpan(text: widget.code)];

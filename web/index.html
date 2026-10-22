@@ -47,24 +47,6 @@
   </script>
   <link rel="manifest" href="manifest.json">
 
-  <!-- Start everything the first frame waits for at once. Otherwise each step
-       waits for the one before: main.dart.js has to load and start before it
-       asks for the asset lists, the fonts and the renderer. -->
-  <link rel="preload" href="main.dart.js" as="script">
-  <link rel="preload" href="assets/FontManifest.json" as="fetch" crossorigin>
-  <link rel="preload" href="assets/AssetManifest.bin.json" as="fetch" crossorigin>
-  <link rel="preconnect" href="https://www.gstatic.com">
-  <link rel="preconnect" href="https://www.gstatic.com" crossorigin>
-  <!-- The Inter and JetBrains Mono files AppTheme.preloadFonts gets from Google
-       Fonts. test/content_test.dart fails if this list stops matching them
-       (after upgrading google_fonts, say) and prints the right one. -->
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/06fb8b97ad04af6b7fa9f2fb17d3763d28f6694f777f33dcf147e84c55a4e81a.ttf" as="fetch" crossorigin>
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/7485a755eabadd6c1b38664e848793fd919674ab8d09c25e9347e93bea9a7177.ttf" as="fetch" crossorigin>
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/b7e339223d56e8c4210c86f1ba87b3d43d6c47e03956ea56f0a7a938ae61b2a3.ttf" as="fetch" crossorigin>
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/d7ba633bab7f40576e539a7e934a1301d7618dceea59c743de477c2c493462fc.ttf" as="fetch" crossorigin>
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/ecdb53099b1a68cd24c6900ea5beeafec81bd3c8cb9d0f3c51b9986583ba3982.ttf" as="fetch" crossorigin>
-  <link rel="preload" href="https://fonts.gstatic.com/s/a/fc34426314d00825ccc768a0c4b1178fe704f04bd947882ef10c2b71b7e355e7.ttf" as="fetch" crossorigin>
-
   <style>
     html, body { margin: 0; height: 100%; background: #0E0E11; }
     #splash {

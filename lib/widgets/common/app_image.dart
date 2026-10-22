@@ -14,7 +14,6 @@ class AppImage extends StatelessWidget {
     this.semanticLabel,
     this.cacheWidth,
     this.filterQuality = FilterQuality.medium,
-    this.opacity = 1,
   });
 
   final String source;
@@ -26,9 +25,6 @@ class AppImage extends StatelessWidget {
   /// Decode the image at this pixel width (smaller is cheaper; tiny values look blurred).
   final int? cacheWidth;
   final FilterQuality filterQuality;
-
-  /// Drawn see-through by the image itself, which is cheaper than wrapping it in [Opacity].
-  final double opacity;
 
   bool get isNetwork => _isUrl(source);
 
@@ -50,7 +46,6 @@ class AppImage extends StatelessWidget {
     }
 
     Widget error(BuildContext context, Object error, StackTrace? stack) => _Broken(source: source);
-    final seeThrough = opacity == 1 ? null : AlwaysStoppedAnimation(opacity);
 
     if (isNetwork) {
       return Image.network(
@@ -61,7 +56,6 @@ class AppImage extends StatelessWidget {
         width: width,
         height: height,
         semanticLabel: semanticLabel,
-        opacity: seeThrough,
         frameBuilder: frame,
         errorBuilder: error,
         // Fall back to an <img> element for hosts that don't send CORS headers.
@@ -76,7 +70,6 @@ class AppImage extends StatelessWidget {
       width: width,
       height: height,
       semanticLabel: semanticLabel,
-      opacity: seeThrough,
       frameBuilder: frame,
       errorBuilder: error,
     );
