@@ -66,12 +66,6 @@ class FrontMatterDocument {
     return s.isEmpty ? null : s;
   }
 
-  num? number(String key) {
-    final value = data[key];
-    if (value is num) return value;
-    return value == null ? null : num.tryParse(value.toString());
-  }
-
   bool flag(String key) => data[key] == true || data[key]?.toString() == 'true';
 
   List<String> list(String key) {
