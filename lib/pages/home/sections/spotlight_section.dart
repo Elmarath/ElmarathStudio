@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
@@ -29,14 +28,13 @@ class SpotlightSection extends StatefulWidget {
   State<SpotlightSection> createState() => _SpotlightSectionState();
 }
 
-class _SpotlightSectionState extends State<SpotlightSection> {
-  /// How long each plugin stays up.
+class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerProviderStateMixin {
   static const _interval = Duration(seconds: 7);
 
-  /// Moves on to the next plugin. A plain timer rather than an animated
-  /// progress bar: any animation makes the browser redraw the whole page on
-  /// every frame for as long as the carousel is on screen.
-  Timer? _timer;
+  late final AnimationController _progress = AnimationController(vsync: this, duration: _interval)
+    ..addStatusListener((status) {
+      if (status == AnimationStatus.completed) _next();
+    });
 
   /// Page p shows plugin p % n, with no first or last page, so swiping goes
   /// round and round. Made once the plugins can be read from [context].
@@ -53,9 +51,6 @@ class _SpotlightSectionState extends State<SpotlightSection> {
   int _index = 0;
   bool _paused = false;
   bool _onScreen = false;
-
-  /// False while the home page is hidden behind another section.
-  bool _active = true;
   ScrollPosition? _scrollPosition;
 
   List<DocCategory> get _items => context.content.featuredPlugins;
@@ -75,11 +70,6 @@ class _SpotlightSectionState extends State<SpotlightSection> {
       _scrollPosition = position?..addListener(_checkOnScreen);
     }
     _pages ??= PageController(initialPage: _items.length * 1000);
-    final active = TickerMode.of(context);
-    if (active != _active) {
-      _active = active;
-      _updatePlayback();
-    }
     for (final item in _items) {
       if (item.thumbnail != null) BlurredImage.precache(item.thumbnail!);
     }
@@ -98,11 +88,12 @@ class _SpotlightSectionState extends State<SpotlightSection> {
     }
   }
 
-  /// Gives the current plugin a fresh [_interval], unless it shouldn't move:
-  /// paused, scrolled away, hidden, or being dragged.
   void _updatePlayback() {
-    _timer?.cancel();
-    _timer = !_paused && _onScreen && _active && _drag == null ? Timer(_interval, _next) : null;
+    // The timer also waits while the banner is being dragged.
+    if (_paused || !_onScreen || _drag != null) return _progress.stop();
+    // Still full after a drag that was let go without changing plugin.
+    if (_progress.isCompleted) _progress.value = 0;
+    _progress.forward();
   }
 
   void _togglePaused() {
@@ -122,6 +113,7 @@ class _SpotlightSectionState extends State<SpotlightSection> {
     if (pages == null || !pages.hasClients) return;
     final page = pages.page?.round() ?? pages.initialPage;
     final target = page - page % _items.length + index;
+    _progress.value = 0;
     _updatePlayback();
     if (target == page) return;
     setState(() {
@@ -139,6 +131,7 @@ class _SpotlightSectionState extends State<SpotlightSection> {
   void _pageChanged(int page) {
     if (_target != null) return; // sliding past other plugins on the way to the one picked
     setState(() => _index = page % _items.length);
+    _progress.value = 0;
     _updatePlayback();
   }
 
@@ -164,7 +157,7 @@ class _SpotlightSectionState extends State<SpotlightSection> {
   void dispose() {
     _scrollPosition?.removeListener(_checkOnScreen);
     _pages?.dispose();
-    _timer?.cancel();
+    _progress.dispose();
     super.dispose();
   }
 
@@ -218,7 +211,12 @@ class _SpotlightSectionState extends State<SpotlightSection> {
                           Expanded(
                             child: Padding(
                               padding: const EdgeInsets.only(bottom: 4),
-                              child: _Tab(plugin: item, active: i == _index, onTap: () => _select(i)),
+                              child: _Tab(
+                                plugin: item,
+                                active: i == _index,
+                                progress: _progress,
+                                onTap: () => _select(i),
+                              ),
                             ),
                           ),
                       ],
@@ -241,7 +239,9 @@ class _SpotlightSectionState extends State<SpotlightSection> {
                     children: [
                       for (final (i, item) in items.indexed) ...[
                         if (i > 0) const SizedBox(width: Insets.sm),
-                        Expanded(child: _Tab(plugin: item, active: i == _index, onTap: () => _select(i))),
+                        Expanded(
+                          child: _Tab(plugin: item, active: i == _index, progress: _progress, onTap: () => _select(i)),
+                        ),
                       ],
                     ],
                   ),
@@ -402,16 +402,17 @@ class _Banner extends StatelessWidget {
   }
 }
 
-/// One plugin in the list beside or below the banner; the active one is
-/// highlighted. When it's too narrow for the name, it shows just the
+/// One plugin in the list beside or below the banner. The active one fills up
+/// as the timer runs. When it's too narrow for the name, it shows just the
 /// thumbnail, with the name as a tooltip.
 class _Tab extends StatelessWidget {
-  const _Tab({required this.plugin, required this.active, required this.onTap});
+  const _Tab({required this.plugin, required this.active, required this.progress, required this.onTap});
 
   static const _minWidthForName = 180.0;
 
   final DocCategory plugin;
   final bool active;
+  final Animation<double> progress;
   final VoidCallback onTap;
 
   @override
@@ -429,34 +430,56 @@ class _Tab extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: onTap,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth < _minWidthForName) {
-              return Tooltip(
-                message: plugin.label,
-                child: Center(
-                  child: Opacity(opacity: active ? 1 : 0.6, child: thumbnail(math.min(48, constraints.maxWidth - 12))),
-                ),
-              );
-            }
-            return Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12),
-              child: Row(
-                children: [
-                  thumbnail(48),
-                  const SizedBox(width: 14),
-                  Expanded(
-                    child: Text(
-                      plugin.label,
-                      maxLines: 2,
-                      overflow: TextOverflow.ellipsis,
-                      style: text.titleSmall?.copyWith(color: active ? p.textPrimary : p.textSecondary),
-                    ),
+        child: Stack(
+          alignment: AlignmentDirectional.centerStart,
+          children: [
+            if (active)
+              Positioned.fill(
+                child: RepaintBoundary(
+                  child: AnimatedBuilder(
+                    animation: progress,
+                    builder:
+                        (context, _) => FractionallySizedBox(
+                          alignment: Alignment.centerLeft,
+                          widthFactor: progress.value,
+                          child: ColoredBox(color: p.surfaceRaised),
+                        ),
                   ),
-                ],
+                ),
               ),
-            );
-          },
+            LayoutBuilder(
+              builder: (context, constraints) {
+                if (constraints.maxWidth < _minWidthForName) {
+                  return Tooltip(
+                    message: plugin.label,
+                    child: Center(
+                      child: Opacity(
+                        opacity: active ? 1 : 0.6,
+                        child: thumbnail(math.min(48, constraints.maxWidth - 12)),
+                      ),
+                    ),
+                  );
+                }
+                return Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12),
+                  child: Row(
+                    children: [
+                      thumbnail(48),
+                      const SizedBox(width: 14),
+                      Expanded(
+                        child: Text(
+                          plugin.label,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: text.titleSmall?.copyWith(color: active ? p.textPrimary : p.textSecondary),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
+            ),
+          ],
         ),
       ),
     );

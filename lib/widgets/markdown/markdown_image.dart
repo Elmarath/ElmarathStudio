@@ -39,23 +39,7 @@ class MarkdownImage extends StatelessWidget {
               child: ClipRRect(
                 borderRadius: Radii.mdAll,
                 // Animated GIFs repaint every frame; keep that to the image itself.
-                child: RepaintBoundary(
-                  child: LayoutBuilder(
-                    // Decoded no bigger than it's shown: screenshots can be several times
-                    // wider than the page, and a full-size copy is slow to decode and to
-                    // hand to the GPU the first time it scrolls into view. The viewer
-                    // still opens the original.
-                    builder: (context, constraints) => AppImage(
-                      source,
-                      fit: BoxFit.contain,
-                      semanticLabel: alt,
-                      cacheWidth:
-                          constraints.hasBoundedWidth
-                              ? (constraints.maxWidth * MediaQuery.devicePixelRatioOf(context)).round()
-                              : null,
-                    ),
-                  ),
-                ),
+                child: RepaintBoundary(child: AppImage(source, fit: BoxFit.contain, semanticLabel: alt)),
               ),
             ),
           ),

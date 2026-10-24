@@ -8,7 +8,6 @@ import 'package:elmarath_dev_website/content/models.dart';
 import 'package:elmarath_dev_website/content/text_utils.dart';
 import 'package:elmarath_dev_website/pages/about_page.dart';
 import 'package:elmarath_dev_website/pages/blog/blog_list_page.dart';
-import 'package:elmarath_dev_website/pages/blog/blog_post_page.dart';
 import 'package:elmarath_dev_website/pages/blog/featured_post.dart';
 import 'package:elmarath_dev_website/pages/docs/doc_toc.dart';
 import 'package:elmarath_dev_website/pages/docs/docs_home_page.dart';
@@ -169,77 +168,36 @@ void main() {
     await tearDownSite(tester);
   });
 
-  testWidgets(
-    'sections slide in from their tab\'s side, stay as you left them, and pages within one change instantly',
-    (tester) async {
-      await pumpSite(tester, sizes['desktop']!);
-      final width = sizes['desktop']!.width;
-      String? title;
-      final messenger = tester.binding.defaultBinaryMessenger;
-      messenger.setMockMethodCallHandler(SystemChannels.platform, (call) async {
-        if (call.method == 'SystemChrome.setApplicationSwitcherDescription') {
-          title = (call.arguments as Map)['label'] as String;
-        }
-        return null;
-      });
-      addTearDown(() => messenger.setMockMethodCallHandler(SystemChannels.platform, null));
-      Finder tab(String label) => find.descendant(of: find.byType(SiteNavBar), matching: find.text(label));
-      double leftOf(Type page) => tester.getTopLeft(find.byType(page)).dx;
-      Future<void> midSlide() async {
-        await tester.pump(); // builds the new section
-        await tester.pump(const Duration(milliseconds: 16)); // the slide starts
-        await tester.pump(const Duration(milliseconds: 100));
-      }
+  testWidgets('nav tabs slide toward their side; other navigation does not slide', (tester) async {
+    await pumpSite(tester, sizes['desktop']!);
+    Finder tab(String label) => find.descendant(of: find.byType(SiteNavBar), matching: find.text(label));
+    double leftOf(Type page) => tester.getTopLeft(find.byType(page)).dx;
+    // Mid-slide a page is hundreds of pixels off; fade-through only zooms (a few dozen).
+    final slid = sizes['desktop']!.width * 0.2;
 
-      // Home → Blog (a tab to the right): Blog comes in from the right.
-      await tester.tap(tab('Blog'));
-      await midSlide();
-      expect(leftOf(BlogListPage), inExclusiveRange(0, width));
-      await tester.pump(const Duration(seconds: 1));
-      expect(leftOf(BlogListPage), 0);
+    // Home → Blog (a tab to the right): Blog comes in from the right.
+    await tester.tap(tab('Blog'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(BlogListPage), greaterThan(slid));
+    await tester.pump(const Duration(seconds: 1));
+    expect(leftOf(BlogListPage), 0);
 
-      // Within a section, pages change instantly.
-      GoRouter.of(tester.element(find.byType(SiteShell).first)).go(content.posts.first.route);
-      await tester.pump();
-      expect(leftOf(BlogPostPage), 0);
+    // Blog → Home (a tab to the left): Home comes in from the left.
+    await tester.tap(tab('Home'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(HomePage), lessThan(-slid));
+    await tester.pump(const Duration(seconds: 1));
 
-      // Blog → Home (a tab to the left): Home comes in from the left, scrolled where it was left.
-      await tester.tap(tab('Home'));
-      await midSlide();
-      expect(leftOf(HomePage), inExclusiveRange(-width, 0));
-      await tester.pump(const Duration(seconds: 1));
-      final homeScroll = tester.state<ScrollableState>(
-        find.descendant(of: find.byType(HomePage), matching: find.byType(Scrollable)).first,
-      );
-      homeScroll.position.jumpTo(500);
-      await tester.pump();
-      final homeTitle = title;
-      await tester.tap(tab('About'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
-      expect(title, isNot(homeTitle));
-      await tester.tap(tab('Home'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
-      // The same page, not a rebuilt one, and its title is back.
-      final homeScrollNow = find.descendant(of: find.byType(HomePage), matching: find.byType(Scrollable)).first;
-      expect(tester.state<ScrollableState>(homeScrollNow), same(homeScroll));
-      expect(homeScroll.position.pixels, 500);
-      expect(title, homeTitle);
-
-      // A tab goes back to where you were in its section; the tab of the
-      // section you're in goes to its first page.
-      await tester.tap(tab('Blog'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BlogPostPage), findsOneWidget);
-      await tester.tap(tab('Blog'));
-      await tester.pump();
-      await tester.pump(const Duration(seconds: 1));
-      expect(find.byType(BlogListPage), findsOneWidget);
-      await tearDownSite(tester);
-    },
-  );
+    // Any other navigation (here a link straight to About) keeps the fade.
+    GoRouter.of(tester.element(find.byType(SiteShell).first)).go('/about');
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+    expect(leftOf(AboutPage).abs(), lessThan(slid));
+    await tester.pump(const Duration(seconds: 1));
+    await tearDownSite(tester);
+  });
 
   testWidgets('the home page counts open the docs and the blog', (tester) async {
     await pumpSite(tester, sizes['desktop']!);

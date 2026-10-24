@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../theme/tokens.dart';
 import '../search/site_search.dart';
@@ -9,14 +8,10 @@ import 'site_nav_bar.dart';
 /// The frame around every page: nav bar on top, page below.
 /// Cmd/Ctrl + K opens search from anywhere.
 class SiteShell extends StatefulWidget {
-  const SiteShell({super.key, required this.location, this.sections, required this.child});
+  const SiteShell({super.key, required this.location, required this.child});
 
   /// Current path, used to highlight the active nav item.
   final String location;
-
-  /// The site's sections, which the nav bar tabs switch between. Null on the
-  /// not-found page, where tabs simply follow their links.
-  final StatefulNavigationShell? sections;
   final Widget child;
 
   @override
@@ -47,10 +42,10 @@ class _SiteShellState extends State<SiteShell> {
       child: Focus(
         autofocus: true,
         child: Scaffold(
-          endDrawer: compact ? SiteNavDrawer(location: widget.location, sections: widget.sections) : null,
+          endDrawer: compact ? SiteNavDrawer(location: widget.location) : null,
           body: Column(
             children: [
-              SiteNavBar(location: widget.location, sections: widget.sections, search: SiteSearch(controller: _search)),
+              SiteNavBar(location: widget.location, search: SiteSearch(controller: _search)),
               Expanded(child: widget.child),
             ],
           ),

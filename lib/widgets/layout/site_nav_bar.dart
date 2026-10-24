@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../app_scope.dart';
 import '../../config/site_config.dart';
+import '../../router/tab_slide.dart';
 import '../../theme/app_palette.dart';
 import '../../theme/app_themes.dart';
 import '../../theme/tokens.dart';
@@ -11,22 +12,22 @@ import '../common/links.dart';
 bool _isActive(String location, String path) =>
     path == '/' ? location == '/' : location == path || location.startsWith('$path/');
 
-/// Opens a nav tab's section, back where you were in it, or at its first page
-/// if you're already there. Tabs are in the same order as the sections.
-void _openTab(BuildContext context, StatefulNavigationShell? sections, NavItem item) {
-  final index = SiteConfig.navItems.indexOf(item);
-  if (sections == null || isExternalLink(item.path)) {
-    openLink(context, item.path);
-    return;
+/// Opens a nav tab, sliding the page in from the side the tab sits on
+/// relative to the current one.
+void _openTab(BuildContext context, String location, NavItem item) {
+  if (!isExternalLink(item.path)) {
+    final items = SiteConfig.navItems;
+    final from = items.indexWhere((i) => _isActive(location, i.path));
+    final to = items.indexOf(item);
+    TabSlide.prepare(direction: from < 0 ? 1 : (to - from).sign, target: Uri.parse(item.path).path);
   }
-  sections.goBranch(index, initialLocation: index == sections.currentIndex);
+  openLink(context, item.path);
 }
 
 class SiteNavBar extends StatelessWidget {
-  const SiteNavBar({super.key, required this.location, this.sections, required this.search});
+  const SiteNavBar({super.key, required this.location, required this.search});
 
   final String location;
-  final StatefulNavigationShell? sections;
   final Widget search;
 
   @override
@@ -49,7 +50,7 @@ class SiteNavBar extends StatelessWidget {
               _NavLink(
                 item: item,
                 active: _isActive(location, item.path),
-                onTap: () => _openTab(context, sections, item),
+                onTap: () => _openTab(context, location, item),
               ),
           ],
           const Spacer(),
@@ -225,10 +226,9 @@ class _Swatch extends StatelessWidget {
 
 /// Slide-in menu for phones.
 class SiteNavDrawer extends StatelessWidget {
-  const SiteNavDrawer({super.key, required this.location, this.sections});
+  const SiteNavDrawer({super.key, required this.location});
 
   final String location;
-  final StatefulNavigationShell? sections;
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +246,7 @@ class SiteNavDrawer extends StatelessWidget {
                 selected: _isActive(location, item.path),
                 onTap: () {
                   Navigator.of(context).pop();
-                  _openTab(context, sections, item);
+                  _openTab(context, location, item);
                 },
               ),
             const SizedBox(height: Insets.md),
