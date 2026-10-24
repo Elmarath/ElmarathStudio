@@ -16,9 +16,8 @@ abstract final class SiteConfig {
   static const String heroEyebrow = 'Unreal Engine · C++ · Gameplay tools';
   static const String heroTitle = 'Gameplay systems,\nbuilt for Unreal Engine.';
   static const String heroSubtitle =
-      "I'm Denizhan, a C++ gameplay programmer building games and tools for Unreal Engine. "
-      'I create modular plugins designed for real-world production '
-      'and document everything I build along the way.';
+      "I'm Denizhan, a C++ gameplay programmer. I build games and modular, production-ready "
+      'plugins for Unreal Engine, and document every one of them here.';
   static const String heroImage = 'assets/images/hero.jpeg';
 
   /// Main navigation, left to right. Each tab opens a section of the site, in
@@ -79,6 +78,7 @@ abstract final class SiteConfig {
       url: 'https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ',
       icon: FontAwesomeIcons.youtube,
     ),
+    ExternalLink(label: 'X', url: 'https://twitter.com/denizhan_toprak', icon: FontAwesomeIcons.xTwitter),
   ];
 
   /// Footer link columns.
