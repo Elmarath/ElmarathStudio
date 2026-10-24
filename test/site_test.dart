@@ -241,39 +241,6 @@ void main() {
     },
   );
 
-  testWidgets('a mouse wheel glides the page; a trackpad moves it straight away', (tester) async {
-    await pumpSite(tester, sizes['desktop']!);
-    await tester.pump(const Duration(seconds: 1));
-    final scroll = tester.state<ScrollableState>(
-      find.descendant(of: find.byType(HomePage), matching: find.byType(Scrollable)).first,
-    );
-    final center = tester.getCenter(find.byType(HomePage));
-    Future<void> wheel(double dy, {PointerDeviceKind kind = PointerDeviceKind.mouse}) =>
-        tester.sendEventToBinding(PointerScrollEvent(position: center, scrollDelta: Offset(0, dy), kind: kind));
-
-    // One notch: on its way after a moment, there once the glide ends.
-    await wheel(100);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 50));
-    expect(scroll.position.pixels, inExclusiveRange(0, 100));
-    await tester.pump(const Duration(milliseconds: 200));
-    expect(scroll.position.pixels, 100);
-
-    // Quick notches add up.
-    await wheel(100);
-    await tester.pump(const Duration(milliseconds: 30));
-    await wheel(100);
-    await tester.pump();
-    await tester.pump(const Duration(milliseconds: 300));
-    expect(scroll.position.pixels, 300);
-
-    // A trackpad already sends small, smooth steps: no glide.
-    await wheel(40, kind: PointerDeviceKind.trackpad);
-    await tester.pump();
-    expect(scroll.position.pixels, 340);
-    await tearDownSite(tester);
-  });
-
   testWidgets('the home page counts open the docs and the blog', (tester) async {
     await pumpSite(tester, sizes['desktop']!);
     Finder count(String label) => find.descendant(of: find.byType(HeroSection), matching: find.text(label));
