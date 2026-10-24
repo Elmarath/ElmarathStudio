@@ -18,14 +18,14 @@ class AppThemePreset {
   final AppPalette palette;
 }
 
-/// All themes on the site. The first one is the default.
+/// All themes on the site: a dark one (the default, as the first) and a bright one.
 ///
 /// To add a theme, copy one of the presets below, give it a new `id`, and
 /// change the colors. It appears in the theme menu automatically.
 const List<AppThemePreset> appThemes = [
   AppThemePreset(
     id: 'unreal-dark',
-    name: 'Unreal Dark',
+    name: 'Dark',
     palette: AppPalette(
       brightness: Brightness.dark,
       background: Color(0xFF0E0E11),
@@ -51,47 +51,24 @@ const List<AppThemePreset> appThemes = [
     id: 'elmarath-gold',
     name: 'Elmarath Gold',
     palette: AppPalette(
-      brightness: Brightness.dark,
-      background: Color(0xFF100E0B),
-      surface: Color(0xFF1A1714),
-      surfaceRaised: Color(0xFF26221D),
-      border: Color(0x1FFFF4E0),
-      textPrimary: Color(0xFFF7F3EE),
-      textSecondary: Color(0xFFBDB4A8),
-      textMuted: Color(0xFF857C70),
-      accent: Color(0xFFF2A638),
-      onAccent: Color(0xFF2A1A02),
-      heroGlow: Color(0xFF6B3F07),
-      codeBackground: Color(0xFF141210),
-      codeTheme: atomOneDarkTheme,
-      note: Color(0xFFA8A29E),
-      tip: Color(0xFF4ADE80),
-      info: Color(0xFF60A5FA),
-      warning: Color(0xFFF2A638),
-      danger: Color(0xFFF87171),
-    ),
-  ),
-  AppThemePreset(
-    id: 'daylight',
-    name: 'Daylight',
-    palette: AppPalette(
       brightness: Brightness.light,
-      background: Color(0xFFF5F5F7),
+      background: Color(0xFFFAF7F2),
       surface: Color(0xFFFFFFFF),
-      surfaceRaised: Color(0xFFECECF0),
-      border: Color(0x1A000000),
-      textPrimary: Color(0xFF111114),
-      textSecondary: Color(0xFF4B4B55),
-      textMuted: Color(0xFF7A7A85),
-      accent: Color(0xFF0074E4),
+      surfaceRaised: Color(0xFFF1EBE2),
+      border: Color(0x1F3A2A10),
+      textPrimary: Color(0xFF1C1712),
+      textSecondary: Color(0xFF5A5046),
+      textMuted: Color(0xFF736859),
+      // A deeper gold than the logo's, so links and labels stay readable on white.
+      accent: Color(0xFFA0650A),
       onAccent: Color(0xFFFFFFFF),
-      heroGlow: Color(0xFFBFDFFF),
-      codeBackground: Color(0xFFF7F7F9),
+      heroGlow: Color(0xFFF5D7A1),
+      codeBackground: Color(0xFFF7F2EA),
       codeTheme: githubTheme,
-      note: Color(0xFF6B7280),
-      tip: Color(0xFF059669),
-      info: Color(0xFF0074E4),
-      warning: Color(0xFFD97706),
+      note: Color(0xFF78716C),
+      tip: Color(0xFF15803D),
+      info: Color(0xFF2563EB),
+      warning: Color(0xFFB45309),
       danger: Color(0xFFDC2626),
     ),
   ),

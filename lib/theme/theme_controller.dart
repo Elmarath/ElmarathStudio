@@ -22,7 +22,11 @@ class ThemeController extends ChangeNotifier {
     } catch (_) {
       // Storage can be blocked (private mode); fall back to the default theme.
     }
-    final savedId = prefs?.getString(_storageKey);
+    final savedId = switch (prefs?.getString(_storageKey)) {
+      // Daylight was the light theme before Elmarath Gold became the bright one.
+      'daylight' => 'elmarath-gold',
+      final id => id,
+    };
     final preset = appThemes.firstWhere(
       (t) => t.id == savedId,
       orElse: () => appThemes.first,
