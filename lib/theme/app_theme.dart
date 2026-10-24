@@ -21,13 +21,13 @@ abstract final class AppTheme {
   /// Fetches the fonts before the first frame, so text never renders (and gets
   /// measured) with a fallback font first. Gives up after a few seconds offline.
   static Future<void> preloadFonts() async {
-    for (final weight in [FontWeight.w400, FontWeight.w600, FontWeight.w700, FontWeight.w800, FontWeight.w900]) {
+    // Only the weights on the first screen hold up the first frame; the rest
+    // (and code fonts) load when first used.
+    for (final weight in [FontWeight.w400, FontWeight.w700]) {
       GoogleFonts.inter(fontWeight: weight);
     }
-    GoogleFonts.inter(fontStyle: FontStyle.italic);
-    GoogleFonts.jetBrainsMono();
     try {
-      await GoogleFonts.pendingFonts().timeout(const Duration(seconds: 4));
+      await GoogleFonts.pendingFonts().timeout(const Duration(seconds: 2));
     } catch (_) {}
   }
 

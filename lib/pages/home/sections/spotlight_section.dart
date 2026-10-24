@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 
 import 'package:flutter/gestures.dart';
@@ -29,13 +30,12 @@ class SpotlightSection extends StatefulWidget {
   State<SpotlightSection> createState() => _SpotlightSectionState();
 }
 
-class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerProviderStateMixin {
+class _SpotlightSectionState extends State<SpotlightSection> {
   static const _interval = Duration(seconds: 7);
 
-  late final AnimationController _progress = AnimationController(vsync: this, duration: _interval)
-    ..addStatusListener((status) {
-      if (status == AnimationStatus.completed) _next();
-    });
+  /// Moves on to the next plugin. A timer rather than an animation: an
+  /// animation would make Flutter redraw the page on every frame.
+  Timer? _timer;
 
   /// Page p shows plugin p % n, with no first or last page, so swiping goes
   /// round and round. Made once the plugins can be read from [context].
@@ -98,10 +98,15 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
 
   void _updatePlayback() {
     // The timer also waits while the banner is being dragged.
-    if (_paused || !_onScreen || _drag != null) return _progress.stop();
-    // Still full after a drag that was let go without changing plugin.
-    if (_progress.isCompleted) _progress.value = 0;
-    _progress.forward();
+    if (_paused || !_onScreen || _drag != null) {
+      _timer?.cancel();
+      _timer = null;
+      return;
+    }
+    _timer ??= Timer(_interval, () {
+      _timer = null;
+      _next();
+    });
   }
 
   void _togglePaused() {
@@ -121,7 +126,8 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
     if (pages == null || !pages.hasClients) return;
     final page = pages.page?.round() ?? pages.initialPage;
     final target = page - page % _items.length + index;
-    _progress.value = 0;
+    _timer?.cancel();
+    _timer = null;
     _updatePlayback();
     if (target == page) return;
     setState(() {
@@ -140,7 +146,8 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
   void _pageChanged(int page) {
     if (_target != null) return; // sliding past other plugins on the way to the one picked
     setState(() => _index = page % _items.length);
-    _progress.value = 0;
+    _timer?.cancel();
+    _timer = null;
     _updatePlayback();
     _revealTab();
   }
@@ -188,7 +195,7 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
     _scrollPosition?.removeListener(_checkOnScreen);
     _pages?.dispose();
     _tabs.dispose();
-    _progress.dispose();
+    _timer?.cancel();
     super.dispose();
   }
 
@@ -237,7 +244,7 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
                   (context, i) => SizedBox(
                     width: vertical ? null : extent,
                     height: vertical ? extent : null,
-                    child: _Tab(plugin: items[i], active: i == _index, progress: _progress, onTap: () => _select(i)),
+                    child: _Tab(plugin: items[i], active: i == _index, onTap: () => _select(i)),
                   ),
             ),
           ),
@@ -461,17 +468,16 @@ class _Banner extends StatelessWidget {
   }
 }
 
-/// One plugin in the list beside or below the banner. The active one fills up
-/// as the timer runs. When it's too narrow for the name, it shows just the
+/// One plugin in the list beside or below the banner, highlighted while shown.
+/// When it's too narrow for the name, it shows just the
 /// thumbnail, with the name as a tooltip.
 class _Tab extends StatelessWidget {
-  const _Tab({required this.plugin, required this.active, required this.progress, required this.onTap});
+  const _Tab({required this.plugin, required this.active, required this.onTap});
 
   static const _minWidthForName = 180.0;
 
   final DocCategory plugin;
   final bool active;
-  final Animation<double> progress;
   final VoidCallback onTap;
 
   @override
@@ -492,20 +498,6 @@ class _Tab extends StatelessWidget {
         child: Stack(
           alignment: AlignmentDirectional.centerStart,
           children: [
-            if (active)
-              Positioned.fill(
-                child: RepaintBoundary(
-                  child: AnimatedBuilder(
-                    animation: progress,
-                    builder:
-                        (context, _) => FractionallySizedBox(
-                          alignment: Alignment.centerLeft,
-                          widthFactor: progress.value,
-                          child: ColoredBox(color: p.surfaceRaised),
-                        ),
-                  ),
-                ),
-              ),
             LayoutBuilder(
               builder: (context, constraints) {
                 if (constraints.maxWidth < _minWidthForName) {
