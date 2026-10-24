@@ -7,119 +7,126 @@ import '../../../config/site_config.dart';
 import '../../../theme/app_palette.dart';
 import '../../../theme/tokens.dart';
 import '../../../widgets/common/app_image.dart';
-import '../../../widgets/common/section_header.dart';
 import '../../../widgets/layout/content_width.dart';
+import 'hero_video_stub.dart' if (dart.library.js_interop) 'hero_video_web.dart';
 
-/// Full-width banner: who you are, what the site is, and where to go next.
+/// The top of the home page, after unrealengine.com: who you are and what you
+/// make on one side, a looping showreel with a soft glow of it behind it on the
+/// other (below, on smaller screens).
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final p = context.palette;
+    final size = ScreenSize.of(context);
+    // The showreel comes first in each layout: drawn under the text, its glow
+    // can spread out behind it, as on unrealengine.com.
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: size.isCompact ? Insets.xxl : 96),
+      child: ContentWidth(
+        child:
+            size.isExpanded
+                ? const Stack(
+                  alignment: Alignment.centerLeft,
+                  clipBehavior: Clip.none,
+                  children: [
+                    // Two rows on top of each other: the video on the right, drawn first,
+                    // then the text on the left.
+                    Row(
+                      children: [Spacer(flex: 5), SizedBox(width: 72), Expanded(flex: 6, child: _Showreel(glow: 220))],
+                    ),
+                    Row(children: [Expanded(flex: 5, child: _Intro()), SizedBox(width: 72), Spacer(flex: 6)]),
+                  ],
+                )
+                // Laid out bottom to top, so the text above is drawn after the showreel below.
+                : const Column(
+                  verticalDirection: VerticalDirection.up,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [_Showreel(glow: 140), SizedBox(height: 64), _Intro()],
+                ),
+      ),
+    );
+  }
+}
+
+/// Name, the big statement, what you do, and where to go next.
+class _Intro extends StatelessWidget {
+  const _Intro();
+
+  @override
+  Widget build(BuildContext context) {
     final text = Theme.of(context).textTheme;
     final size = ScreenSize.of(context);
     final content = context.content;
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+            const _OwnerChip(),
+            const SizedBox(height: Insets.xl),
+            Text(
+              SiteConfig.heroTitle,
+              // Beside the video there's room for two lines only at a smaller size.
+              style: switch (size) {
+                ScreenSize.compact => text.displaySmall,
+                ScreenSize.medium => text.displayLarge,
+                ScreenSize.expanded => text.displayMedium,
+              },
+            ),
+            const SizedBox(height: Insets.lg),
+            ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Text(SiteConfig.heroSubtitle, style: text.bodyLarge?.copyWith(fontSize: 18)),
+            ),
+            const SizedBox(height: Insets.xl),
+            Wrap(
+              spacing: Insets.md,
+              runSpacing: Insets.md,
+              children: [
+                FilledButton.icon(
+                  onPressed: () => context.go('/docs'),
+                  icon: const Icon(Icons.menu_book_outlined, size: 18),
+                  label: const Text('Explore the docs'),
+                ),
+                OutlinedButton(onPressed: () => context.go('/blog'), child: const Text('Read the blog')),
+              ],
+            ),
+            const SizedBox(height: Insets.xl),
+            Wrap(
+              spacing: Insets.md,
+              runSpacing: Insets.sm,
+              children: [
+                _Stat(value: content.plugins.length, label: 'Plugins', route: '/docs'),
+                _Stat(
+                  value: content.posts.length,
+                  label: content.posts.length == 1 ? 'Blog post' : 'Blog posts',
+                  route: '/blog',
+                ),
+              ],
+            ),
+          ]
+          .animate(interval: 70.ms)
+          .fadeIn(duration: 500.ms, curve: Curves.easeOut)
+          .slideY(begin: 0.25, end: 0, duration: 500.ms, curve: Curves.easeOutCubic),
+    );
+  }
+}
 
-    return ConstrainedBox(
-      constraints: BoxConstraints(minHeight: size.isCompact ? 560 : 640),
+/// The video in a rounded 16:9 frame. The glow spills out around it.
+class _Showreel extends StatelessWidget {
+  const _Showreel({required this.glow});
+
+  /// How far the glow can spread around the frame.
+  final double glow;
+
+  @override
+  Widget build(BuildContext context) {
+    return AspectRatio(
+      aspectRatio: 16 / 9,
       child: Stack(
-        alignment: Alignment.centerLeft,
+        clipBehavior: Clip.none,
         children: [
-          Positioned.fill(
-            child: Image.asset(SiteConfig.heroImage, fit: BoxFit.cover, alignment: const Alignment(0.6, -0.2)),
-          ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [p.background, p.background.withValues(alpha: 0.88), p.background.withValues(alpha: 0.25)],
-                  stops: size.isCompact ? const [0, 0.6, 1] : const [0, 0.42, 1],
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [p.background.withValues(alpha: 0), p.background],
-                  stops: const [0.55, 1],
-                ),
-              ),
-            ),
-          ),
-          Positioned.fill(
-            child: DecoratedBox(
-              decoration: BoxDecoration(
-                gradient: RadialGradient(
-                  center: const Alignment(-0.9, -0.8),
-                  radius: 1.1,
-                  colors: [p.heroGlow.withValues(alpha: 0.45), p.heroGlow.withValues(alpha: 0)],
-                ),
-              ),
-            ),
-          ),
-          ContentWidth(
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: size.isCompact ? Insets.xxl : 88),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                      const _OwnerChip(),
-                      const SizedBox(height: Insets.lg),
-                      Eyebrow(SiteConfig.heroEyebrow),
-                      const SizedBox(height: Insets.md),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 760),
-                        child: Text(
-                          SiteConfig.heroTitle,
-                          style: size.isCompact ? text.displaySmall : text.displayLarge,
-                        ),
-                      ),
-                      const SizedBox(height: Insets.lg),
-                      ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 560),
-                        child: Text(SiteConfig.heroSubtitle, style: text.bodyLarge?.copyWith(fontSize: 18)),
-                      ),
-                      const SizedBox(height: Insets.xl),
-                      Wrap(
-                        spacing: Insets.md,
-                        runSpacing: Insets.md,
-                        children: [
-                          FilledButton.icon(
-                            onPressed: () => context.go('/docs'),
-                            icon: const Icon(Icons.menu_book_outlined, size: 18),
-                            label: const Text('Explore the docs'),
-                          ),
-                          OutlinedButton(onPressed: () => context.go('/blog'), child: const Text('Read the blog')),
-                        ],
-                      ),
-                      const SizedBox(height: Insets.xxl),
-                      Wrap(
-                        spacing: Insets.md,
-                        runSpacing: Insets.sm,
-                        children: [
-                          _Stat(value: content.plugins.length, label: 'Plugins', route: '/docs'),
-                          _Stat(
-                            value: content.posts.length,
-                            label: content.posts.length == 1 ? 'Blog post' : 'Blog posts',
-                            route: '/blog',
-                          ),
-                        ],
-                      ),
-                    ]
-                    .animate(interval: 70.ms)
-                    .fadeIn(duration: 500.ms, curve: Curves.easeOut)
-                    .slideY(begin: 0.25, end: 0, duration: 500.ms, curve: Curves.easeOutCubic),
-              ),
-            ),
-          ),
+          Positioned(left: -glow, top: -glow, right: -glow, bottom: -glow, child: HeroVideo(glow: glow, radius: 24)),
         ],
       ),
     );
@@ -141,9 +148,7 @@ class _OwnerChipState extends State<_OwnerChip> {
   Widget build(BuildContext context) {
     final p = context.palette;
     final text = Theme.of(context).textTheme;
-    final shape = StadiumBorder(
-      side: BorderSide(color: _hovered ? p.textPrimary.withValues(alpha: 0.4) : p.border),
-    );
+    final shape = StadiumBorder(side: BorderSide(color: _hovered ? p.textPrimary.withValues(alpha: 0.4) : p.border));
     return Material(
       color: (_hovered ? p.surfaceRaised : p.surface).withValues(alpha: 0.75),
       shape: shape,

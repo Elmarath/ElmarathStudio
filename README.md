@@ -2,7 +2,7 @@
 
 Portfolio, dev blog and Docusaurus-style plugin documentation for Elmarath, built with Flutter (web).
 
-- **Home**: hero, a featured-plugin spotlight, latest posts, and a contact section
+- **Home**: a hero with a looping showreel, a featured-plugin spotlight, latest posts, and a contact section
 - **Docs** (`/docs`): sidebar tree, "On this page" table of contents, breadcrumbs, previous/next links
 - **Blog** (`/blog`): laid out like the Unreal Engine feed, with tag pills, tag search, a featured post and a card grid with "Load more"
 - **About** and standalone pages (`/about`, `/privacy-policy`), plus a built-in **CV viewer** (a window from "View CV", or the page `/cv`)
@@ -108,6 +108,7 @@ Standard GitHub-flavored Markdown (tables, task lists, strikethrough, fenced cod
 | To change | Edit |
 | --- | --- |
 | Name, links, nav items, hero text, footer | `lib/config/site_config.dart` |
+| Home page showreel | Short muted `.mp4` clips in `web/videos/`, each with a `.jpg` still of the same name, listed in `heroVideos` in `site_config.dart`. They play one after another; 16:9 looks best. |
 | Colors / add a theme | `lib/theme/app_themes.dart` (each preset appears in the theme menu) |
 | Fonts, button and card styling | `lib/theme/app_theme.dart` |
 | Spacing, radii, breakpoints | `lib/theme/tokens.dart` |
@@ -119,7 +120,7 @@ Standard GitHub-flavored Markdown (tables, task lists, strikethrough, fenced cod
 
 ```
 content/            Markdown: blog/, docs/, pages/
-assets/images/      Logo and hero image
+assets/images/      Logo, and the image link previews show (og:image)
 lib/
   config/           site_config.dart: everything about you
   content/          Markdown loading, front matter, custom blocks, search

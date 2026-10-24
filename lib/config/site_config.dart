@@ -13,12 +13,16 @@ abstract final class SiteConfig {
   static const String logoAsset = 'assets/images/logo.png';
 
   // Home page hero.
-  static const String heroEyebrow = 'Unreal Engine · C++ · Gameplay tools';
-  static const String heroTitle = 'Gameplay systems,\nbuilt for Unreal Engine.';
+  // A non-breaking space keeps "Unreal Engine" together when the line wraps on phones.
+  static const String heroTitle = 'Gameplay systems,\nbuilt for Unreal\u00A0Engine.';
   static const String heroSubtitle =
       "I'm Denizhan, a C++ gameplay programmer. I build games and modular, production-ready "
       'plugins for Unreal Engine, and document every one of them here.';
-  static const String heroImage = 'assets/images/hero.jpeg';
+
+  /// The showreel next to the hero text: short, muted clips that play one after
+  /// another on a loop. Put them in `web/videos/`, each with a still of the same
+  /// name ending in `.jpg`, shown until the clip can play.
+  static const List<String> heroVideos = ['videos/skeletal-mesh-merge.mp4', 'videos/trace-trail.mp4'];
 
   /// Main navigation, left to right.
   static const List<NavItem> navItems = [
