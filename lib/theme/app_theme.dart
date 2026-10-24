@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -74,6 +75,10 @@ abstract final class AppTheme {
       focusColor: p.accent.withValues(alpha: 0.16),
       splashFactory: InkSparkle.splashFactory,
       extensions: [p],
+      // Default for any route that doesn't set its own transition (e.g. the 404 page).
+      pageTransitionsTheme: PageTransitionsTheme(builders: {
+        for (final platform in TargetPlatform.values) platform: const FadeThroughPageTransitionsBuilder(),
+      }),
       textSelectionTheme: TextSelectionThemeData(
         cursorColor: p.accent,
         selectionColor: p.accent.withValues(alpha: 0.3),

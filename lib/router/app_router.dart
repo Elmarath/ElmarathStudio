@@ -29,9 +29,7 @@ GoRouter buildRouter(ContentRepository content) {
   return GoRouter(
     // Old links (the previous site, the CV, Fab listings) land on today's pages.
     redirect: (context, state) => content.legacyRoute(state.uri, moved: SiteConfig.movedPages),
-    errorPageBuilder:
-        (context, state) =>
-            NoTransitionPage<void>(child: SiteShell(location: state.uri.path, child: const NotFoundPage())),
+    errorBuilder: (context, state) => SiteShell(location: state.uri.path, child: const NotFoundPage()),
     routes: [
       StatefulShellRoute(
         builder: (context, state, sections) => SiteShell(location: state.uri.path, sections: sections, child: sections),
