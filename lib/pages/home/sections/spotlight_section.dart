@@ -15,8 +15,9 @@ import '../../../widgets/common/section_header.dart';
 import '../../../widgets/layout/content_width.dart';
 
 /// Epic Games Store–style featured carousel: a big banner that auto-advances,
-/// with every plugin listed beside it, or in a row below it on smaller
-/// screens. Shows docs folders with `featured: true`.
+/// with every plugin in a list beside it, or a row below it on smaller
+/// screens, that scrolls when they don't all fit. Plugins with
+/// `featured: true` come first.
 ///
 /// Like Fab's, it plays until the pause button in the banner's corner is
 /// pressed. On smaller screens (phones, tablets, narrow windows) the banner can
@@ -48,12 +49,19 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
   int? _target;
   Drag? _drag;
 
+  /// The list of plugins beside or below the banner.
+  final _tabs = ScrollController();
+
+  /// How far apart the plugins in that list are, set as it's laid out.
+  double _tabStride = 0;
+  bool? _expanded;
+
   int _index = 0;
   bool _paused = false;
   bool _onScreen = false;
   ScrollPosition? _scrollPosition;
 
-  List<DocCategory> get _items => context.content.featuredPlugins;
+  List<DocCategory> get _items => context.content.spotlightPlugins;
 
   @override
   void initState() {
@@ -120,6 +128,7 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
       _index = index;
       _target = target;
     });
+    _revealTab();
     pages.animateToPage(target, duration: Motion.slow, curve: Motion.curve).whenComplete(() {
       _target = null;
       // A drag can cut the slide short; catch up with wherever it stopped.
@@ -133,6 +142,27 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
     setState(() => _index = page % _items.length);
     _progress.value = 0;
     _updatePlayback();
+    _revealTab();
+  }
+
+  /// Scrolls the list of plugins, when they don't all fit, so the one on show
+  /// is in view. Only that list moves, never the page.
+  void _revealTab({bool animate = true}) {
+    if (!mounted || !_tabs.hasClients) return;
+    final position = _tabs.position;
+    final start = _index * _tabStride;
+    var target = position.pixels;
+    if (start < target) target = start;
+    if (start + _tabStride > target + position.viewportDimension) {
+      target = start + _tabStride - position.viewportDimension;
+    }
+    target = target.clamp(position.minScrollExtent, position.maxScrollExtent);
+    if (target == position.pixels) return;
+    if (animate) {
+      _tabs.animateTo(target, duration: Motion.slow, curve: Motion.curve);
+    } else {
+      _tabs.jumpTo(target);
+    }
   }
 
   // Drags are handled here rather than by the PageView itself, which would
@@ -157,8 +187,63 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
   void dispose() {
     _scrollPosition?.removeListener(_checkOnScreen);
     _pages?.dispose();
+    _tabs.dispose();
     _progress.dispose();
     super.dispose();
+  }
+
+  /// Keeps wheel and trackpad scrolling along the list of plugins in it, like
+  /// CSS's `overscroll-behavior: contain`: at either end the page doesn't
+  /// scroll instead. The first widget to register for a pointer signal handles
+  /// it, innermost first, so the list still takes the event while it can move;
+  /// this takes what's left and does nothing with it. Scrolling across the
+  /// list (down over the row below the banner) still moves the page, and so
+  /// does any scrolling when all the plugins fit.
+  void _containScroll(PointerSignalEvent event, bool vertical) {
+    if (event is! PointerScrollEvent || !_tabs.hasClients || _tabs.position.maxScrollExtent == 0) return;
+    final Offset(:dx, :dy) = event.scrollDelta;
+    final along = vertical ? dy : dx;
+    final across = vertical ? dx : dy;
+    if (along.abs() > across.abs()) GestureBinding.instance.pointerSignalResolver.register(event, (_) {});
+  }
+
+  /// Every plugin, in a list beside the banner ([Axis.vertical]) or a row
+  /// below it. They share out its length when they all fit. Otherwise the list
+  /// scrolls, and they're sized (about 72 pixels) so the last one in view is
+  /// cut in half, a hint that there's more.
+  Widget _tabList(Axis axis) {
+    final items = _items;
+    final vertical = axis == Axis.vertical;
+    final gap = vertical ? 4.0 : Insets.sm;
+    final behavior = ScrollConfiguration.of(context);
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final length = (vertical ? constraints.maxHeight : constraints.maxWidth) + gap;
+        final fit = length / (72 + gap);
+        final inView = fit >= items.length ? items.length : math.max(1, (fit - 0.5).round()) + 0.5;
+        _tabStride = length / inView;
+        final extent = _tabStride - gap;
+        return Listener(
+          onPointerSignal: (event) => _containScroll(event, vertical),
+          child: ScrollConfiguration(
+            // A mouse can drag it too, like the banner on smaller screens.
+            behavior: behavior.copyWith(dragDevices: {...behavior.dragDevices, PointerDeviceKind.mouse}),
+            child: ListView.separated(
+              controller: _tabs,
+              scrollDirection: axis,
+              itemCount: items.length,
+              separatorBuilder: (context, i) => SizedBox.square(dimension: gap),
+              itemBuilder:
+                  (context, i) => SizedBox(
+                    width: vertical ? null : extent,
+                    height: vertical ? extent : null,
+                    child: _Tab(plugin: items[i], active: i == _index, progress: _progress, onTap: () => _select(i)),
+                  ),
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -166,6 +251,11 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
     final items = _items;
     if (items.isEmpty) return const SizedBox.shrink();
     final size = ScreenSize.of(context);
+    // Resized into the other layout: its list starts at the plugin on show.
+    if (size.isExpanded != _expanded) {
+      _expanded = size.isExpanded;
+      WidgetsBinding.instance.addPostFrameCallback((_) => _revealTab(animate: false));
+    }
 
     Widget slides = PageView.builder(
       key: _slidesKey,
@@ -203,25 +293,7 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
                 children: [
                   Expanded(child: banner),
                   const SizedBox(width: Insets.md),
-                  SizedBox(
-                    width: 290,
-                    child: Column(
-                      children: [
-                        for (final (i, item) in items.indexed)
-                          Expanded(
-                            child: Padding(
-                              padding: const EdgeInsets.only(bottom: 4),
-                              child: _Tab(
-                                plugin: item,
-                                active: i == _index,
-                                progress: _progress,
-                                onTap: () => _select(i),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                  ),
+                  SizedBox(width: 290, child: _tabList(Axis.vertical)),
                 ],
               ),
             )
@@ -231,21 +303,8 @@ class _SpotlightSectionState extends State<SpotlightSection> with SingleTickerPr
                 // A fixed height for swiping, with room for the longest title and pitch.
                 SizedBox(height: size.isCompact ? 560 : 480, child: banner),
                 const SizedBox(height: Insets.sm),
-                // The same list, as a row that always shares out the full width.
-                SizedBox(
-                  height: 72,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      for (final (i, item) in items.indexed) ...[
-                        if (i > 0) const SizedBox(width: Insets.sm),
-                        Expanded(
-                          child: _Tab(plugin: item, active: i == _index, progress: _progress, onTap: () => _select(i)),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
+                // The same list, as a row as wide as the banner.
+                SizedBox(height: 72, child: _tabList(Axis.horizontal)),
               ],
             );
 

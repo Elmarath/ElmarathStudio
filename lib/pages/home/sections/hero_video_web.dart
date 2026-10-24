@@ -14,11 +14,15 @@ import '../../../config/site_config.dart';
 ///
 /// It's an HTML <video>, so the browser plays it (and blurs the glow) without
 /// Flutter redrawing the page for every video frame. It covers the frame plus
-/// [glow] logical pixels around it for the glow.
+/// room for the glow: twice [blur] around it, and [shift] more on the left.
 class HeroVideo extends StatelessWidget {
-  const HeroVideo({super.key, required this.glow, required this.radius});
+  const HeroVideo({super.key, required this.blur, required this.shift, required this.radius});
 
-  final double glow;
+  /// How much the glow is blurred.
+  final double blur;
+
+  /// How far left of the video the glow is centred.
+  final double shift;
   final double radius;
 
   @override
@@ -30,45 +34,52 @@ class HeroVideo extends StatelessWidget {
     if (_registered.add(viewType)) {
       ui_web.platformViewRegistry.registerViewFactory(viewType, (int viewId, {Object? params}) {
         final settings = params! as Map<Object?, Object?>;
+        double setting(String name) => (settings[name]! as num).toDouble();
         return _Showreel(
-          glow: (settings['glow']! as num).toDouble(),
-          radius: (settings['radius']! as num).toDouble(),
+          blur: setting('blur'),
+          shift: setting('shift'),
+          radius: setting('radius'),
           bright: bright,
         ).root;
       });
     }
     // Plain values: they travel through Flutter's platform view channel.
-    return HtmlElementView(viewType: viewType, creationParams: {'glow': glow, 'radius': radius});
+    return HtmlElementView(
+      viewType: viewType,
+      creationParams: {'blur': blur, 'shift': shift, 'radius': radius},
+    );
   }
 }
 
 final _registered = <String>{};
 
 class _Showreel {
-  _Showreel({required double glow, required double radius, required bool bright}) : _bright = bright {
+  _Showreel({required double blur, required double shift, required double radius, required bool bright})
+    : _bright = bright {
     final clips = SiteConfig.heroVideos;
     // Decorative: clicks and scrolling go through to the page.
     root.style.cssText =
         'position:relative;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .8s ease';
-    // A tiny copy of the video, blown up past the frame and blurred by the
-    // browser into a wash of its colours. It spreads [glow] pixels out at most,
-    // so the blur fades out inside this element rather than being cut off.
-    final spread = glow * 0.45;
+    // The glow, made the way unrealengine.com makes it: a tiny copy of the
+    // video, as big as the video but [shift]ed left, blurred by the browser into
+    // a wash of its colours. The blur fades out within twice [blur], inside
+    // this element rather than being cut off at its edge.
+    final margin = 2 * blur;
+    final size = 'width:calc(100% - ${shift + 2 * margin}px);height:calc(100% - ${2 * margin}px)';
     glowCanvas
       ..width = 32
       ..height = 18
       ..style.cssText =
-          'position:absolute;left:${glow - spread}px;top:${glow - spread}px;'
-          'width:calc(100% - ${2 * (glow - spread)}px);height:calc(100% - ${2 * (glow - spread)}px);'
-          'filter:blur(${glow * 0.22}px) ${bright ? 'saturate(1.8);opacity:.6' : 'saturate(1.3);opacity:.75'}';
+          'position:absolute;left:${margin}px;top:${margin}px;$size;'
+          // Unreal's own colours at full strength; on a light page, coloured light.
+          'filter:blur(${blur}px)${bright ? ' saturate(1.8);opacity:.6' : ''}';
     video
       ..muted = true
       ..playsInline = true
       ..preload = 'auto'
       ..loop = clips.length == 1
       ..style.cssText =
-          'position:absolute;left:${glow}px;top:${glow}px;'
-          'width:calc(100% - ${2 * glow}px);height:calc(100% - ${2 * glow}px);'
+          'position:absolute;left:${shift + margin}px;top:${margin}px;$size;'
           'object-fit:cover;border-radius:${radius}px;background:#000;transition:opacity .35s ease';
     // Safari only autoplays when these are attributes, not just properties.
     video

@@ -70,7 +70,7 @@ position: 10                  # order in the sidebar
 summary: One line shown on cards.
 description: Longer text for the overview page.
 thumbnail: thumbnail.png      # square image in this folder
-featured: true                # show in the home page spotlight
+featured: true                # list first in the home page carousel (it shows every plugin)
 links:
   fab: https://www.fab.com/listings/...
   github: https://github.com/...

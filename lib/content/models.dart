@@ -126,7 +126,7 @@ class DocCategory extends DocNode {
   /// Asset path or URL of the square thumbnail.
   final String? thumbnail;
 
-  /// Shown in the home page spotlight.
+  /// Listed first in the home page carousel.
   final bool featured;
 
   /// External links such as `fab` and `github`.

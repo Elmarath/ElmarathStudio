@@ -16,6 +16,12 @@ import 'hero_video_stub.dart' if (dart.library.js_interop) 'hero_video_web.dart'
 class HeroSection extends StatelessWidget {
   const HeroSection({super.key});
 
+  /// On wide screens, as on unrealengine.com: a narrow column of text, and the
+  /// video filling the rest of the row. Unreal slides its video a little under
+  /// the text; here they stay apart, as dark text over the video can't be read.
+  static const _textWidth = 400.0;
+  static const _videoLeft = _textWidth + 40;
+
   @override
   Widget build(BuildContext context) {
     final size = ScreenSize.of(context);
@@ -30,19 +36,19 @@ class HeroSection extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   clipBehavior: Clip.none,
                   children: [
-                    // Two rows on top of each other: the video on the right, drawn first,
-                    // then the text on the left.
-                    Row(
-                      children: [Spacer(flex: 5), SizedBox(width: 72), Expanded(flex: 6, child: _Showreel(glow: 220))],
+                    // Its glow is centred on the whole row, so it reaches in behind the text.
+                    Padding(
+                      padding: EdgeInsets.only(left: _videoLeft),
+                      child: _Showreel(blur: 80, shift: _videoLeft / 2),
                     ),
-                    Row(children: [Expanded(flex: 5, child: _Intro()), SizedBox(width: 72), Spacer(flex: 6)]),
+                    SizedBox(width: _textWidth, child: _Intro()),
                   ],
                 )
                 // Laid out bottom to top, so the text above is drawn after the showreel below.
                 : const Column(
                   verticalDirection: VerticalDirection.up,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [_Showreel(glow: 140), SizedBox(height: 64), _Intro()],
+                  children: [_Showreel(blur: 48), SizedBox(height: 64), _Intro()],
                 ),
       ),
     );
@@ -66,12 +72,9 @@ class _Intro extends StatelessWidget {
             const SizedBox(height: Insets.xl),
             Text(
               SiteConfig.heroTitle,
-              // Beside the video there's room for two lines only at a smaller size.
-              style: switch (size) {
-                ScreenSize.compact => text.displaySmall,
-                ScreenSize.medium => text.displayLarge,
-                ScreenSize.expanded => text.displayMedium,
-              },
+              // Beside the video there's room for two lines only at a smaller size
+              // (about Unreal's 40px).
+              style: size == ScreenSize.medium ? text.displayLarge : text.displaySmall,
             ),
             const SizedBox(height: Insets.lg),
             ConstrainedBox(
@@ -112,21 +115,31 @@ class _Intro extends StatelessWidget {
   }
 }
 
-/// The video in a rounded 16:9 frame. The glow spills out around it.
+/// The video in a rounded 16:9 frame, with its glow spilling out around it.
 class _Showreel extends StatelessWidget {
-  const _Showreel({required this.glow});
+  const _Showreel({required this.blur, this.shift = 0});
 
-  /// How far the glow can spread around the frame.
-  final double glow;
+  /// How much the glow is blurred; it fades out within twice that.
+  final double blur;
+
+  /// How far left of the video the glow is centred.
+  final double shift;
 
   @override
   Widget build(BuildContext context) {
+    final margin = 2 * blur;
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(left: -glow, top: -glow, right: -glow, bottom: -glow, child: HeroVideo(glow: glow, radius: 24)),
+          Positioned(
+            left: -(shift + margin),
+            top: -margin,
+            right: -margin,
+            bottom: -margin,
+            child: HeroVideo(blur: blur, shift: shift, radius: 32),
+          ),
         ],
       ),
     );

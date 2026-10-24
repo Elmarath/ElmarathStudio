@@ -77,12 +77,27 @@ void Function()? _restoreErrorHandler;
 
 /// Drives the home page's plugin carousel.
 class Carousel {
-  Carousel(this.tester) : items = content.featuredPlugins;
+  Carousel(this.tester) : items = content.spotlightPlugins;
 
   final WidgetTester tester;
   final List<DocCategory> items;
 
   Finder text(String text) => find.descendant(of: find.byType(SpotlightSection), matching: find.text(text));
+
+  /// The list of plugins beside or below the banner.
+  Finder get _list => find.descendant(of: find.byType(SpotlightSection), matching: find.byType(ListView));
+  Rect get list => tester.getRect(_list);
+  Finder inList(Finder finder) => find.descendant(of: _list, matching: finder);
+  ScrollPosition get listPosition => tester.state<ScrollableState>(inList(find.byType(Scrollable)).first).position;
+  double get pageScroll =>
+      tester
+          .state<ScrollableState>(find.ancestor(of: find.byType(SpotlightSection), matching: find.byType(Scrollable)))
+          .position
+          .pixels;
+
+  /// A mouse wheel (or trackpad) scroll at [position].
+  Future<void> wheel(Offset position, Offset delta) =>
+      tester.sendEventToBinding(PointerScrollEvent(position: position, scrollDelta: delta));
 
   /// Only the banner shows a plugin's pitch, so it tells which one is up.
   Finder pitch(int i) => text(items[i % items.length].pitch);
@@ -244,7 +259,7 @@ void main() {
     await c.wait(7600);
     expect(c.showing(4), isTrue);
 
-    // A narrower window swaps the list for dots and stays on the same plugin.
+    // A narrower window moves the list below the banner and stays on the same plugin.
     tester.view.physicalSize = sizes['tablet']!;
     await c.wait(500);
     expect(c.showing(4), isTrue);
@@ -258,11 +273,30 @@ void main() {
     await tester.tap(find.byTooltip('Play'));
     await c.wait(7500);
     expect(c.showing(5), isTrue);
+    // When the plugins don't all fit, the list scrolls along to the one on show.
+    expect(c.list.contains(tester.getCenter(c.inList(find.text(c.items[5 % c.items.length].label)))), isTrue);
 
     // Next to the list it doesn't move with a swipe.
     await tester.fling(c.pitch(5), const Offset(-500, 0), 1000);
     await c.wait(1000);
     expect(c.showing(5), isTrue);
+
+    // The wheel over the list scrolls it, and at either end the page stays
+    // put rather than scrolling instead.
+    final page = c.pageScroll;
+    Future<void> wheelList(double dy, int times) async {
+      for (var i = 0; i < times; i++) {
+        await c.wheel(c.list.center, Offset(0, dy));
+      }
+      await c.wait(500);
+    }
+
+    await wheelList(120, 6);
+    expect(c.listPosition.pixels, c.listPosition.maxScrollExtent);
+    expect(c.pageScroll, page);
+    await wheelList(-120, 6);
+    expect(c.listPosition.pixels, 0);
+    expect(c.pageScroll, page);
     await mouse.removePointer();
     await tearDownSite(tester);
   });
@@ -271,11 +305,6 @@ void main() {
     tester,
   ) async {
     final c = await Carousel.open(tester, sizes['phone']!);
-    double pageScroll() =>
-        tester
-            .state<ScrollableState>(find.ancestor(of: find.byType(SpotlightSection), matching: find.byType(Scrollable)))
-            .position
-            .pixels;
 
     await tester.fling(c.pitch(0), const Offset(-200, 0), 1000);
     await c.wait(1000);
@@ -288,28 +317,41 @@ void main() {
     await tester.fling(c.pitch(0), const Offset(200, 0), 1000);
     await c.wait(1000);
     expect(c.showing(-1), isTrue);
+    // The row of previews scrolls along to it.
+    expect(c.list.contains(tester.getCenter(find.byTooltip(c.items.last.label))), isTrue);
 
     await tester.drag(c.pitch(-1), const Offset(-250, 0), kind: PointerDeviceKind.mouse);
     await c.wait(1000);
     expect(c.showing(0), isTrue);
 
     // The wheel (or a trackpad) scrolls the page, even with a little sideways movement in it.
-    final before = pageScroll();
-    await tester.sendEventToBinding(
-      PointerScrollEvent(position: tester.getCenter(c.pitch(0)), scrollDelta: const Offset(4, 120)),
-    );
+    final before = c.pageScroll;
+    await c.wheel(tester.getCenter(c.pitch(0)), const Offset(4, 120));
     await c.wait(1000);
-    expect(pageScroll(), greaterThan(before));
+    expect(c.pageScroll, greaterThan(before));
     expect(c.showing(0), isTrue);
 
-    // Below the banner, a preview of every plugin, together exactly as wide as the banner.
+    // Below the banner, a row of every plugin exactly as wide as the banner,
+    // which a finger can scroll.
     final banner = tester.getRect(find.byType(PageView));
+    expect(c.list.left, banner.left);
+    expect(c.list.right, banner.right);
     expect(tester.getRect(find.byTooltip(c.items.first.label)).left, banner.left);
-    expect(tester.getRect(find.byTooltip(c.items.last.label)).right, banner.right);
+    await tester.ensureVisible(find.byTooltip(c.items[1].label));
+    await tester.drag(find.byTooltip(c.items[1].label), const Offset(-100, 0));
+    await c.wait(1000);
+    expect(c.listPosition.pixels, greaterThan(0));
+    expect(c.showing(0), isTrue);
     await tester.ensureVisible(find.byTooltip(c.items[2].label));
     await tester.tap(find.byTooltip(c.items[2].label));
     await c.wait(1000);
     expect(c.showing(2), isTrue);
+
+    // Scrolling down over the row moves the page: the row only scrolls sideways.
+    final page = c.pageScroll;
+    await c.wheel(c.list.center, const Offset(0, 120));
+    await c.wait(500);
+    expect(c.pageScroll, greaterThan(page));
     await tearDownSite(tester);
   });
 

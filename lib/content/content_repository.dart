@@ -37,7 +37,11 @@ class ContentRepository {
   final Map<String, DocCategory> _categoriesById = {};
 
   List<DocCategory> get plugins => docsRoot.children.whereType<DocCategory>().toList();
-  List<DocCategory> get featuredPlugins => plugins.where((c) => c.featured).toList();
+  /// The home page carousel: every plugin, those with `featured: true` first.
+  List<DocCategory> get spotlightPlugins => [
+    ...plugins.where((c) => c.featured),
+    ...plugins.where((c) => !c.featured),
+  ];
 
   DocPage? doc(String id) => _docsById[id];
   DocCategory? category(String id) => _categoriesById[id];
