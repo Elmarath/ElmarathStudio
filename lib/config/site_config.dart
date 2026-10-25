@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../widgets/common/brand_icons.dart';
 
 /// Everything about *you* and the site's structure lives here.
 ///
@@ -69,19 +69,19 @@ abstract final class SiteConfig {
 
   /// Social links: shown in the footer, the About page and the contact section.
   static const List<ExternalLink> socials = [
-    ExternalLink(label: 'GitHub', url: 'https://github.com/Elmarath', icon: FontAwesomeIcons.github),
+    ExternalLink(label: 'GitHub', url: 'https://github.com/Elmarath', icon: BrandIcons.github),
     ExternalLink(
       label: 'LinkedIn',
       url: 'https://www.linkedin.com/in/denizhan-toprak-006073193/',
-      icon: FontAwesomeIcons.linkedin,
+      icon: BrandIcons.linkedin,
     ),
-    ExternalLink(label: 'Discord', url: 'https://discord.gg/mUm4hYvG3x', icon: FontAwesomeIcons.discord),
+    ExternalLink(label: 'Discord', url: 'https://discord.gg/mUm4hYvG3x', icon: BrandIcons.discord),
     ExternalLink(
       label: 'YouTube',
       url: 'https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ',
-      icon: FontAwesomeIcons.youtube,
+      icon: BrandIcons.youtube,
     ),
-    ExternalLink(label: 'X', url: 'https://twitter.com/denizhan_toprak', icon: FontAwesomeIcons.xTwitter),
+    ExternalLink(label: 'X', url: 'https://twitter.com/denizhan_toprak', icon: BrandIcons.xTwitter),
   ];
 
   /// Footer link columns.

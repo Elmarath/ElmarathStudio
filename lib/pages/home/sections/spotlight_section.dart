@@ -387,7 +387,7 @@ class _Banner extends StatelessWidget {
               ),
               child: ClipRRect(
                 borderRadius: Radii.lgAll,
-                child: AppImage(thumbnail, width: compact ? 120 : 280, height: compact ? 120 : 280),
+                child: AppImage(thumbnail, width: compact ? 120 : 280, height: compact ? 120 : 280, cacheWidth: 560),
               ),
             );
 
@@ -487,7 +487,7 @@ class _Tab extends StatelessWidget {
     Widget thumbnail(double side) =>
         plugin.thumbnail == null
             ? SizedBox.square(dimension: side)
-            : ClipRRect(borderRadius: Radii.smAll, child: AppImage(plugin.thumbnail!, width: side, height: side));
+            : ClipRRect(borderRadius: Radii.smAll, child: AppImage(plugin.thumbnail!, width: side, height: side, cacheWidth: 128));
 
     return Material(
       color: active ? p.surface : Colors.transparent,

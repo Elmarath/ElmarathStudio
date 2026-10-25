@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../../../widgets/common/brand_icons.dart';
 
 import '../../../config/site_config.dart';
 import '../../../theme/app_palette.dart';
@@ -45,7 +45,7 @@ class ContactSection extends StatelessWidget {
         if (linkedIn != null)
           OutlinedButton.icon(
             onPressed: () => openLink(context, linkedIn.url),
-            icon: const Icon(FontAwesomeIcons.linkedin, size: 16),
+            icon: const Icon(BrandIcons.linkedin, size: 16),
             label: const Text('LinkedIn'),
           ),
         OutlinedButton.icon(

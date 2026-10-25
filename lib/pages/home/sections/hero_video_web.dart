@@ -118,8 +118,9 @@ class _Showreel {
 
   late final _observer = web.IntersectionObserver(
     ((JSArray<web.IntersectionObserverEntry> entries, web.IntersectionObserver _) {
-      if (!root.isConnected) return _stop(); // gone with the page
-      _visible = entries.toDart.last.isIntersecting;
+      // Not in the page (yet, or any more, e.g. while it's being swapped in
+      // after Back): just wait, so it plays again once it's back on screen.
+      _visible = root.isConnected && entries.toDart.last.isIntersecting;
       _update();
     }).toJS,
   );
@@ -143,14 +144,14 @@ class _Showreel {
       video.pause();
       _glowTimer?.cancel();
       _glowTimer = null;
-      _paintGlow();
+      if (root.isConnected) _paintGlow();
     }
   }
 
   void _paintGlow() {
     if (!root.isConnected) {
-      if (_glowTimer != null) _stop(); // gone with the page
-      return;
+      _visible = false;
+      return _update(); // gone with the page: stops playing until it's back
     }
     if (video.readyState < 2) return; // no frame yet
     _glow.drawImage(video, 0, 0, 32, 18);
@@ -165,12 +166,5 @@ class _Showreel {
       pixels[i + 3] = math.max(pixels[i], math.max(pixels[i + 1], pixels[i + 2]));
     }
     _glow.putImageData(web.ImageData(pixels.toJS, 32), 0, 0);
-  }
-
-  void _stop() {
-    _glowTimer?.cancel();
-    _glowTimer = null;
-    _observer.disconnect();
-    video.pause();
   }
 }

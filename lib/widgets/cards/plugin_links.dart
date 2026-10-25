@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import '../common/brand_icons.dart';
 
 import '../../content/text_utils.dart';
 import '../../theme/tokens.dart';
@@ -28,12 +28,12 @@ class PluginLinks extends StatelessWidget {
               ),
             'github' => OutlinedButton.icon(
                 onPressed: () => openLink(context, value),
-                icon: const Icon(FontAwesomeIcons.github, size: 16),
+                icon: const Icon(BrandIcons.github, size: 16),
                 label: const Text('GitHub'),
               ),
             'youtube' => OutlinedButton.icon(
                 onPressed: () => openLink(context, value),
-                icon: const Icon(FontAwesomeIcons.youtube, size: 16),
+                icon: const Icon(BrandIcons.youtube, size: 16),
                 label: const Text('YouTube'),
               ),
             _ => OutlinedButton.icon(

@@ -12,5 +12,6 @@ fi
 export PATH="$FLUTTER_DIR/bin:$PATH"
 
 flutter pub get
+dart run tool/content.dart bundle
 # No offline service worker: visitors always get the newest posts and docs.
 flutter build web --release --pwa-strategy=none

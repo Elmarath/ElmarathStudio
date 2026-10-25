@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
@@ -228,11 +230,7 @@ class ContentRepository {
   }
 
   static Future<ContentRepository> load(AssetBundle bundle) async {
-    final manifest = await AssetManifest.loadFromAssetBundle(bundle);
-    final assets = manifest.listAssets().where((a) => a.startsWith('content/')).toList()..sort();
-    final textAssets = assets.where(_isTextFile).toList();
-    final texts = await Future.wait(textAssets.map(bundle.loadString));
-    final files = Map.fromIterables(textAssets, texts);
+    final files = await _loadBundled(bundle) ?? await _loadSeparately(bundle);
 
     final authors = _parseAuthors(files);
     return ContentRepository._(
@@ -240,6 +238,24 @@ class ContentRepository {
       docsRoot: _parseDocs(files),
       pages: _parsePages(files),
     );
+  }
+
+  /// All text content in one file (`dart run tool/content.dart bundle`): one
+  /// request on startup instead of one per page.
+  static Future<Map<String, String>?> _loadBundled(AssetBundle bundle) async {
+    try {
+      final json = jsonDecode(await bundle.loadString('assets/generated/content.json')) as Map<String, dynamic>;
+      return {for (final MapEntry(:key, :value) in json.entries) if (_isTextFile(key)) key: value as String};
+    } catch (_) {
+      return null;
+    }
+  }
+
+  static Future<Map<String, String>> _loadSeparately(AssetBundle bundle) async {
+    final manifest = await AssetManifest.loadFromAssetBundle(bundle);
+    final textAssets = manifest.listAssets().where((a) => a.startsWith('content/') && _isTextFile(a)).toList()..sort();
+    final texts = await Future.wait(textAssets.map(bundle.loadString));
+    return Map.fromIterables(textAssets, texts);
   }
 
   static bool _isTextFile(String path) =>

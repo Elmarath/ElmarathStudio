@@ -4,9 +4,11 @@
 //   dart run tool/content.dart new-doc <Plugin-Folder> "Page title"
 //   dart run tool/content.dart sync     # register content folders in pubspec.yaml
 //   dart run tool/content.dart check    # find broken images and bad front matter
+//   dart run tool/content.dart bundle   # all text content in one file, for a faster start
 //
 // Flutter only bundles folders listed in pubspec.yaml, so `new-post` and
 // `new-doc` run `sync` for you. Run it yourself after adding folders by hand.
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:yaml/yaml.dart';
@@ -23,6 +25,8 @@ void main(List<String> args) {
       _newPost(args.skip(1).toList());
     case 'new-doc':
       _newDoc(args.skip(1).toList());
+    case 'bundle':
+      _bundle();
     case 'check':
       exitCode = _check() ? 0 : 1;
     default:
@@ -212,3 +216,18 @@ bool _check() {
 }
 
 String _yamlString(String s) => '"${s.replaceAll('"', r'\"')}"';
+
+/// Writes every Markdown and YAML file under content/ into
+/// assets/generated/content.json, so the site fetches one file on startup
+/// instead of one per page. The site falls back to the separate files when
+/// it's missing. Run by tool/netlify_build.sh before each build.
+void _bundle() {
+  final files = <String, String>{
+    for (final f in Directory('content').listSync(recursive: true).whereType<File>())
+      if (RegExp(r'\.(md|mdx|ya?ml|json)$').hasMatch(f.path)) f.path.replaceAll(r'\\', '/'): f.readAsStringSync(),
+  };
+  File('assets/generated/content.json')
+    ..createSync(recursive: true)
+    ..writeAsStringSync(jsonEncode(files));
+  stdout.writeln('Bundled ${files.length} files into assets/generated/content.json');
+}
