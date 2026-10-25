@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:js_interop';
-import 'dart:math' as math;
+import 'dart:ui' as ui;
 import 'dart:ui_web' as ui_web;
 
 import 'package:flutter/material.dart';
@@ -9,85 +9,53 @@ import 'package:web/web.dart' as web;
 import '../../../config/site_config.dart';
 
 /// The home page showreel, like the one on unrealengine.com: [SiteConfig.heroVideos]
-/// play one after another on a loop in a rounded frame, with a soft glow of
-/// the video behind it.
+/// play one after another on a loop in a rounded frame.
 ///
-/// It's an HTML <video>, so the browser plays it (and blurs the glow) without
-/// Flutter redrawing the page for every video frame. It covers the frame plus
-/// room for the glow: twice [blur] around it, and [shift] more on the left.
+/// It's an HTML <video>, so the browser plays it without Flutter redrawing the
+/// page for every video frame. It covers exactly the frame: Flutter has to draw
+/// anything that overlaps an HTML element in an extra layer on every frame, so
+/// the glow around it is drawn by Flutter instead ([HeroGlow]).
 class HeroVideo extends StatelessWidget {
-  const HeroVideo({super.key, required this.blur, required this.shift, required this.radius});
+  const HeroVideo({super.key, required this.radius});
 
-  /// How much the glow is blurred.
-  final double blur;
-
-  /// How far left of the video the glow is centred.
-  final double shift;
   final double radius;
 
   @override
   Widget build(BuildContext context) {
-    // One view type per brightness, so switching themes makes a new element
-    // with the right glow.
-    final bright = Theme.of(context).brightness == Brightness.light;
-    final viewType = bright ? 'hero-showreel-bright' : 'hero-showreel-dark';
-    if (_registered.add(viewType)) {
-      ui_web.platformViewRegistry.registerViewFactory(viewType, (int viewId, {Object? params}) {
+    if (_registered.add(_viewType)) {
+      ui_web.platformViewRegistry.registerViewFactory(_viewType, (int viewId, {Object? params}) {
         final settings = params! as Map<Object?, Object?>;
-        double setting(String name) => (settings[name]! as num).toDouble();
-        return _Showreel(
-          blur: setting('blur'),
-          shift: setting('shift'),
-          radius: setting('radius'),
-          bright: bright,
-        ).root;
+        return _Showreel(radius: (settings['radius']! as num).toDouble()).root;
       });
     }
     // Plain values: they travel through Flutter's platform view channel.
-    return HtmlElementView(
-      viewType: viewType,
-      creationParams: {'blur': blur, 'shift': shift, 'radius': radius},
-    );
+    return HtmlElementView(viewType: _viewType, creationParams: {'radius': radius});
   }
 }
 
+const _viewType = 'hero-showreel';
 final _registered = <String>{};
 
 class _Showreel {
-  _Showreel({required double blur, required double shift, required double radius, required bool bright})
-    : _bright = bright {
+  _Showreel({required double radius}) {
+    current = this;
     final clips = SiteConfig.heroVideos;
     // Decorative: clicks and scrolling go through to the page.
     root.style.cssText =
         'position:relative;width:100%;height:100%;pointer-events:none;opacity:0;transition:opacity .8s ease';
-    // The glow, made the way unrealengine.com makes it: a tiny copy of the
-    // video, as big as the video but [shift]ed left, blurred by the browser into
-    // a wash of its colours. The blur fades out within twice [blur], inside
-    // this element rather than being cut off at its edge.
-    final margin = 2 * blur;
-    final size = 'width:calc(100% - ${shift + 2 * margin}px);height:calc(100% - ${2 * margin}px)';
-    glowCanvas
-      ..width = 32
-      ..height = 18
-      ..style.cssText =
-          'position:absolute;left:${margin}px;top:${margin}px;$size;'
-          // Unreal's own colours at full strength; on a light page, coloured light.
-          'filter:blur(${blur}px)${bright ? ' saturate(1.8);opacity:.6' : ''}';
     video
       ..muted = true
       ..playsInline = true
       ..preload = 'auto'
       ..loop = clips.length == 1
       ..style.cssText =
-          'position:absolute;left:${shift + margin}px;top:${margin}px;$size;'
-          'object-fit:cover;border-radius:${radius}px;background:#000;transition:opacity .35s ease';
+          'display:block;width:100%;height:100%;object-fit:cover;border-radius:${radius}px;'
+          'background:#000;transition:opacity .35s ease';
     // Safari only autoplays when these are attributes, not just properties.
     video
       ..setAttribute('muted', '')
       ..setAttribute('playsinline', '');
-    root
-      ..append(glowCanvas)
-      ..append(video);
+    root.append(video);
 
     video.addEventListener('loadeddata', ((web.Event _) => root.style.opacity = '1').toJS);
     video.addEventListener('playing', ((web.Event _) => video.style.opacity = '1').toJS);
@@ -103,14 +71,12 @@ class _Showreel {
     _observer.observe(root);
   }
 
+  /// The newest showreel: the one on the page, for [HeroGlow].
+  static _Showreel? current;
+
   final root = web.HTMLDivElement();
-  final glowCanvas = web.HTMLCanvasElement();
   final video = web.HTMLVideoElement();
-  final bool _bright;
-  late final _glow =
-      glowCanvas.getContext('2d', {'willReadFrequently': _bright}.jsify()!)! as web.CanvasRenderingContext2D;
   int _clip = 0;
-  Timer? _glowTimer;
   bool _visible = false;
 
   /// With "reduce motion" on, the first clip's still stays put.
@@ -135,36 +101,109 @@ class _Showreel {
   }
 
   /// Plays only while it's on screen: off screen it would still cost the
-  /// browser decoding and the glow updates.
+  /// browser decoding.
   void _update() {
     if (_visible && !_reduceMotion) {
       video.play().toDart.catchError((Object _) => null); // autoplay can be blocked, e.g. in Low Power Mode
-      _glowTimer ??= Timer.periodic(const Duration(milliseconds: 100), (_) => _paintGlow());
     } else {
       video.pause();
-      _glowTimer?.cancel();
-      _glowTimer = null;
-      if (root.isConnected) _paintGlow();
+    }
+  }
+}
+
+/// The glow behind the showreel, made the way unrealengine.com makes it: the
+/// frame playing, blurred into a wash of its colours (80px on a 978px video
+/// there) that fades out at twice the blur. Lay it out in a box the size of
+/// the video; the glow spreads past it.
+///
+/// Ten times a second while the video plays, the frame is copied into a small
+/// canvas and blurred once into a picture, which Flutter then just draws: it
+/// costs nothing while the page scrolls.
+class HeroGlow extends StatefulWidget {
+  const HeroGlow({super.key, required this.bright});
+
+  /// On a light page: dark parts fade out, so it reads as coloured light
+  /// rather than a grey shadow.
+  final bool bright;
+
+  @override
+  State<HeroGlow> createState() => _HeroGlowState();
+}
+
+class _HeroGlowState extends State<HeroGlow> {
+  static const _width = 128;
+  static const _height = 72;
+  static const _sigma = _width * 80 / 978; // as on unrealengine.com
+  static const _margin = 22; // twice the blur, where Unreal's glow ends
+
+  final _frame = web.HTMLCanvasElement()
+    ..width = _width
+    ..height = _height;
+  late final _context = _frame.getContext('2d')! as web.CanvasRenderingContext2D;
+  late final Timer _timer;
+  ui.Image? _image;
+  bool _busy = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) => _refresh());
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    _image?.dispose();
+    super.dispose();
+  }
+
+  Future<void> _refresh() async {
+    final video = _Showreel.current?.video;
+    // A new picture only while the video plays (it pauses off screen), and a
+    // first one as soon as there's a frame.
+    if (_busy || video == null || video.readyState < 2 || (video.paused && _image != null)) return;
+    _busy = true;
+    try {
+      _context.drawImage(video, 0, 0, _width, _height);
+      final frame = await ui_web.createImageFromTextureSource(_frame, width: _width, height: _height);
+      final recorder = ui.PictureRecorder();
+      Canvas(recorder).drawImage(
+        frame,
+        const Offset(_margin + 0.0, _margin + 0.0),
+        Paint()
+          // Decal: outside the frame is see-through, so the glow fades out
+          // (the default would smear the frame's edges out to the corners).
+          ..imageFilter = ui.ImageFilter.blur(sigmaX: _sigma, sigmaY: _sigma, tileMode: TileMode.decal)
+          // Opacity from brightness, at most about a third.
+          ..colorFilter =
+              widget.bright
+                  ? const ColorFilter.matrix([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, .18, .27, .15, 0, 0])
+                  : null,
+      );
+      final picture = recorder.endRecording();
+      final image = await picture.toImage(_width + 2 * _margin, _height + 2 * _margin);
+      picture.dispose();
+      frame.dispose();
+      if (!mounted) return image.dispose();
+      final old = _image;
+      setState(() => _image = image);
+      old?.dispose();
+    } catch (_) {
+      // No glow this time (e.g. the video isn't ready); the next tick tries again.
+    } finally {
+      _busy = false;
     }
   }
 
-  void _paintGlow() {
-    if (!root.isConnected) {
-      _visible = false;
-      return _update(); // gone with the page: stops playing until it's back
-    }
-    if (video.readyState < 2) return; // no frame yet
-    _glow.drawImage(video, 0, 0, 32, 18);
-    if (_bright) _fadeDarkPixels();
-  }
-
-  /// On a light page the video's dark parts would glow as a grey shadow, so
-  /// each pixel fades out by how dark it is and only the colours are left.
-  void _fadeDarkPixels() {
-    final pixels = _glow.getImageData(0, 0, 32, 18).data.toDart;
-    for (var i = 0; i < pixels.length; i += 4) {
-      pixels[i + 3] = math.max(pixels[i], math.max(pixels[i + 1], pixels[i + 2]));
-    }
-    _glow.putImageData(web.ImageData(pixels.toJS, 32), 0, 0);
+  @override
+  Widget build(BuildContext context) {
+    final image = _image;
+    if (image == null) return const SizedBox.shrink();
+    // The picture's margins hang out past the box, so the glow fades out around it.
+    return FractionallySizedBox(
+      widthFactor: (_width + 2 * _margin) / _width,
+      heightFactor: (_height + 2 * _margin) / _height,
+      child: RawImage(image: image, fit: BoxFit.fill, filterQuality: FilterQuality.high),
+    );
   }
 }

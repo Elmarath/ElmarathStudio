@@ -39,7 +39,7 @@ class HeroSection extends StatelessWidget {
                     // Its glow is centred on the whole row, so it reaches in behind the text.
                     Padding(
                       padding: EdgeInsets.only(left: _videoLeft),
-                      child: _Showreel(blur: 80, shift: _videoLeft / 2),
+                      child: _Showreel(shift: _videoLeft / 2),
                     ),
                     SizedBox(width: _textWidth, child: _Intro()),
                   ],
@@ -48,7 +48,7 @@ class HeroSection extends StatelessWidget {
                 : const Column(
                   verticalDirection: VerticalDirection.up,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [_Showreel(blur: 48), SizedBox(height: 64), _Intro()],
+                  children: [_Showreel(), SizedBox(height: 64), _Intro()],
                 ),
       ),
     );
@@ -115,31 +115,25 @@ class _Intro extends StatelessWidget {
   }
 }
 
-/// The video in a rounded 16:9 frame, with its glow spilling out around it.
+/// The video in a rounded 16:9 frame, with a glow of it spilling out around
+/// it, as on unrealengine.com.
 class _Showreel extends StatelessWidget {
-  const _Showreel({required this.blur, this.shift = 0});
-
-  /// How much the glow is blurred; it fades out within twice that.
-  final double blur;
+  const _Showreel({this.shift = 0});
 
   /// How far left of the video the glow is centred.
   final double shift;
 
   @override
   Widget build(BuildContext context) {
-    final margin = 2 * blur;
+    final bright = Theme.of(context).brightness == Brightness.light;
     return AspectRatio(
       aspectRatio: 16 / 9,
       child: Stack(
         clipBehavior: Clip.none,
         children: [
-          Positioned(
-            left: -(shift + margin),
-            top: -margin,
-            right: -margin,
-            bottom: -margin,
-            child: HeroVideo(blur: blur, shift: shift, radius: 32),
-          ),
+          // Drawn by Flutter under the video, centred [shift] to its left.
+          Positioned(left: -shift, top: 0, right: shift, bottom: 0, child: HeroGlow(bright: bright)),
+          const Positioned.fill(child: HeroVideo(radius: 32)),
         ],
       ),
     );
