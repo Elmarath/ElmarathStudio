@@ -6,6 +6,11 @@
 # resolves those too (ContentRepository.legacyRoute). test/content_test.dart
 # checks that every target here is a real page.
 
+# Netlify's own address for the site sends visitors and search engines to
+# the same page on elmarath.com, so Google doesn't see the site twice.
+http://elmarathstudio.netlify.app/*  https://elmarath.com/:splat  301!
+https://elmarathstudio.netlify.app/*  https://elmarath.com/:splat  301!
+
 /blog/About%20Me  /about  301
 /blog/archive  /blog  301
 /blog/authors  /blog  301
