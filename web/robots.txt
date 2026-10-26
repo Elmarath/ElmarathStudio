@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://elmarath.com/sitemap.xml

@@ -154,7 +154,9 @@ Intro
           .where((line) => line.isNotEmpty && !line.startsWith('#'))
           .map((line) => line.split(RegExp(r'\s+')))
           .toList();
-      expect(rules.last, ['/*', '/index.html', '200'], reason: 'the app fallback must be the last rule');
+      // index.html is the home page's copy for search engines (tool/prerender_test.dart);
+      // app.html is the plain app page.
+      expect(rules.last, ['/*', '/app.html', '200'], reason: 'the app fallback must be the last rule');
       final broken = [
         for (final rule in rules)
           if (rule[2] == '301' && !rule[1].contains(':') && !content.isRoute(Uri.parse(rule[1]).path)) rule.join(' '),

@@ -67,6 +67,10 @@
     }
     .bright #splash { --bg: #FAF7F2; --text: #1C1712; --muted: #736859; --accent: #A0650A; --track: rgba(58, 42, 16, .12); }
     #splash.hidden { opacity: 0; pointer-events: none; }
+    /* A plain copy of the page's text for search engines, written into each
+       page at build time (tool/prerender_test.dart). It sits behind the app,
+       which covers it. */
+    #page-text { position: absolute; inset: 0; z-index: -1; overflow: hidden; padding: 24px; color: #7D7D86; font: 16px/1.5 sans-serif; }
     /* The throbber, after Epic's on unrealengine.com: a faint ring with a
        round-capped arc going round once a second, here around the logo. */
     .throbber { position: relative; width: 112px; height: 112px; display: grid; place-items: center; }

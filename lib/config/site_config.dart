@@ -7,6 +7,9 @@ import '../widgets/common/brand_icons.dart';
 /// Blog posts, docs and pages are Markdown files in `content/`, not here.
 abstract final class SiteConfig {
   static const String siteName = 'Elmarath';
+
+  /// Where the site is published, for addresses in the sitemap and link previews.
+  static const String siteUrl = 'https://elmarath.com';
   static const String ownerName = 'Denizhan Toprak';
   static const String role = 'C++ Gameplay Programmer';
   static const String avatarUrl = 'https://avatars.githubusercontent.com/u/65414809?v=4';

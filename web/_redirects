@@ -53,5 +53,7 @@
 /docs/Staged-Interaction-System/UsingStageInteraction  /docs/staged-interaction-system/using-stage-interaction  301
 /blog/tags/:tag  /blog?tag=:tag  301
 
-# Everything else is the Flutter app, which handles its own routes.
-/*  /index.html  200
+# Every page has its own HTML copy for search engines (tool/prerender_test.dart),
+# which Netlify serves first. Everything else is the plain app page, which
+# handles its own routes.
+/*  /app.html  200

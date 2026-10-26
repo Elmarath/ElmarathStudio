@@ -15,3 +15,5 @@ flutter pub get
 dart run tool/content.dart bundle
 # No offline service worker: visitors always get the newest posts and docs.
 flutter build web --release --pwa-strategy=none
+# An HTML copy of every page and a sitemap, so search engines can read the site.
+flutter test tool/prerender_test.dart
