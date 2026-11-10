@@ -241,8 +241,10 @@ class ContentRepository {
   }
 
   /// All text content in one file (`dart run tool/content.dart bundle`): one
-  /// request on startup instead of one per page.
+  /// request on startup instead of one per page. Skipped in debug runs, where
+  /// a leftover copy would hide posts and edits made since it was generated.
   static Future<Map<String, String>?> _loadBundled(AssetBundle bundle) async {
+    if (kDebugMode) return null;
     try {
       final json = jsonDecode(await bundle.loadString('assets/generated/content.json')) as Map<String, dynamic>;
       return {for (final MapEntry(:key, :value) in json.entries) if (_isTextFile(key)) key: value as String};
