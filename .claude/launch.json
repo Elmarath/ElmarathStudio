@@ -6,6 +6,12 @@
       "runtimeExecutable": "/Users/denizhan/flutter/bin/flutter",
       "runtimeArgs": ["run", "-d", "web-server", "--web-port", "8080", "--web-hostname", "localhost"],
       "port": 8080
+    },
+    {
+      "name": "web-release",
+      "runtimeExecutable": "python3",
+      "runtimeArgs": ["-m", "http.server", "8090", "--bind", "127.0.0.1", "--directory", "build/web"],
+      "port": 8090
     }
   ]
 }

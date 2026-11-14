@@ -38,7 +38,6 @@ final _registered = <String>{};
 
 class _Showreel {
   _Showreel({required double radius}) {
-    current = this;
     final clips = SiteConfig.heroVideos;
     // Decorative: clicks and scrolling go through to the page.
     root.style.cssText =
@@ -57,7 +56,13 @@ class _Showreel {
       ..setAttribute('playsinline', '');
     root.append(video);
 
-    video.addEventListener('loadeddata', ((web.Event _) => root.style.opacity = '1').toJS);
+    video.addEventListener(
+      'loadeddata',
+      ((web.Event _) {
+        root.style.opacity = '1';
+        shown.value = video.getAttribute('src');
+      }).toJS,
+    );
     video.addEventListener('playing', ((web.Event _) => video.style.opacity = '1').toJS);
     // On to the next clip: fade out, swap, and fade back in once it plays.
     video.addEventListener(
@@ -71,8 +76,8 @@ class _Showreel {
     _observer.observe(root);
   }
 
-  /// The newest showreel: the one on the page, for [HeroGlow].
-  static _Showreel? current;
+  /// The clip on show, once its first frame is in: [HeroGlow] glows with it.
+  static final shown = ValueNotifier<String?>(null);
 
   final root = web.HTMLDivElement();
   final video = web.HTMLVideoElement();
@@ -95,7 +100,7 @@ class _Showreel {
     final clips = SiteConfig.heroVideos;
     _clip = index % clips.length;
     video
-      ..poster = clips[_clip].replaceFirst(RegExp(r'\.\w+$'), '.jpg')
+      ..poster = _posterOf(clips[_clip])
       ..src = clips[_clip];
     _update();
   }
@@ -111,14 +116,19 @@ class _Showreel {
   }
 }
 
+/// A clip's still: the same name, as a .jpg.
+String _posterOf(String clip) => clip.replaceFirst(RegExp(r'\.\w+$'), '.jpg');
+
 /// The glow behind the showreel, made the way unrealengine.com makes it: the
-/// frame playing, blurred into a wash of its colours (80px on a 978px video
-/// there) that fades out at twice the blur. Lay it out in a box the size of
-/// the video; the glow spreads past it.
+/// clip blurred into a wash of its colours (80px on a 978px video there) that
+/// fades out at twice the blur. Lay it out in a box the size of the video; the
+/// glow spreads past it.
 ///
-/// Ten times a second while the video plays, the frame is copied into a small
-/// canvas and blurred once into a picture, which Flutter then just draws: it
-/// costs nothing while the page scrolls.
+/// Each clip's glow is made once, from its poster, and cross-fades in when the
+/// clip comes on. Unreal's follows every frame, but copying video frames out
+/// and blurring them several times a second stalls Safari's GPU and redraws
+/// the page each time, which made scrolling stutter. Blurred this much, a
+/// clip's colours barely change while it plays.
 class HeroGlow extends StatefulWidget {
   const HeroGlow({super.key, required this.bright});
 
@@ -136,74 +146,109 @@ class _HeroGlowState extends State<HeroGlow> {
   static const _sigma = _width * 80 / 978; // as on unrealengine.com
   static const _margin = 22; // twice the blur, where Unreal's glow ends
 
-  final _frame = web.HTMLCanvasElement()
-    ..width = _width
-    ..height = _height;
-  late final _context = _frame.getContext('2d')! as web.CanvasRenderingContext2D;
-  late final Timer _timer;
+  /// Made glows, by clip and brightness: a few small pictures, kept for the visit.
+  static final _glows = <(String, bool), Future<ui.Image?>>{};
+
   ui.Image? _image;
-  bool _busy = false;
 
   @override
   void initState() {
     super.initState();
-    _timer = Timer.periodic(const Duration(milliseconds: 100), (_) => _refresh());
+    _Showreel.shown.addListener(_update);
+    _update();
+  }
+
+  @override
+  void didUpdateWidget(HeroGlow oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.bright != widget.bright) _update();
   }
 
   @override
   void dispose() {
-    _timer.cancel();
-    _image?.dispose();
+    _Showreel.shown.removeListener(_update);
     super.dispose();
   }
 
-  Future<void> _refresh() async {
-    final video = _Showreel.current?.video;
-    // A new picture only while the video plays (it pauses off screen), and a
-    // first one as soon as there's a frame.
-    if (_busy || video == null || video.readyState < 2 || (video.paused && _image != null)) return;
-    _busy = true;
+  void _update() {
+    final clip = _Showreel.shown.value;
+    if (clip == null) return;
+    final bright = widget.bright;
+    _glows.putIfAbsent((clip, bright), () => _make(_posterOf(clip), bright)).then((image) {
+      // Only if it's still the one wanted: clips can move on while one is made.
+      if (image != null && mounted && clip == _Showreel.shown.value && bright == widget.bright) {
+        setState(() => _image = image);
+      }
+    });
+  }
+
+  static Future<ui.Image?> _make(String poster, bool bright) async {
     try {
-      _context.drawImage(video, 0, 0, _width, _height);
-      final frame = await ui_web.createImageFromTextureSource(_frame, width: _width, height: _height);
+      final frame = await _decode(poster);
       final recorder = ui.PictureRecorder();
-      Canvas(recorder).drawImage(
+      Canvas(recorder).drawImageRect(
         frame,
-        const Offset(_margin + 0.0, _margin + 0.0),
+        Rect.fromLTWH(0, 0, frame.width.toDouble(), frame.height.toDouble()),
+        const Rect.fromLTWH(_margin + 0.0, _margin + 0.0, _width + 0.0, _height + 0.0),
         Paint()
+          ..filterQuality = FilterQuality.medium
           // Decal: outside the frame is see-through, so the glow fades out
           // (the default would smear the frame's edges out to the corners).
           ..imageFilter = ui.ImageFilter.blur(sigmaX: _sigma, sigmaY: _sigma, tileMode: TileMode.decal)
           // Opacity from brightness, at most about a third.
           ..colorFilter =
-              widget.bright
-                  ? const ColorFilter.matrix([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, .18, .27, .15, 0, 0])
-                  : null,
+              bright ? const ColorFilter.matrix([1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, .18, .27, .15, 0, 0]) : null,
       );
       final picture = recorder.endRecording();
-      final image = await picture.toImage(_width + 2 * _margin, _height + 2 * _margin);
-      picture.dispose();
-      frame.dispose();
-      if (!mounted) return image.dispose();
-      final old = _image;
-      setState(() => _image = image);
-      old?.dispose();
+      try {
+        return await picture.toImage(_width + 2 * _margin, _height + 2 * _margin);
+      } finally {
+        picture.dispose();
+        frame.dispose();
+      }
     } catch (_) {
-      // No glow this time (e.g. the video isn't ready); the next tick tries again.
-    } finally {
-      _busy = false;
+      return null; // No poster, no glow.
     }
+  }
+
+  /// [source] decoded at the size it's blurred at.
+  static Future<ui.Image> _decode(String source) {
+    final completer = Completer<ui.Image>();
+    final stream = ResizeImage(NetworkImage(source), width: _width).resolve(ImageConfiguration.empty);
+    late final ImageStreamListener listener;
+    listener = ImageStreamListener(
+      (info, _) {
+        stream.removeListener(listener);
+        completer.complete(info.image.clone());
+        info.dispose();
+      },
+      onError: (error, stack) {
+        stream.removeListener(listener);
+        completer.completeError(error, stack);
+      },
+    );
+    stream.addListener(listener);
+    return completer.future;
   }
 
   @override
   Widget build(BuildContext context) {
     final image = _image;
-    if (image == null) return const SizedBox.shrink();
-    // The picture's margins hang out past the box, so the glow fades out around it.
-    return FractionallySizedBox(
-      widthFactor: (_width + 2 * _margin) / _width,
-      heightFactor: (_height + 2 * _margin) / _height,
-      child: RawImage(image: image, fit: BoxFit.fill, filterQuality: FilterQuality.high),
+    // Its own picture: the cross-fade redraws only the glow, not the page.
+    return RepaintBoundary(
+      // The picture's margins hang out past the box, so the glow fades out around it.
+      child: FractionallySizedBox(
+        widthFactor: (_width + 2 * _margin) / _width,
+        heightFactor: (_height + 2 * _margin) / _height,
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 700),
+          layoutBuilder: (current, previous) => Stack(fit: StackFit.expand, children: [...previous, if (current != null) current]),
+          child:
+              image == null
+                  ? const SizedBox.shrink()
+                  : RawImage(key: ValueKey(image), image: image, fit: BoxFit.fill, filterQuality: FilterQuality.high),
+        ),
+      ),
     );
   }
 }

@@ -123,11 +123,16 @@ class PageScroll extends StatelessWidget {
   Widget build(BuildContext context) {
     return ContentScrollView(
       controller: controller,
+      // Each section is its own picture. A section that redraws then only
+      // redraws itself, and an HTML element in one (the home page's video)
+      // only has to be layered with what really overlaps it: a single picture
+      // of the whole page would overlap it, and the browser would have to draw
+      // the page on a second full-screen canvas above the video.
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          ...children,
-          if (showFooter) const SiteFooter(),
+          for (final child in children) RepaintBoundary(child: child),
+          if (showFooter) const RepaintBoundary(child: SiteFooter()),
         ],
       ),
     );

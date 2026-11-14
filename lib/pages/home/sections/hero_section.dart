@@ -25,8 +25,12 @@ class HeroSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = ScreenSize.of(context);
-    // The showreel comes first in each layout: drawn under the text, its glow
-    // can spread out behind it, as on unrealengine.com.
+    // Drawn in this order in both layouts: the glow, the text over it (the
+    // glow spreads out behind it, as on unrealengine.com), then the video.
+    // The video is an HTML element, and the browser has to draw anything
+    // Flutter paints after it on a second full-screen canvas above it if it
+    // might overlap it. Text's measured bounds reach well past its letters,
+    // so the text has to come before the video, not just beside it.
     return Padding(
       padding: EdgeInsets.symmetric(vertical: size.isCompact ? Insets.xxl : 96),
       child: ContentWidth(
@@ -36,19 +40,21 @@ class HeroSection extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   clipBehavior: Clip.none,
                   children: [
-                    // Its glow is centred on the whole row, so it reaches in behind the text.
-                    Padding(
-                      padding: EdgeInsets.only(left: _videoLeft),
-                      child: _Showreel(shift: _videoLeft / 2),
-                    ),
+                    // Centred on the whole row, so it reaches in behind the text.
+                    Padding(padding: EdgeInsets.only(left: _videoLeft), child: _Glow(shift: _videoLeft / 2)),
                     SizedBox(width: _textWidth, child: _Intro()),
+                    Padding(padding: EdgeInsets.only(left: _videoLeft), child: _Video()),
                   ],
                 )
-                // Laid out bottom to top, so the text above is drawn after the showreel below.
-                : const Column(
-                  verticalDirection: VerticalDirection.up,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [_Showreel(), SizedBox(height: 64), _Intro()],
+                : const Stack(
+                  children: [
+                    // Lined up with the video at the bottom.
+                    Positioned(left: 0, right: 0, bottom: 0, child: _Glow()),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [_Intro(), SizedBox(height: 64), _Video()],
+                    ),
+                  ],
                 ),
       ),
     );
@@ -115,10 +121,18 @@ class _Intro extends StatelessWidget {
   }
 }
 
-/// The video in a rounded 16:9 frame, with a glow of it spilling out around
-/// it, as on unrealengine.com.
-class _Showreel extends StatelessWidget {
-  const _Showreel({this.shift = 0});
+/// The showreel in a rounded 16:9 frame. [_Glow] goes behind it.
+class _Video extends StatelessWidget {
+  const _Video();
+
+  @override
+  Widget build(BuildContext context) => const AspectRatio(aspectRatio: 16 / 9, child: HeroVideo(radius: 32));
+}
+
+/// A glow of the showreel spilling out around it, as on unrealengine.com: lay
+/// it out the size of [_Video].
+class _Glow extends StatelessWidget {
+  const _Glow({this.shift = 0});
 
   /// How far left of the video the glow is centred.
   final double shift;
@@ -130,11 +144,7 @@ class _Showreel extends StatelessWidget {
       aspectRatio: 16 / 9,
       child: Stack(
         clipBehavior: Clip.none,
-        children: [
-          // Drawn by Flutter under the video, centred [shift] to its left.
-          Positioned(left: -shift, top: 0, right: shift, bottom: 0, child: HeroGlow(bright: bright)),
-          const Positioned.fill(child: HeroVideo(radius: 32)),
-        ],
+        children: [Positioned(left: -shift, top: 0, right: shift, bottom: 0, child: HeroGlow(bright: bright))],
       ),
     );
   }
