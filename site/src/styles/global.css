@@ -55,6 +55,9 @@ body {
   overflow-x: clip;
 }
 main { flex: 1 0 auto; }
+/* Each section paints over the one before it, so a glow spreading out of one
+   (the home page hero's) stays behind the next. */
+main > section { position: relative; }
 
 img, svg, video { display: block; max-width: 100%; }
 img { height: auto; }

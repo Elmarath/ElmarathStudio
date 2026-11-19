@@ -86,36 +86,63 @@ for (const key of Object.keys(manifest)) if (!seen.has(key)) delete manifest[key
 // --- 3. Baked effects --------------------------------------------------------
 
 // The showreel glow, made the way unrealengine.com makes it: the clip's still
-// shrunk to 128×72, blurred into a wash of its colours (80px on a 978px video
-// there) that fades out at twice the blur. On a bright page dark parts fade
-// out, so it reads as coloured light rather than a grey shadow.
-const GLOW_W = 128;
-const GLOW_H = 72;
-const GLOW_MARGIN = 22;
-const GLOW_SIGMA = (GLOW_W * 80) / 978;
+// stretched to cover a box (object-fit: cover), blurred by 80px, spreading
+// 160px past the box on every side. Two boxes: the whole hero row (text and
+// video side by side, wide screens) and the 16:9 video (smaller screens).
+// Baked once here at 1/6 scale; the browser just scales the picture up, so
+// the page never blurs anything while it scrolls. On a bright page dark parts
+// fade out, so it reads as coloured light rather than a grey shadow.
+const GLOW_VERSION = 'v2'; // bump to remake every glow after changing this code
+const GLOW_SCALE = 1 / 6;
+const GLOW_BLUR = 80;
+const GLOW_SPREAD = 160;
+const GLOW_BOXES = { wide: [1240, 470], video: [800, 450] };
+
+async function bakeGlow(poster, [boxW, boxH], out, outBright) {
+  const w = Math.round(boxW * GLOW_SCALE);
+  const h = Math.round(boxH * GLOW_SCALE);
+  const m = Math.round(GLOW_SPREAD * GLOW_SCALE);
+  const sigma = GLOW_BLUR * GLOW_SCALE;
+  // Colour: the edges carried outwards (so the blur doesn't drag black in) ...
+  const color = await sharp(poster)
+    .resize(w, h, { fit: 'cover' })
+    .removeAlpha()
+    .extend({ top: m, bottom: m, left: m, right: m, extendWith: 'copy' })
+    .blur(sigma)
+    .raw()
+    .toBuffer({ resolveWithObject: true });
+  // ... and how much shows: the box, blurred out to nothing at the edges.
+  const box = await sharp({ create: { width: w, height: h, channels: 3, background: '#fff' } })
+    .extend({ top: m, bottom: m, left: m, right: m, background: '#000' })
+    .blur(sigma)
+    .extractChannel(0)
+    .raw()
+    .toBuffer();
+  const { width, height } = color.info;
+  const rgba = Buffer.alloc(width * height * 4);
+  const bright = Buffer.alloc(width * height * 4);
+  for (let i = 0, j = 0; i < width * height; i++, j += 3) {
+    const [r, g, b] = [color.data[j], color.data[j + 1], color.data[j + 2]];
+    rgba.set([r, g, b, box[i]], i * 4);
+    const luminance = (0.18 * r + 0.27 * g + 0.15 * b) / 255;
+    bright.set([r, g, b, Math.round(box[i] * Math.min(1, luminance * 1.6))], i * 4);
+  }
+  const raw = { raw: { width, height, channels: 4 } };
+  await sharp(rgba, raw).webp({ quality: 90, alphaQuality: 90 }).toFile(out);
+  await sharp(bright, raw).webp({ quality: 90, alphaQuality: 90 }).toFile(outBright);
+}
+
 let glows = 0;
 for await (const poster of walk(join(repo, 'web', 'videos'))) {
   if (!/\.jpg$/i.test(poster)) continue;
   const name = basename(poster, extname(poster));
-  const dark = join(pub, 'videos', `${name}-glow.webp`);
-  const bright = join(pub, 'videos', `${name}-glow-bright.webp`);
-  if ((await fresh(dark, poster)) && (await fresh(bright, poster))) continue;
-  const blurred = await sharp(poster)
-    .resize(GLOW_W, GLOW_H, { fit: 'cover' })
-    .ensureAlpha()
-    .extend({ top: GLOW_MARGIN, bottom: GLOW_MARGIN, left: GLOW_MARGIN, right: GLOW_MARGIN, background: { r: 0, g: 0, b: 0, alpha: 0 } })
-    .blur(GLOW_SIGMA)
-    .raw()
-    .toBuffer({ resolveWithObject: true });
-  const { data, info } = blurred;
-  await sharp(data, { raw: info }).webp({ quality: 80, alphaQuality: 80 }).toFile(dark);
-  const light = Buffer.from(data);
-  for (let i = 0; i < light.length; i += 4) {
-    const luminance = (0.18 * light[i] + 0.27 * light[i + 1] + 0.15 * light[i + 2]) / 255;
-    light[i + 3] = Math.round(light[i + 3] * Math.min(1, luminance * 1.6));
+  for (const [kind, box] of Object.entries(GLOW_BOXES)) {
+    const out = join(pub, 'videos', `${name}.glow-${GLOW_VERSION}-${kind}.webp`);
+    const outBright = join(pub, 'videos', `${name}.glow-${GLOW_VERSION}-${kind}-bright.webp`);
+    if ((await fresh(out, poster)) && (await fresh(outBright, poster))) continue;
+    await bakeGlow(poster, box, out, outBright);
+    glows++;
   }
-  await sharp(light, { raw: info }).webp({ quality: 80, alphaQuality: 80 }).toFile(bright);
-  glows++;
 }
 
 // The carousel's backgrounds: each plugin thumbnail as a tiny, heavily blurred

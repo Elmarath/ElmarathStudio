@@ -3,9 +3,12 @@
 // make on one side, a looping showreel with a soft glow of it on the other
 // (below, on smaller screens).
 //
-// The glow is two pictures per clip baked by scripts/media.mjs (one per theme),
-// cross-faded when the clip changes. The video and the glow are drawn by the
-// browser's compositor, so the page never repaints for them, even while scrolling.
+// The glow is made the way unrealengine.com makes it: the clip stretched over
+// the whole hero row (text and video; just the video on smaller screens),
+// blurred by 80px and spreading 160px past it. scripts/media.mjs bakes it per
+// clip, layout and theme; here it cross-fades when the clip changes. The video
+// and the glow are drawn by the browser's compositor, so the page never
+// repaints for them, even while scrolling.
 import { site } from '../../config.ts';
 import { content } from '../../content/repository.ts';
 import Icon from '../Icon.astro';
@@ -13,7 +16,8 @@ import Icon from '../Icon.astro';
 const repo = content();
 const clips = site.heroVideos.map((src) => {
   const base = src.replace(/\.\w+$/, '');
-  return { src, poster: `${base}.jpg`, glow: `${base}-glow.webp`, glowBright: `${base}-glow-bright.webp` };
+  const glow = (kind: string, bright = false) => `${base}.glow-v2-${kind}${bright ? '-bright' : ''}.webp`;
+  return { src, poster: `${base}.jpg`, glow };
 });
 const [title1, title2] = site.heroTitle.split('\n');
 const posts = repo.posts.length;
@@ -44,15 +48,19 @@ const posts = repo.posts.length;
   <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))}>
     <div class="glow" aria-hidden="true">
       {
-        clips.map((c, i) => (
-          <>
-            <img class:list={['dark', { on: i === 0 }]} src={c.glow} alt="" width="172" height="116" decoding="async" />
-            <img class:list={['bright', { on: i === 0 }]} src={c.glowBright} alt="" width="172" height="116" decoding="async" />
-          </>
-        ))
+        clips.map((c, i) =>
+          [false, true].map((bright) => (
+            <picture class:list={[bright ? 'bright' : 'dark', { on: i === 0 }]}>
+              <source media="(min-width: 1100px)" srcset={c.glow('wide', bright)} />
+              <img src={c.glow('video', bright)} alt="" decoding="async" />
+            </picture>
+          )),
+        )
       }
     </div>
-    <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+    <div class="screen">
+      <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+    </div>
   </div>
 </section>
 
@@ -66,6 +74,9 @@ const posts = repo.posts.length;
   .hero {
     --text-w: 400px;
     --gap: 64px;
+    /* The glow sits behind everything in here, and nothing outside. */
+    position: relative;
+    isolation: isolate;
     display: grid;
     gap: var(--gap);
     padding-block: 48px;
@@ -119,14 +130,12 @@ const posts = repo.posts.length;
   .stats :global(.icon) { font-size: 14px; transition: transform var(--fast); }
   .stats a:hover :global(.icon) { transform: translateX(4px); color: var(--accent); }
 
-  /* The showreel in a rounded 16:9 frame. */
+  /* The showreel in a rounded 16:9 frame. The frame is black, so between clips
+     the video dips to black rather than showing the glow through it. */
   .reel { --radius: 32px; position: relative; aspect-ratio: 16 / 9; }
-  /* Black behind the video: between clips the video dips to black, rather than
-     showing the glow through it. */
-  .reel::before { content: ''; position: absolute; inset: 0; z-index: 1; border-radius: var(--radius); background: #000; }
+  .screen { position: relative; height: 100%; border-radius: var(--radius); background: #000; }
   video {
-    position: relative;
-    z-index: 2;
+    display: block;
     width: 100%;
     height: 100%;
     object-fit: cover;
@@ -136,18 +145,18 @@ const posts = repo.posts.length;
   }
   video.swapping { opacity: 0; }
 
-  /* The glow's margins hang out past the video (22px on a 128×72 frame), and
-     on wide screens it's centred on the whole row so it reaches in behind the text. */
-  .glow {
-    position: absolute;
-    inset: -30.56% -17.19%;
-    pointer-events: none;
-    transform: translateX(calc(-1 * var(--shift, 0px)));
-  }
+  /* The glow: 160px past the video on smaller screens, and the whole of it
+     shrunk to 70% on phones, as on unrealengine.com ... */
+  .glow { position: absolute; z-index: -1; inset: -160px; pointer-events: none; }
+  @media (max-width: 719px) { .glow { transform: scale(0.7); } }
+  /* ... and on wide screens 160px past the whole row, text and video together:
+     the frame steps aside (position: static) so the glow measures the section. */
   @media (min-width: 1100px) {
-    .glow { --shift: calc((var(--text-w) + 40px) / 2); }
+    .reel { position: static; }
+    .glow { inset: -64px calc(var(--gutter) - 160px); }
   }
-  .glow img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 700ms ease; }
+  .glow picture { position: absolute; inset: 0; opacity: 0; transition: opacity 700ms ease; }
+  .glow img { width: 100%; height: 100%; }
 
   /* Below 1100px everything stacks, laid out like unrealengine.com at that
      size: the name chip (where Unreal has its logo), a big two-line statement,
@@ -186,6 +195,6 @@ const posts = repo.posts.length;
     .button-row { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
     .button-row .button { padding: 0 12px; }
   }
-  .glow img.dark.on { opacity: var(--glow-dark); }
-  .glow img.bright.on { opacity: var(--glow-bright); }
+  .glow .dark.on { opacity: var(--glow-dark); }
+  .glow .bright.on { opacity: var(--glow-bright); }
 </style>
