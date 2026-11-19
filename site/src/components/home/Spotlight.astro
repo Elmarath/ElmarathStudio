@@ -74,8 +74,9 @@ const items = await Promise.all(
 }
 
 <script>
+  import { onPage } from '../../scripts/lifecycle.ts';
   import { startCarousels } from '../../scripts/carousel.ts';
-  startCarousels();
+  onPage(startCarousels);
 </script>
 
 <style>

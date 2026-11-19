@@ -237,11 +237,13 @@ dialog::backdrop { background: rgb(0 0 0 / 0.55); }
 @keyframes dialog-in { from { opacity: 0; transform: translateY(8px) scale(0.98); } }
 body:has(dialog[open]) { overflow: hidden; }
 
-/* Page-to-page transitions: a quick cross-fade between pages (browsers that support it). */
-@view-transition { navigation: auto; }
+/* Page-to-page transitions (the client router swaps pages in place): a quick
+   cross-fade of the content. The nav bar and the docs sidebar have their own
+   names, so they stay put instead of fading. */
 ::view-transition-old(root), ::view-transition-new(root) { animation-duration: 160ms; }
-::view-transition-group(site-nav) { animation-duration: 0s; }
+::view-transition-group(site-nav), ::view-transition-group(docs-sidebar) { animation-duration: 0s; }
+::view-transition-old(site-nav), ::view-transition-old(docs-sidebar) { display: none; }
+::view-transition-new(site-nav), ::view-transition-new(docs-sidebar) { animation: none; }
 @media (prefers-reduced-motion: reduce) {
-  @view-transition { navigation: none; }
   *, *::before, *::after { transition-duration: 0.01ms !important; animation-duration: 0.01ms !important; }
 }

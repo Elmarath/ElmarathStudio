@@ -16,11 +16,15 @@ const data = JSON.stringify(content().legacyData);
   </script>
   <script type="application/json" id="legacy-data" set:html={data} />
   <script>
+    import { onPage } from '../scripts/lifecycle.ts';
     import { legacyRoute } from '../scripts/legacy-core.ts';
-    const data = JSON.parse(document.getElementById('legacy-data')!.textContent!);
-    const target = location.pathname === '/404' ? null : legacyRoute(location.pathname, data, location.hash);
-    if (target) location.replace(target);
-    else document.documentElement.classList.remove('matching');
+    onPage(() => {
+      const json = document.getElementById('legacy-data')?.textContent;
+      if (!json) return;
+      const target = location.pathname === '/404' ? null : legacyRoute(location.pathname, JSON.parse(json), location.hash);
+      if (target) location.replace(target);
+      else document.documentElement.classList.remove('matching');
+    });
   </script>
   <section class="container not-found">
     <p class="code">404</p>

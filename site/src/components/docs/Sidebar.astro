@@ -31,19 +31,50 @@ const root = content().docsRoot;
 </nav>
 
 <script>
-  // Opening a folder opens its first page, unless you're already reading one
-  // of its pages. Closing just closes.
-  for (const d of document.querySelectorAll<HTMLDetailsElement>('.tree details[data-first]')) {
-    d.querySelector('summary')!.addEventListener('click', () => {
-      if (!d.open && d.dataset.active === undefined) location.assign(d.dataset.first!);
-    });
-  }
-  // Keep the current page in view inside the sidebar (it scrolls on its own).
-  const current = document.querySelector<HTMLElement>('.tree [aria-current="page"]');
-  const sidebar = current?.closest<HTMLElement>('.sidebar');
-  if (current && sidebar && sidebar.scrollHeight > sidebar.clientHeight) {
-    sidebar.scrollTop = current.offsetTop - sidebar.clientHeight / 2;
-  }
+  import { navigate } from 'astro:transitions/client';
+  import { onPage } from '../../scripts/lifecycle.ts';
+
+  onPage((signal) => {
+    // Opening a folder opens its first page, unless you're already reading one
+    // of its pages. Closing just closes.
+    for (const d of document.querySelectorAll<HTMLDetailsElement>('.tree details[data-first]')) {
+      d.querySelector('summary')!.addEventListener(
+        'click',
+        () => {
+          if (!d.open && d.dataset.active === undefined) void navigate(d.dataset.first!);
+        },
+        { signal },
+      );
+    }
+    // Keep the current page in view inside the sidebar (it scrolls on its own),
+    // without moving it when it's already showing.
+    const current = document.querySelector<HTMLElement>('.tree [aria-current="page"]');
+    const sidebar = current?.closest<HTMLElement>('.sidebar');
+    if (current && sidebar && sidebar.scrollHeight > sidebar.clientHeight) {
+      const top = current.offsetTop;
+      if (top < sidebar.scrollTop || top + current.offsetHeight > sidebar.scrollTop + sidebar.clientHeight) {
+        sidebar.scrollTop = top - sidebar.clientHeight / 2;
+      }
+    }
+  });
+
+  // Moving to another doc swaps the page in place: the sidebar keeps where it
+  // was scrolled to and the folders that were open.
+  let scrollTop: number | undefined;
+  document.addEventListener('astro:before-swap', (e) => {
+    const old = document.querySelector<HTMLElement>('.sidebar');
+    if (!old) return;
+    scrollTop = old.scrollTop;
+    const open = new Set([...old.querySelectorAll<HTMLDetailsElement>('details[open][data-first]')].map((d) => d.dataset.first));
+    for (const d of e.newDocument.querySelectorAll<HTMLDetailsElement>('.tree details[data-first]')) {
+      if (open.has(d.dataset.first)) d.open = true;
+    }
+  });
+  document.addEventListener('astro:after-swap', () => {
+    const sidebar = document.querySelector<HTMLElement>('.sidebar');
+    if (sidebar && scrollTop !== undefined) sidebar.scrollTop = scrollTop;
+    scrollTop = undefined;
+  });
 </script>
 
 <style>

@@ -1,6 +1,6 @@
 // Draws ```mermaid diagrams. The library (large) is loaded only on pages that
 // have one, once the page is idle, and the diagrams follow the theme.
-export function drawDiagrams() {
+export function drawDiagrams(signal: AbortSignal) {
   const blocks = document.querySelectorAll<HTMLElement>('pre.mermaid');
   if (blocks.length === 0) return;
   const sources = [...blocks].map((b) => b.textContent ?? '');
@@ -17,5 +17,7 @@ export function drawDiagrams() {
   const idle = (window as unknown as { requestIdleCallback?: (cb: () => void) => void }).requestIdleCallback ?? ((cb: () => void) => setTimeout(cb, 200));
   idle(() => void draw());
   // Redraw in the other theme's colors when the theme changes.
-  new MutationObserver(() => void draw()).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  const themes = new MutationObserver(() => void draw());
+  themes.observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
+  signal.addEventListener('abort', () => themes.disconnect());
 }

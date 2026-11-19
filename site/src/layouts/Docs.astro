@@ -93,6 +93,8 @@ const toc = headings.length > 1;
       background: none;
       animation: none;
       overflow-y: auto;
+      /* Stays in place while the page beside it changes. */
+      view-transition-name: docs-sidebar;
     }
   }
   @media (min-width: 1100px) {

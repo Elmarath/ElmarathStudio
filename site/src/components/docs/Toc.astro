@@ -24,29 +24,35 @@ const { headings } = Astro.props;
 <script>
   // A heading counts as "being read" once it's in the top 30% of the window.
   // An IntersectionObserver tells when that changes: nothing runs per scroll frame.
-  const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
-  const targets = links.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter((h): h is HTMLElement => !!h);
-  const passed = new Set<Element>();
-  const mark = (id: string) => links.forEach((a) => a.toggleAttribute('aria-current', a.hash === `#${id}`));
-  const update = () => {
-    const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
-    const current = atEnd ? targets.at(-1) : (targets.filter((t) => passed.has(t)).at(-1) ?? targets[0]);
-    if (current) mark(current.id);
-  };
-  const observer = new IntersectionObserver(
-    (entries) => {
-      for (const e of entries) {
-        if (e.boundingClientRect.top < (e.rootBounds?.top ?? 0) + 1 || e.isIntersecting) passed.add(e.target);
-        else passed.delete(e.target);
-      }
-      update();
-    },
-    { rootMargin: '0px 0px -70% 0px' },
-  );
-  targets.forEach((t) => observer.observe(t));
-  addEventListener('scrollend', update, { passive: true });
-  // A clicked heading stays highlighted while the page scrolls to it.
-  for (const a of links) a.addEventListener('click', () => mark(decodeURIComponent(a.hash.slice(1))));
+  import { observe, onPage } from '../../scripts/lifecycle.ts';
+
+  onPage((signal) => {
+    const links = [...document.querySelectorAll<HTMLAnchorElement>('.toc a')];
+    if (links.length === 0) return;
+    const targets = links.map((a) => document.getElementById(decodeURIComponent(a.hash.slice(1)))).filter((h): h is HTMLElement => !!h);
+    const passed = new Set<Element>();
+    const mark = (id: string) => links.forEach((a) => a.toggleAttribute('aria-current', a.hash === `#${id}`));
+    const update = () => {
+      const atEnd = innerHeight + scrollY >= document.documentElement.scrollHeight - 4;
+      const current = atEnd ? targets.at(-1) : (targets.filter((t) => passed.has(t)).at(-1) ?? targets[0]);
+      if (current) mark(current.id);
+    };
+    observe(
+      signal,
+      targets,
+      (entries) => {
+        for (const e of entries) {
+          if (e.boundingClientRect.top < (e.rootBounds?.top ?? 0) + 1 || e.isIntersecting) passed.add(e.target);
+          else passed.delete(e.target);
+        }
+        update();
+      },
+      { rootMargin: '0px 0px -70% 0px' },
+    );
+    addEventListener('scrollend', update, { passive: true, signal });
+    // A clicked heading stays highlighted while the page scrolls to it.
+    for (const a of links) a.addEventListener('click', () => mark(decodeURIComponent(a.hash.slice(1))), { signal });
+  });
 </script>
 
 <style>

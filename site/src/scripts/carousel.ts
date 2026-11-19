@@ -1,13 +1,16 @@
 // The home page plugin carousel: moves on every 7 seconds while it's on
 // screen and not paused; the list picks a plugin; a swipe (touch screens) is
 // native scrolling, and the list follows wherever it lands.
+// Everything stops with [signal] (the page being swapped out).
+import { observe } from './lifecycle.ts';
+
 const INTERVAL = 7000;
 
-export function startCarousels() {
-  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) start(root);
+export function startCarousels(signal: AbortSignal) {
+  for (const root of document.querySelectorAll<HTMLElement>('[data-carousel]')) start(root, signal);
 }
 
-function start(root: HTMLElement) {
+function start(root: HTMLElement, signal: AbortSignal) {
   const track = root.querySelector<HTMLElement>('.slides')!;
   const slides = [...track.querySelectorAll<HTMLElement>('.slide')];
   const tabs = [...root.querySelectorAll<HTMLButtonElement>('.tab')];
@@ -56,14 +59,15 @@ function start(root: HTMLElement) {
     timer = setTimeout(() => select(index + 1), INTERVAL);
   };
 
-  tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i)));
+  signal.addEventListener('abort', () => clearTimeout(timer));
+  tabs.forEach((tab, i) => tab.addEventListener('click', () => select(i), { signal }));
   pause.addEventListener('click', () => {
     paused = !paused;
     root.toggleAttribute('data-paused', paused);
     pause.setAttribute('aria-label', paused ? 'Play' : 'Pause');
     pause.title = paused ? 'Play' : 'Pause';
     schedule();
-  });
+  }, { signal });
 
   // A swipe: when the row settles, the list follows and the timer starts over.
   let settle: ReturnType<typeof setTimeout> | undefined;
@@ -71,19 +75,21 @@ function start(root: HTMLElement) {
     const i = Math.round(track.scrollLeft / track.clientWidth);
     if (i !== index) select(i, { scroll: false });
   };
-  if ('onscrollend' in window) track.addEventListener('scrollend', settled);
+  if ('onscrollend' in window) track.addEventListener('scrollend', settled, { signal });
   else
     track.addEventListener('scroll', () => {
       clearTimeout(settle);
       settle = setTimeout(settled, 120);
-    }, { passive: true });
-  track.addEventListener('pointerdown', () => clearTimeout(timer), { passive: true });
+    }, { passive: true, signal });
+  track.addEventListener('pointerdown', () => clearTimeout(timer), { passive: true, signal });
 
   // Keep the slide in place when the window is resized.
-  new ResizeObserver(() => track.scrollTo({ left: index * track.clientWidth })).observe(track);
-  new IntersectionObserver((entries) => {
+  const resize = new ResizeObserver(() => track.scrollTo({ left: index * track.clientWidth }));
+  resize.observe(track);
+  signal.addEventListener('abort', () => resize.disconnect());
+  observe(signal, root, (entries) => {
     onScreen = entries.at(-1)!.isIntersecting;
     schedule();
-  }).observe(root);
-  document.addEventListener('visibilitychange', schedule);
+  });
+  document.addEventListener('visibilitychange', schedule, { signal });
 }

@@ -67,15 +67,28 @@ const PAGE = 9;
 </div>
 
 <script>
-  const tags = new Map([...document.querySelectorAll<HTMLAnchorElement>('.pills a')].map((a) => [a.textContent!.trim().toLowerCase(), a.href]));
-  document.querySelector<HTMLInputElement>('[data-tag-search]')?.addEventListener('change', (e) => {
-    const href = tags.get((e.target as HTMLInputElement).value.trim().toLowerCase());
-    if (href) location.assign(href);
-  });
-  document.querySelector('[data-load-more]')?.addEventListener('click', (e) => {
-    const hidden = [...document.querySelectorAll<HTMLElement>('[data-posts] .item[hidden]')];
-    hidden.slice(0, 9).forEach((el) => (el.hidden = false));
-    if (hidden.length <= 9) (e.currentTarget as HTMLElement).remove();
+  import { onPage } from '../../scripts/lifecycle.ts';
+  import { navigate } from 'astro:transitions/client';
+
+  onPage((signal) => {
+    const tags = new Map([...document.querySelectorAll<HTMLAnchorElement>('.pills a')].map((a) => [a.textContent!.trim().toLowerCase(), a.href]));
+    document.querySelector<HTMLInputElement>('[data-tag-search]')?.addEventListener(
+      'change',
+      (e) => {
+        const href = tags.get((e.target as HTMLInputElement).value.trim().toLowerCase());
+        if (href) void navigate(href);
+      },
+      { signal },
+    );
+    document.querySelector('[data-load-more]')?.addEventListener(
+      'click',
+      (e) => {
+        const hidden = [...document.querySelectorAll<HTMLElement>('[data-posts] .item[hidden]')];
+        hidden.slice(0, 9).forEach((el) => (el.hidden = false));
+        if (hidden.length <= 9) (e.currentTarget as HTMLElement).remove();
+      },
+      { signal },
+    );
   });
 </script>
 

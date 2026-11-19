@@ -1,10 +1,19 @@
-// The one script every page runs. Everything here waits for a click or a key:
-// nothing runs per frame, nothing runs while scrolling.
+// The one script every page runs, loaded once per visit (pages after that are
+// swapped in by the client router). Everything here waits for a click or a key:
+// nothing runs per frame, nothing runs while scrolling. Elements are looked up
+// when they're needed, since each page swap brings new ones.
 import { searchEntries, highlight, type IndexedEntry } from './search-core.ts';
+import { onPage } from './lifecycle.ts';
 
 const $ = <T extends Element>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
+const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
+
+onPage(() => {
+  for (const k of document.querySelectorAll('[data-shortcut]')) k.textContent = isMac ? '⌘ K' : 'Ctrl K';
+});
 
 // --- Theme ------------------------------------------------------------------
+// (Applying the saved theme before each page shows is in the <head> of src/layouts/Base.astro.)
 document.addEventListener('click', (e) => {
   const item = (e.target as Element).closest<HTMLElement>('[data-set-theme]');
   if (!item) return;
@@ -13,20 +22,13 @@ document.addEventListener('click', (e) => {
   try {
     localStorage.setItem('theme', id);
   } catch {}
-  syncThemeColor();
+  const colors = (window as unknown as { __themeColors?: Record<string, string> }).__themeColors;
+  if (colors?.[id]) $<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', colors[id]);
   $<HTMLElement>('#theme-menu')?.hidePopover?.();
 });
-function syncThemeColor() {
-  const colors = (window as unknown as { __themeColors?: Record<string, string> }).__themeColors;
-  const color = colors?.[document.documentElement.dataset.theme ?? ''];
-  if (color) $<HTMLMetaElement>('meta[name="theme-color"]')?.setAttribute('content', color);
-}
-syncThemeColor();
 
 // --- Search -----------------------------------------------------------------
-const dialog = $<HTMLDialogElement>('#search');
-const input = dialog ? $<HTMLInputElement>('input', dialog) : null;
-const results = $<HTMLElement>('#search-results');
+const searchDialog = () => $<HTMLDialogElement>('#search');
 let index: Promise<IndexedEntry[]> | undefined;
 const loadIndex = () =>
   (index ??= fetch('/search.json')
@@ -36,40 +38,40 @@ const loadIndex = () =>
       index = undefined;
       return [];
     }));
-const icons: Record<string, string> = {};
-for (const t of document.querySelectorAll<HTMLTemplateElement>('template[data-search-icon]')) icons[t.dataset.searchIcon!] = t.innerHTML;
-
-const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
-for (const k of document.querySelectorAll('[data-shortcut]')) k.textContent = isMac ? '⌘ K' : 'Ctrl K';
 
 function openSearch() {
+  const dialog = searchDialog();
   if (!dialog || dialog.open) return;
   dialog.showModal();
-  input!.select();
+  $<HTMLInputElement>('input', dialog)!.select();
   void loadIndex();
 }
 document.addEventListener('click', (e) => {
-  if ((e.target as Element).closest('[data-search]')) openSearch();
+  const target = e.target as Element;
+  if (target.closest('[data-search]')) openSearch();
+  else if (target === searchDialog()) searchDialog()!.close(); // a click on the backdrop
+  else if (target.closest('#search-results a')) searchDialog()?.close();
 });
 // Warm the index as soon as someone reaches for the search box.
-for (const b of document.querySelectorAll('[data-search]')) {
-  b.addEventListener('pointerenter', () => void loadIndex(), { once: true });
-  b.addEventListener('focus', () => void loadIndex(), { once: true });
-}
+document.addEventListener('pointerover', (e) => {
+  if ((e.target as Element).closest?.('[data-search]')) void loadIndex();
+});
+document.addEventListener('focusin', (e) => {
+  if ((e.target as Element).closest?.('[data-search]')) void loadIndex();
+});
 document.addEventListener('keydown', (e) => {
   if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
     e.preventDefault();
+    const dialog = searchDialog();
     if (dialog?.open) dialog.close();
     else openSearch();
   }
 });
-dialog?.addEventListener('click', (e) => {
-  if (e.target === dialog) dialog.close(); // a click on the backdrop
-});
 
 let selected = 0;
-async function runSearch() {
-  if (!input || !results) return;
+async function runSearch(input: HTMLInputElement) {
+  const results = $<HTMLElement>('#search-results');
+  if (!results) return;
   const query = input.value.trim();
   if (!query) {
     results.innerHTML = '<p class="hint">Type to search docs, blog posts and pages.</p>';
@@ -91,6 +93,8 @@ async function runSearch() {
     results.append(p);
     return;
   }
+  const icons: Record<string, string> = {};
+  for (const t of document.querySelectorAll<HTMLTemplateElement>('template[data-search-icon]')) icons[t.dataset.searchIcon!] = t.innerHTML;
   selected = 0;
   results.innerHTML = hits
     .map(
@@ -102,9 +106,13 @@ async function runSearch() {
     )
     .join('');
 }
-input?.addEventListener('input', runSearch);
-input?.addEventListener('keydown', (e) => {
-  const items = results ? [...results.querySelectorAll<HTMLAnchorElement>('a')] : [];
+document.addEventListener('input', (e) => {
+  const input = e.target as HTMLInputElement;
+  if (input.closest?.('#search')) void runSearch(input);
+});
+document.addEventListener('keydown', (e) => {
+  if (!(e.target as Element).closest?.('#search input')) return;
+  const items = [...document.querySelectorAll<HTMLAnchorElement>('#search-results a')];
   if (items.length === 0) return;
   if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
     e.preventDefault();
@@ -117,13 +125,14 @@ input?.addEventListener('keydown', (e) => {
     items[selected]?.click();
   }
 });
-results?.addEventListener('click', (e) => {
-  if ((e.target as Element).closest('a')) dialog?.close();
-});
 
 // --- CV window ----------------------------------------------------------------
-const cv = $<HTMLDialogElement>('#cv');
 document.addEventListener('click', (e) => {
+  const cv = $<HTMLDialogElement>('#cv');
+  if (e.target === cv) {
+    cv!.close(); // a click on the backdrop
+    return;
+  }
   const link = (e.target as Element).closest<HTMLAnchorElement>('a[href="/cv"]');
   if (!link || !cv || e.metaKey || e.ctrlKey || e.shiftKey || location.pathname === '/cv') return;
   e.preventDefault();
@@ -131,16 +140,13 @@ document.addEventListener('click', (e) => {
   if (!frame.src) frame.src = frame.dataset.src!;
   cv.showModal();
 });
-cv?.addEventListener('click', (e) => {
-  if (e.target === cv) cv.close();
-});
 
 // --- Images: click to see them full size ------------------------------------
-let viewer: HTMLDialogElement | undefined;
 document.addEventListener('click', (e) => {
   const link = (e.target as Element).closest<HTMLAnchorElement>('a[data-zoom]');
   if (!link || e.metaKey || e.ctrlKey) return;
   e.preventDefault();
+  let viewer = $<HTMLDialogElement>('dialog.image-viewer');
   if (!viewer) {
     viewer = document.createElement('dialog');
     viewer.className = 'image-viewer';

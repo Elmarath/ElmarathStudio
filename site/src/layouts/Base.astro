@@ -5,6 +5,7 @@
 import '@fontsource-variable/inter/wght.css';
 import '../styles/global.css';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import { ClientRouter } from 'astro:transitions';
 import { site, themes } from '../config.ts';
 import Nav from '../components/Nav.astro';
 import Footer from '../components/Footer.astro';
@@ -42,9 +43,11 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
 
-    <!-- The theme picked last time, before anything is painted (no flash of the other theme). -->
+    <!-- The theme picked last time, before anything is painted (no flash of the
+         other theme), and again on each page the client router swaps in (it
+         replaces the <html> attributes with the new page's). -->
     <script is:inline define:vars={{ themeIds, themeColors }}>
-      (() => {
+      const applyTheme = () => {
         let id;
         try {
           id = localStorage.getItem('theme');
@@ -53,10 +56,16 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
         } catch {}
         if (!themeIds.includes(id)) id = themeIds[0];
         document.documentElement.dataset.theme = id;
-        window.__themeColors = themeColors;
-      })();
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[id]);
+      };
+      window.__themeColors = themeColors;
+      applyTheme();
+      document.addEventListener('astro:after-swap', applyTheme);
     </script>
     <meta name="theme-color" content={themes[0].background} />
+    <!-- Moving between pages swaps the page in place (no reload): the nav bar
+         and the docs sidebar stay put, and the content cross-fades. -->
+    <ClientRouter />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
 
     <!-- Link previews (Discord, LinkedIn, X...). -->

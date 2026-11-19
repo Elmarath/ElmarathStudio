@@ -62,8 +62,9 @@ const posts = repo.posts.length;
 </section>
 
 <script>
+  import { onPage } from '../../scripts/lifecycle.ts';
   import { startShowreel } from '../../scripts/showreel.ts';
-  startShowreel();
+  onPage(startShowreel);
 </script>
 
 <style>

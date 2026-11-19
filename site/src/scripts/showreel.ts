@@ -1,7 +1,10 @@
 // The home page showreel: the clips play one after another on a loop, only
 // while the video is on screen (off screen it would still cost decoding), and
 // not at all with "reduce motion" on. The glow cross-fades to each clip's colours.
-export function startShowreel() {
+// Everything stops with [signal] (the page being swapped out).
+import { observe } from './lifecycle.ts';
+
+export function startShowreel(signal: AbortSignal) {
   const reel = document.querySelector<HTMLElement>('[data-showreel]');
   const video = reel?.querySelector('video');
   if (!reel || !video) return;
@@ -27,12 +30,14 @@ export function startShowreel() {
   };
   video.addEventListener('ended', () => {
     video.classList.add('swapping');
-    setTimeout(() => show(clip + 1), 350);
-  });
-  video.addEventListener('playing', () => video.classList.remove('swapping'));
-  new IntersectionObserver((entries) => {
+    const next = setTimeout(() => show(clip + 1), 350);
+    signal.addEventListener('abort', () => clearTimeout(next));
+  }, { signal });
+  video.addEventListener('playing', () => video.classList.remove('swapping'), { signal });
+  observe(signal, video, (entries) => {
     visible = entries.at(-1)!.isIntersecting;
     update();
-  }).observe(video);
-  document.addEventListener('visibilitychange', update);
+  });
+  document.addEventListener('visibilitychange', update, { signal });
+  signal.addEventListener('abort', () => video.pause());
 }

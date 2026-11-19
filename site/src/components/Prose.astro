@@ -15,8 +15,9 @@ const { rendered } = Astro.props;
 {
   rendered.mermaid && (
     <script>
+      import { onPage } from '../scripts/lifecycle.ts';
       import { drawDiagrams } from '../scripts/mermaid.ts';
-      drawDiagrams();
+      onPage(drawDiagrams);
     </script>
   )
 }
