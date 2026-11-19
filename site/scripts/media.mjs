@@ -99,6 +99,9 @@ const GLOW_BLUR = 80;
 /** How far past the box the glow reaches, and how softly it fades out on the way. */
 const GLOW_SPREAD = 300;
 const GLOW_FADE = 130;
+/** How strongly it fades: 1 follows the blur; higher keeps the middle as bright
+    and makes the outer parts fainter, sooner. */
+const GLOW_FADE_STRENGTH = 2.2;
 const GLOW_BOXES = { wide: [1240, 470], video: [800, 450] };
 
 async function bakeGlow(poster, [boxW, boxH], out, outBright) {
@@ -127,9 +130,10 @@ async function bakeGlow(poster, [boxW, boxH], out, outBright) {
   const bright = Buffer.alloc(width * height * 4);
   for (let i = 0, j = 0; i < width * height; i++, j += 3) {
     const [r, g, b] = [color.data[j], color.data[j + 1], color.data[j + 2]];
-    rgba.set([r, g, b, box[i]], i * 4);
+    const alpha = 255 * (box[i] / 255) ** GLOW_FADE_STRENGTH;
+    rgba.set([r, g, b, Math.round(alpha)], i * 4);
     const luminance = (0.18 * r + 0.27 * g + 0.15 * b) / 255;
-    bright.set([r, g, b, Math.round(box[i] * Math.min(1, luminance * 1.6))], i * 4);
+    bright.set([r, g, b, Math.round(alpha * Math.min(1, luminance * 1.6))], i * 4);
   }
   const raw = { raw: { width, height, channels: 4 } };
   await sharp(rgba, raw).webp({ quality: 90, alphaQuality: 90 }).toFile(out);
