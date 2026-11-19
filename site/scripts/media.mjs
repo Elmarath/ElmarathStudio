@@ -101,7 +101,7 @@ const GLOW_SPREAD = 300;
 const GLOW_FADE = 130;
 /** How strongly it fades: 1 follows the blur; higher keeps the middle as bright
     and makes the outer parts fainter, sooner. */
-const GLOW_FADE_STRENGTH = 3.3;
+const GLOW_FADE_STRENGTH = 2.475;
 const GLOW_BOXES = { wide: [1240, 470], video: [800, 450] };
 
 async function bakeGlow(poster, [boxW, boxH], out, outBright) {
