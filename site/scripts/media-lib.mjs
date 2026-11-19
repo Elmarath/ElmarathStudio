@@ -21,7 +21,7 @@ export const WIDTHS = [480, 960, 1600];
 export const IMAGE = /\.(png|jpe?g|webp|gif)$/i;
 
 /** In the hero glow's file names; bump it to remake every glow after changing how they're made (media.mjs). */
-export const GLOW_VERSION = 'v4';
+export const GLOW_VERSION = 'v5';
 
 export async function fresh(output, source) {
   if (!existsSync(output)) return false;
