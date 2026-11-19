@@ -9,12 +9,12 @@
 //   backgrounds.
 //
 // Work is cached: an output newer than its source is left alone, so reruns are quick.
-import { copyFile, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
+import { copyFile, mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, extname, basename } from 'node:path';
 import os from 'node:os';
 import sharp from 'sharp';
-import { IMAGE, convertImage, fresh, manifestPath, pub, repo } from './media-lib.mjs';
+import { GLOW_VERSION, IMAGE, convertImage, fresh, manifestPath, pub, repo } from './media-lib.mjs';
 
 async function* walk(dir) {
   if (!existsSync(dir)) return;
@@ -86,16 +86,19 @@ for (const key of Object.keys(manifest)) if (!seen.has(key)) delete manifest[key
 // --- 3. Baked effects --------------------------------------------------------
 
 // The showreel glow, made the way unrealengine.com makes it: the clip's still
-// stretched to cover a box (object-fit: cover), blurred by 80px, spreading
-// 160px past the box on every side. Two boxes: the whole hero row (text and
+// stretched to cover a box (object-fit: cover) and its colours blurred by 80px.
+// It fades out more gently than Unreal's: over 300px past the box on every
+// side (GLOW_SPREAD; src/components/home/Hero.astro places it to match). Two boxes: the whole hero row (text and
 // video side by side, wide screens) and the 16:9 video (smaller screens).
 // Baked once here at 1/6 scale; the browser just scales the picture up, so
 // the page never blurs anything while it scrolls. On a bright page dark parts
 // fade out, so it reads as coloured light rather than a grey shadow.
-const GLOW_VERSION = 'v2'; // bump to remake every glow after changing this code
 const GLOW_SCALE = 1 / 6;
+/** How much the colours are blurred, in CSS pixels. */
 const GLOW_BLUR = 80;
-const GLOW_SPREAD = 160;
+/** How far past the box the glow reaches, and how softly it fades out on the way. */
+const GLOW_SPREAD = 300;
+const GLOW_FADE = 130;
 const GLOW_BOXES = { wide: [1240, 470], video: [800, 450] };
 
 async function bakeGlow(poster, [boxW, boxH], out, outBright) {
@@ -103,6 +106,7 @@ async function bakeGlow(poster, [boxW, boxH], out, outBright) {
   const h = Math.round(boxH * GLOW_SCALE);
   const m = Math.round(GLOW_SPREAD * GLOW_SCALE);
   const sigma = GLOW_BLUR * GLOW_SCALE;
+  const fade = GLOW_FADE * GLOW_SCALE;
   // Colour: the edges carried outwards (so the blur doesn't drag black in) ...
   const color = await sharp(poster)
     .resize(w, h, { fit: 'cover' })
@@ -114,7 +118,7 @@ async function bakeGlow(poster, [boxW, boxH], out, outBright) {
   // ... and how much shows: the box, blurred out to nothing at the edges.
   const box = await sharp({ create: { width: w, height: h, channels: 3, background: '#fff' } })
     .extend({ top: m, bottom: m, left: m, right: m, background: '#000' })
-    .blur(sigma)
+    .blur(fade)
     .extractChannel(0)
     .raw()
     .toBuffer();
@@ -133,6 +137,10 @@ async function bakeGlow(poster, [boxW, boxH], out, outBright) {
 }
 
 let glows = 0;
+// Glows made by an earlier version of this code.
+for await (const file of walk(join(pub, 'videos'))) {
+  if (/\.glow-v\d+-/.test(file) && !file.includes(`.glow-${GLOW_VERSION}-`)) await rm(file);
+}
 for await (const poster of walk(join(repo, 'web', 'videos'))) {
   if (!/\.jpg$/i.test(poster)) continue;
   const name = basename(poster, extname(poster));

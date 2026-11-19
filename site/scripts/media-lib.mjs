@@ -20,6 +20,9 @@ export const manifestPath = join(site, '.media', 'manifest.json');
 export const WIDTHS = [480, 960, 1600];
 export const IMAGE = /\.(png|jpe?g|webp|gif)$/i;
 
+/** In the hero glow's file names; bump it to remake every glow after changing how they're made (media.mjs). */
+export const GLOW_VERSION = 'v3';
+
 export async function fresh(output, source) {
   if (!existsSync(output)) return false;
   return (await stat(output)).mtimeMs >= (await stat(source)).mtimeMs;

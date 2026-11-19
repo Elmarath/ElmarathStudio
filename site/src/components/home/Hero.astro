@@ -5,18 +5,20 @@
 //
 // The glow is made the way unrealengine.com makes it: the clip stretched over
 // the whole hero row (text and video; just the video on smaller screens),
-// blurred by 80px and spreading 160px past it. scripts/media.mjs bakes it per
+// blurred by 80px and fading out over 300px past it. scripts/media.mjs bakes it per
 // clip, layout and theme; here it cross-fades when the clip changes. The video
 // and the glow are drawn by the browser's compositor, so the page never
 // repaints for them, even while scrolling.
 import { site } from '../../config.ts';
 import { content } from '../../content/repository.ts';
+// @ts-expect-error: plain JavaScript module shared with the media script.
+import { GLOW_VERSION } from '../../../scripts/media-lib.mjs';
 import Icon from '../Icon.astro';
 
 const repo = content();
 const clips = site.heroVideos.map((src) => {
   const base = src.replace(/\.\w+$/, '');
-  const glow = (kind: string, bright = false) => `${base}.glow-v2-${kind}${bright ? '-bright' : ''}.webp`;
+  const glow = (kind: string, bright = false) => `${base}.glow-${GLOW_VERSION}-${kind}${bright ? '-bright' : ''}.webp`;
   return { src, poster: `${base}.jpg`, glow };
 });
 const [title1, title2] = site.heroTitle.split('\n');
@@ -145,15 +147,17 @@ const posts = repo.posts.length;
   }
   video.swapping { opacity: 0; }
 
-  /* The glow: 160px past the video on smaller screens, and the whole of it
-     shrunk to 70% on phones, as on unrealengine.com ... */
-  .glow { position: absolute; z-index: -1; inset: -160px; pointer-events: none; }
+  /* The glow (--spread: GLOW_SPREAD in scripts/media.mjs): around the video on
+     smaller screens, and the whole of it shrunk to 70% on phones, as on
+     unrealengine.com ... */
+  .hero { --spread: 300px; }
+  .glow { position: absolute; z-index: -1; inset: calc(-1 * var(--spread)); pointer-events: none; }
   @media (max-width: 719px) { .glow { transform: scale(0.7); } }
-  /* ... and on wide screens 160px past the whole row, text and video together:
+  /* ... and on wide screens around the whole row, text and video together:
      the frame steps aside (position: static) so the glow measures the section. */
   @media (min-width: 1100px) {
     .reel { position: static; }
-    .glow { inset: -64px calc(var(--gutter) - 160px); }
+    .glow { inset: calc(96px - var(--spread)) calc(var(--gutter) - var(--spread)); }
   }
   .glow picture { position: absolute; inset: 0; opacity: 0; transition: opacity 700ms ease; }
   .glow img { width: 100%; height: 100%; }
