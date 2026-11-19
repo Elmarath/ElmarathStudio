@@ -1,0 +1,38 @@
+---
+// A project on the Work page: its cover, kind, title, pitch and main tech.
+import type { CaseStudy } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+import CaseStudyCover from './CaseStudyCover.astro';
+import TechTags from './TechTags.astro';
+
+interface Props {
+  study: CaseStudy;
+}
+const { study } = Astro.props;
+---
+
+<a class="card case-card" href={study.route}>
+  <div class="cover zoom-media">
+    <CaseStudyCover study={study} />
+    <div class="badges">
+      <span class="badge">{study.workKind}</span>
+      {study.draft && <span class="badge"><Icon name="edit" />Draft</span>}
+    </div>
+  </div>
+  {study.period && <span class="body-md period">{study.period}</span>}
+  <h3 class="title">{study.title}</h3>
+  <p class="body-md tagline">{study.tagline}</p>
+  {study.tech.length > 0 && <div class="tags"><TechTags tech={study.tech.slice(0, 4)} dense /></div>}
+</a>
+
+<style>
+  .case-card { display: flex; flex-direction: column; padding: 18px; border-radius: var(--r-lg); }
+  .cover { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-md); }
+  .badges { position: absolute; left: 12px; bottom: 12px; display: flex; gap: 6px; }
+  .period { margin-top: 18px; color: var(--text-3); }
+  .title { margin-top: 6px; font-size: 19px; font-weight: 700; line-height: 1.3; }
+  .case-card > .title:first-of-type { margin-top: 18px; }
+  .period + .title { margin-top: 6px; }
+  .tagline { margin-top: 8px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .tags { margin-top: auto; padding-top: 16px; }
+</style>

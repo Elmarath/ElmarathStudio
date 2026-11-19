@@ -1,0 +1,13 @@
+---
+// An inline SVG icon (see src/content/icons.ts for the set). Sized by the font size.
+import { iconSvg } from '../content/icons.ts';
+import type { IconName } from '../config.ts';
+
+interface Props {
+  name: IconName;
+  label?: string;
+}
+const { name, label } = Astro.props;
+---
+
+<Fragment set:html={iconSvg(name, { label })} />

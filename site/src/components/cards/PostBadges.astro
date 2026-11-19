@@ -1,0 +1,20 @@
+---
+// "★ Featured", the first tag and "Draft", shown over a post's cover.
+import type { BlogPost } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+
+interface Props {
+  post: BlogPost;
+}
+const { post } = Astro.props;
+---
+
+<div class="badges">
+  {post.featured && <span class="badge"><Icon name="star" />Featured</span>}
+  {post.tags[0] && <span class="badge">{post.tags[0]}</span>}
+  {post.draft && <span class="badge"><Icon name="edit" />Draft</span>}
+</div>
+
+<style>
+  .badges { display: flex; flex-wrap: wrap; gap: 6px; }
+</style>

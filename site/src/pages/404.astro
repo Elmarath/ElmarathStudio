@@ -1,0 +1,41 @@
+---
+// Netlify serves this for any address without a page. Old addresses (the
+// previous Docusaurus site, different letter case or dashes, renamed folders)
+// are matched to today's page and redirected before anything shows.
+import Base from '../layouts/Base.astro';
+import { content } from '../content/repository.ts';
+
+const data = JSON.stringify(content().legacyData);
+---
+
+<Base title="Page not found" noindex>
+  <!-- Hidden for a moment while an old address is matched, so it doesn't flash. -->
+  <script is:inline>
+    document.documentElement.classList.add('matching');
+    setTimeout(() => document.documentElement.classList.remove('matching'), 1500);
+  </script>
+  <script type="application/json" id="legacy-data" set:html={data} />
+  <script>
+    import { legacyRoute } from '../scripts/legacy-core.ts';
+    const data = JSON.parse(document.getElementById('legacy-data')!.textContent!);
+    const target = location.pathname === '/404' ? null : legacyRoute(location.pathname, data, location.hash);
+    if (target) location.replace(target);
+    else document.documentElement.classList.remove('matching');
+  </script>
+  <section class="container not-found">
+    <p class="code">404</p>
+    <h1 class="headline-md">Page not found</h1>
+    <p class="body-lg">The page you're looking for doesn't exist or has moved.</p>
+    <div class="button-row">
+      <a class="button button-filled" href="/">Back to home</a>
+      <a class="button button-outlined" href="/docs">Browse the docs</a>
+    </div>
+  </section>
+</Base>
+
+<style>
+  :global(html.matching) .not-found { visibility: hidden; }
+  .not-found { display: grid; justify-items: center; gap: 12px; padding-block: 96px; text-align: center; }
+  .code { font-size: 96px; font-weight: 800; letter-spacing: -2px; line-height: 1; color: var(--accent); }
+  .button-row { margin-top: 20px; justify-content: center; }
+</style>

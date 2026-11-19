@@ -1,0 +1,29 @@
+---
+// /cv: the CV as a page (links to it open the CV window instead, when scripts run).
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import { site } from '../config.ts';
+---
+
+<Base title="Curriculum Vitae" description={`The CV of ${site.ownerName}, ${site.role}.`} footer={false}>
+  <div class="cv-page">
+    <div class="bar container">
+      <div>
+        <h1 class="title-md">Curriculum Vitae</h1>
+        <p class="body-sm">{site.ownerName}</p>
+      </div>
+      <div class="button-row">
+        <a class="button button-outlined" href={site.cvFile} target="_blank" rel="noopener"><Icon name="external" />Open</a>
+        <a class="button button-filled" href={site.cvFile} download><Icon name="download" />Download</a>
+      </div>
+    </div>
+    <iframe title="Curriculum Vitae" src={`${site.cvFile}#view=FitH`}></iframe>
+  </div>
+</Base>
+
+<style>
+  .cv-page { display: flex; flex-direction: column; height: calc(100dvh - var(--nav-h)); }
+  .bar { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px; max-width: none; padding-block: 12px; border-bottom: 1px solid var(--border); }
+  .bar .button { min-height: 40px; }
+  iframe { flex: 1; width: 100%; border: 0; background: #525659; }
+</style>

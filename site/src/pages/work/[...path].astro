@@ -1,0 +1,17 @@
+---
+// /work and /work/<slug>. Nothing is built here while `site.showWork` is off
+// (src/config.ts), so the portfolio stays hidden until it's switched on.
+import { site } from '../../config.ts';
+import { content } from '../../content/repository.ts';
+import WorkList from '../../components/work/WorkList.astro';
+import CaseStudyPage from '../../components/work/CaseStudyPage.astro';
+
+export function getStaticPaths() {
+  if (!site.showWork) return [];
+  return [{ params: { path: undefined } }, ...content().work.map((w) => ({ params: { path: w.slug } }))];
+}
+const slug = Astro.params.path;
+const study = slug ? content().caseStudy(slug) : undefined;
+---
+
+{study ? <CaseStudyPage study={study} /> : <WorkList />}

@@ -1,0 +1,22 @@
+---
+// Rendered Markdown. Draws a ```mermaid diagram on pages that have one: the
+// diagram library loads there only, after the page is idle.
+import '../styles/prose.css';
+import type { Rendered } from '../content/markdown.ts';
+
+interface Props {
+  rendered: Rendered;
+}
+const { rendered } = Astro.props;
+---
+
+<div class="prose" data-mermaid={rendered.mermaid ? '' : undefined} set:html={rendered.html} />
+
+{
+  rendered.mermaid && (
+    <script>
+      import { drawDiagrams } from '../scripts/mermaid.ts';
+      drawDiagrams();
+    </script>
+  )
+}

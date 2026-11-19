@@ -1,0 +1,71 @@
+---
+// Cmd/Ctrl + K search over every doc, post and page. The index (/search.json)
+// is fetched the first time search opens, so it costs nothing until then.
+import Icon from './Icon.astro';
+---
+
+<dialog id="search" class="search" aria-label="Search">
+  <form method="dialog" class="search-head" role="search">
+    <Icon name="search" />
+    <input type="search" name="q" placeholder="Search docs, posts and pages" autocomplete="off" spellcheck="false" aria-label="Search" aria-controls="search-results" />
+    <button type="submit" class="icon-button" aria-label="Close search"><Icon name="close" /></button>
+  </form>
+  <template data-search-icon="doc"><Icon name="doc" /></template>
+  <template data-search-icon="post"><Icon name="article" /></template>
+  <template data-search-icon="page"><Icon name="globe" /></template>
+  <template data-search-icon="work"><Icon name="work" /></template>
+  <div id="search-results" class="results" role="listbox">
+    <p class="hint">Type to search docs, blog posts and pages.</p>
+  </div>
+</dialog>
+
+<style>
+  .search {
+    width: 680px;
+    margin: 10vh auto auto;
+    max-height: 76vh;
+    overflow: hidden;
+    display: none;
+    flex-direction: column;
+  }
+  .search[open] { display: flex; }
+  .search-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 6px 8px 6px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-3);
+    font-size: 18px;
+  }
+  input {
+    flex: 1;
+    min-width: 0;
+    height: 52px;
+    border: 0;
+    outline: 0;
+    background: none;
+    color: var(--text);
+    font: 500 16px var(--font);
+  }
+  input::placeholder { color: var(--text-3); }
+  input::-webkit-search-cancel-button { display: none; }
+  .results { overflow-y: auto; padding: 8px; overscroll-behavior: contain; }
+  .hint { padding: 32px; text-align: center; font-size: 14.5px; color: var(--text-3); }
+  .results :global(a) {
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    gap: 2px 14px;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+  }
+  .results :global(a[aria-selected='true']), .results :global(a:hover) { background: color-mix(in srgb, var(--accent) 12%, transparent); }
+  .results :global(.icon) { grid-row: span 3; margin-top: 3px; font-size: 18px; color: var(--text-3); }
+  .results :global(.overline) { font-size: 11px; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; color: var(--text-3); }
+  .results :global(.title) { font-size: 15px; font-weight: 600; color: var(--text); }
+  .results :global(.snippet) { font-size: 13px; line-height: 1.5; color: var(--text-3); }
+  .results :global(mark) { background: none; color: var(--accent); font-weight: 600; }
+  @media (max-width: 719px) {
+    .search { margin-top: 0; width: 100vw; max-width: 100vw; max-height: 100dvh; height: 100dvh; border-radius: 0; border: 0; }
+  }
+</style>

@@ -1,0 +1,57 @@
+---
+// /docs: getting-started pages and a card for every plugin.
+import Docs from '../../layouts/Docs.astro';
+import Icon from '../../components/Icon.astro';
+import SectionHeader from '../../components/SectionHeader.astro';
+import PluginCard from '../../components/docs/PluginCard.astro';
+import { content } from '../../content/repository.ts';
+
+const repo = content();
+const guides = repo.docsRoot.children.filter((n) => n.kind === 'page');
+---
+
+<Docs title="Documentation" description={`Documentation for Elmarath's Unreal Engine plugins: ${repo.plugins.map((p) => p.label).join(', ')}.`}>
+  <div class="docs-home">
+    <span class="eyebrow">Documentation</span>
+    <h1 class="display-sm fluid">Plugin docs</h1>
+    <p class="body-lg intro">
+      Guides for every Elmarath plugin, kept up to date whenever a feature changes. Pick a plugin to get started, or press <kbd data-shortcut>⌘ K</kbd> to search.
+    </p>
+    {
+      guides.length > 0 && (
+        <div class="guides">
+          {guides.map((g) => (
+            <a class="card guide" href={g.route}>
+              <span class="badge-icon"><Icon name="rocket" /></span>
+              <span class="text">
+                <span class="label-sm start">Start here</span>
+                <span class="title-md">{g.title}</span>
+              </span>
+              <Icon name="arrow-right" />
+            </a>
+          ))}
+        </div>
+      )
+    }
+    <div class="plugins">
+      <SectionHeader title="Plugins" />
+      <div class="grid" style="--min: 380px">
+        {repo.plugins.map((p) => <PluginCard category={p} />)}
+      </div>
+    </div>
+  </div>
+</Docs>
+
+<style>
+  .docs-home { max-width: 1040px; margin-inline: auto; display: grid; gap: 8px; }
+  .intro { margin-top: 8px; }
+  kbd { padding: 1px 6px; border: 1px solid var(--border); border-radius: 5px; font: 600 13px var(--font); color: var(--text-3); }
+  .guides { display: grid; gap: 8px; margin-top: 24px; }
+  .guide { display: flex; align-items: center; gap: 16px; padding: 20px; }
+  .badge-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: var(--r-md); background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); font-size: 22px; }
+  .text { flex: 1; display: grid; gap: 2px; }
+  .start { color: var(--accent); }
+  .guide > :global(.icon:last-child) { color: var(--text-2); font-size: 20px; transition: transform var(--fast); }
+  .guide:hover > :global(.icon:last-child) { transform: translateX(4px); }
+  .plugins { margin-top: 40px; }
+</style>

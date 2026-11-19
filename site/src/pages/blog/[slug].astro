@@ -1,0 +1,112 @@
+---
+// /blog/<slug>.
+import Base from '../../layouts/Base.astro';
+import Icon from '../../components/Icon.astro';
+import Prose from '../../components/Prose.astro';
+import PostCover from '../../components/cards/PostCover.astro';
+import { render } from '../../content/markdown.ts';
+import { content, formatDate } from '../../content/repository.ts';
+import { slugify } from '../../content/text.ts';
+
+export function getStaticPaths() {
+  return content().posts.map((post) => ({ params: { slug: post.slug } }));
+}
+
+const repo = content();
+const post = repo.post(Astro.params.slug!)!;
+const index = repo.posts.indexOf(post);
+const newer = index > 0 ? repo.posts[index - 1] : undefined;
+const older = repo.posts[index + 1];
+const rendered = await render(post.body, { sourcePath: post.assetPath });
+// Skip the cover if the post already shows the same image in its body.
+const showCover = post.image != null && !post.body.includes(post.image.split('/').at(-1)!);
+const author = post.authors[0];
+---
+
+<Base title={post.title} description={post.excerpt} image={showCover && post.image?.startsWith('http') ? post.image : undefined}>
+  <article class="container reading post">
+    <a class="button button-text back" href="/blog"><Icon name="arrow-left" />All posts</a>
+    {
+      post.tags.length > 0 && (
+        <div class="tags">
+          {post.tags.map((t) => (
+            <a class="chip" href={`/blog/tag/${slugify(t)}`}>{t}</a>
+          ))}
+        </div>
+      )
+    }
+    <h1 class="display-sm fluid">{post.title}</h1>
+    <div class="meta body-md">
+      {author?.imageUrl && <img src={author.imageUrl} alt="" width="28" height="28" />}
+      {author && <span class="name">{author.name}</span>}
+      {author && <span aria-hidden="true">·</span>}
+      <time datetime={post.date.toISOString().slice(0, 10)}>{formatDate(post.date)}</time>
+      <span aria-hidden="true">·</span>
+      <span>{post.readingMinutes} min read</span>
+      {post.draft && <span class="badge">Draft</span>}
+    </div>
+    {
+      showCover && (
+        <div class="cover">
+          <PostCover post={post} width={780} eager />
+        </div>
+      )
+    }
+    <Prose rendered={rendered} />
+    <hr />
+    {
+      post.authors.map((a) => (
+        <div class="author">
+          {a.imageUrl && <img src={a.imageUrl} alt="" width="52" height="52" loading="lazy" />}
+          <div>
+            <span class="label-sm">Written by</span>
+            <p class="title-md">{a.name}</p>
+            {a.title && <p class="body-sm">{a.title}</p>}
+          </div>
+          {a.url && (
+            <a class="icon-button" href={a.url} target="_blank" rel="noopener" aria-label="Profile" title="Profile">
+              <Icon name="external" />
+            </a>
+          )}
+        </div>
+      ))
+    }
+    <nav class="pager" aria-label="More posts">
+      {newer ? (
+        <a class="card" href={newer.route}>
+          <span class="label-sm">Newer post</span>
+          <span class="title">{newer.title}</span>
+        </a>
+      ) : (
+        <span />
+      )}
+      {older && (
+        <a class="card end" href={older.route}>
+          <span class="label-sm">Older post</span>
+          <span class="title">{older.title}</span>
+        </a>
+      )}
+    </nav>
+  </article>
+</Base>
+
+<style>
+  .post { padding-top: 32px; padding-bottom: var(--section); }
+  .back { margin-left: -12px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  h1 { margin-top: 16px; }
+  .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }
+  .meta img { width: 28px; height: 28px; border-radius: 50%; }
+  .meta .name { font-size: 14px; font-weight: 600; color: var(--text); }
+  .meta .badge { background: var(--surface-raised); color: var(--text-2); }
+  .cover { margin-top: 32px; aspect-ratio: 16 / 9; border-radius: var(--r-lg); overflow: hidden; }
+  .post :global(.prose) { margin-top: 32px; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 48px 0 24px; }
+  .author { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+  .author img { width: 52px; height: 52px; border-radius: 50%; }
+  .author > div { flex: 1; display: grid; gap: 2px; }
+  .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .pager .card { display: grid; align-content: start; gap: 4px; padding: 18px; }
+  .pager .end { text-align: right; justify-items: end; }
+  .pager .title { font-size: 16px; font-weight: 600; line-height: 1.35; color: var(--accent); }
+</style>

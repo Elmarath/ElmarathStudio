@@ -1,0 +1,13 @@
+---
+import { site } from '../config.ts';
+---
+
+<a class="logo" href="/" aria-label={`${site.name} home`}>
+  <img src={site.logo} alt="" width="30" height="30" />
+  <span>{site.name.toUpperCase()}</span>
+</a>
+
+<style>
+  .logo { display: inline-flex; align-items: center; gap: 10px; padding: 6px 4px; border-radius: var(--r-sm); flex: none; }
+  .logo span { font-size: 16px; font-weight: 900; letter-spacing: 2.2px; color: var(--text); }
+</style>

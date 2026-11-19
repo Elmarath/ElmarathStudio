@@ -1,0 +1,67 @@
+---
+// The docs navigation tree, generated from the folders in ../content/docs.
+// Folders are <details>: they open and close without any script. The folder
+// holding the current page starts open.
+import { content } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+import Folder from './Folder.astro';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+const root = content().docsRoot;
+---
+
+<nav class="tree">
+  <a class="link top overview" href="/docs" aria-current={path === '/docs' ? 'page' : undefined}>
+    <Icon name="grid" />Overview
+  </a>
+  {
+    root.children.map((node) =>
+      node.kind === 'page' ? (
+        <a class="link top" href={node.route} aria-current={path === node.route ? 'page' : undefined}>
+          {node.label}
+        </a>
+      ) : (
+        <Folder node={node} depth={0} path={path} />
+      ),
+    )
+  }
+</nav>
+
+<script>
+  // Opening a folder opens its first page, unless you're already reading one
+  // of its pages. Closing just closes.
+  for (const d of document.querySelectorAll<HTMLDetailsElement>('.tree details[data-first]')) {
+    d.querySelector('summary')!.addEventListener('click', () => {
+      if (!d.open && d.dataset.active === undefined) location.assign(d.dataset.first!);
+    });
+  }
+  // Keep the current page in view inside the sidebar (it scrolls on its own).
+  const current = document.querySelector<HTMLElement>('.tree [aria-current="page"]');
+  const sidebar = current?.closest<HTMLElement>('.sidebar');
+  if (current && sidebar && sidebar.scrollHeight > sidebar.clientHeight) {
+    sidebar.scrollTop = current.offsetTop - sidebar.clientHeight / 2;
+  }
+</script>
+
+<style>
+  .tree { display: grid; gap: 2px; padding: 24px 12px; }
+  .tree :global(.link) {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 9px 10px 9px var(--indent, 12px);
+    border-radius: var(--r-sm);
+    color: var(--text-2);
+    font-size: 14.5px;
+    line-height: 1.4;
+    transition: background-color var(--fast), color var(--fast);
+  }
+  .tree :global(.link:hover) { background: color-mix(in srgb, var(--text) 5%, transparent); color: var(--text); }
+  .tree :global(.link.top) { color: var(--text); font-size: 14px; font-weight: 600; }
+  .tree :global(.link[aria-current='page']) { background: color-mix(in srgb, var(--accent) 12%, transparent); color: var(--accent); font-weight: 600; }
+  .overview { margin-bottom: 8px; }
+  .overview :global(.icon) { font-size: 18px; }
+</style>

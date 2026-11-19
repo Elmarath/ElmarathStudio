@@ -1,0 +1,22 @@
+---
+import { content } from '../../content/repository.ts';
+import SectionHeader from '../SectionHeader.astro';
+import PostCard from '../cards/PostCard.astro';
+
+interface Props {
+  count?: number;
+}
+const { count = 3 } = Astro.props;
+const posts = content().posts.slice(0, count);
+---
+
+{
+  posts.length > 0 && (
+    <section class="container section">
+      <SectionHeader eyebrow="From the blog" title="Latest posts" actionLabel="All posts" actionHref="/blog" />
+      <div class="grid" style="--min: 300px">
+        {posts.map((post) => <PostCard post={post} />)}
+      </div>
+    </section>
+  )
+}

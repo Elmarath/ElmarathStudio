@@ -1,0 +1,41 @@
+---
+// /work: every case study, grouped by kind in the order the groups first
+// appear (see `order:`).
+import Base from '../../layouts/Base.astro';
+import ContactSection from '../ContactSection.astro';
+import CaseStudyCard from './CaseStudyCard.astro';
+import { content, type CaseStudy } from '../../content/repository.ts';
+
+const groups = new Map<string, CaseStudy[]>();
+for (const study of content().work) {
+  if (!groups.has(study.workKind)) groups.set(study.workKind, []);
+  groups.get(study.workKind)!.push(study);
+}
+---
+
+<Base title="Work" description="Selected projects: games, studio work and Unreal Engine systems.">
+  <section class="container work">
+    <span class="eyebrow">Portfolio</span>
+    <h1 class="display-sm fluid">Selected work</h1>
+    <p class="body-lg intro">Games, studio work and Unreal Engine systems: what each one needed, how I built it, and what I learned.</p>
+    {groups.size === 0 && <p class="body-lg empty">Case studies are on their way.</p>}
+    {
+      [...groups].map(([kind, studies]) => (
+        <section class="group">
+          <h2 class="headline-sm">{kind}</h2>
+          <div class="grid" style="--min: 340px">
+            {studies.map((s) => <CaseStudyCard study={s} />)}
+          </div>
+        </section>
+      ))
+    }
+  </section>
+  <ContactSection />
+</Base>
+
+<style>
+  .work { display: grid; gap: 8px; padding-top: 56px; }
+  .intro { max-width: 640px; }
+  .group { margin-top: 48px; display: grid; gap: 16px; }
+  .empty { margin-top: 48px; }
+</style>

@@ -1,0 +1,41 @@
+---
+// Docs › Plugin › Folder › Page
+import type { DocCategory } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+
+interface Props {
+  category?: DocCategory;
+  current?: string;
+}
+const { category, current } = Astro.props;
+const trail: DocCategory[] = [];
+for (let c = category; c; c = c.parent) trail.unshift(c);
+---
+
+<nav class="crumbs" aria-label="Breadcrumb">
+  <a href="/docs">Docs</a>
+  {
+    trail.map((c) => (
+      <>
+        <Icon name="chevron-right" />
+        <a href={c.route}>{c.label}</a>
+      </>
+    ))
+  }
+  {
+    current && (
+      <>
+        <Icon name="chevron-right" />
+        <span aria-current="page">{current}</span>
+      </>
+    )
+  }
+</nav>
+
+<style>
+  .crumbs { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px; }
+  a { color: var(--text-2); }
+  a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+  span { color: var(--text-3); }
+  .crumbs :global(.icon) { color: var(--text-3); font-size: 15px; }
+</style>

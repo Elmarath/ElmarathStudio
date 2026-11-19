@@ -1,0 +1,104 @@
+---
+// Docs layout: the sidebar on the left (its own scroll, sticky), the page in
+// the middle, and optionally "On this page" on the right. On phones the
+// sidebar opens from a "Docs menu" bar as a drawer.
+import Base from './Base.astro';
+import Icon from '../components/Icon.astro';
+import Sidebar from '../components/docs/Sidebar.astro';
+import Toc from '../components/docs/Toc.astro';
+import type { Heading } from '../content/markdown.ts';
+
+interface Props {
+  title: string;
+  description?: string;
+  headings?: Heading[];
+}
+const { title, description, headings = [] } = Astro.props;
+const path = Astro.url.pathname.replace(/\.html$/, '') || '/docs';
+const toc = headings.length > 1;
+---
+
+<Base title={title} description={description} footer={false}>
+  <div class:list={['docs', { 'has-toc': toc }]}>
+    <button type="button" class="docs-menu" popovertarget="docs-sidebar">
+      <Icon name="menu" />Docs menu
+    </button>
+    <aside id="docs-sidebar" class="sidebar" popover="auto" aria-label="Documentation">
+      <Sidebar path={path} />
+    </aside>
+    <div class="page">
+      <slot />
+    </div>
+    {toc && <Toc headings={headings} />}
+  </div>
+</Base>
+
+<style>
+  .docs { display: block; }
+  .docs-menu {
+    position: sticky;
+    top: var(--nav-h);
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    height: 48px;
+    padding: 0 var(--gutter);
+    border: 0;
+    border-bottom: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+  }
+  .docs-menu :global(.icon) { font-size: 20px; }
+
+  /* Phones: the sidebar is a drawer from the left. */
+  .sidebar {
+    margin: 0;
+    inset: 0 auto 0 0;
+    width: min(320px, 88vw);
+    height: 100dvh;
+    max-height: none;
+    padding: 0;
+    border: 0;
+    border-right: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+  .sidebar::backdrop { background: rgb(0 0 0 / 0.5); }
+  @media (prefers-reduced-motion: no-preference) {
+    .sidebar:popover-open { animation: from-left 200ms var(--ease); }
+  }
+  @keyframes from-left { from { transform: translateX(-100%); } }
+
+  .page { min-width: 0; padding: 48px var(--gutter); }
+
+  @media (min-width: 720px) {
+    .docs { display: grid; grid-template-columns: 260px minmax(0, 1fr); }
+    .docs-menu { display: none; }
+    /* Beside the page: always shown, sticky, scrolling on its own. */
+    .sidebar,
+    .sidebar:popover-open {
+      position: sticky;
+      top: var(--nav-h);
+      display: block;
+      width: auto;
+      height: calc(100dvh - var(--nav-h));
+      inset: auto;
+      border-right: 1px solid var(--border);
+      background: none;
+      animation: none;
+      overflow-y: auto;
+    }
+  }
+  @media (min-width: 1100px) {
+    .docs { grid-template-columns: 300px minmax(0, 1fr); }
+  }
+  @media (min-width: 1280px) {
+    .docs.has-toc { grid-template-columns: 300px minmax(0, 1fr) 260px; }
+  }
+</style>

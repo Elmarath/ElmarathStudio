@@ -1,0 +1,244 @@
+---
+// The nav bar: logo, tabs, search, theme menu, store button; on phones a menu
+// button opens a drawer. The menus are native popovers: no script needed to
+// open or close them.
+import { navItems, site, themes } from '../config.ts';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+
+interface Props {
+  path: string;
+}
+const { path } = Astro.props;
+const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.startsWith(`${p}/`));
+---
+
+<header class="nav">
+  <div class="nav-inner">
+    <Logo />
+    <nav class="tabs" aria-label="Main">
+      {
+        navItems.map((item) => (
+          <a href={item.path} aria-current={isActive(item.path) ? 'page' : undefined}>
+            {item.label}
+          </a>
+        ))
+      }
+    </nav>
+    <span class="spacer"></span>
+    <button type="button" class="search-pill" data-search aria-label="Search (⌘K)">
+      <Icon name="search" />
+      <span class="search-label">Search</span>
+      <kbd data-shortcut>⌘ K</kbd>
+    </button>
+    <button type="button" class="icon-button" popovertarget="theme-menu" aria-label="Theme" title="Theme">
+      <Icon name="palette" />
+    </button>
+    <div id="theme-menu" class="menu" popover>
+      {
+        themes.map((t) => (
+          <button type="button" class="theme-item" data-set-theme={t.id} role="menuitemradio">
+            <span class="swatch" style={`--a:${t.background};--b:${t.accent}`} />
+            <span>{t.name}</span>
+            <Icon name="check" />
+          </button>
+        ))
+      }
+    </div>
+    <a class="button button-filled store" href={site.storeLink.url} target="_blank" rel="noopener">
+      <Icon name="store" />{site.storeLink.label}
+    </a>
+    <button type="button" class="icon-button menu-button" popovertarget="nav-drawer" aria-label="Menu">
+      <Icon name="menu" />
+    </button>
+  </div>
+</header>
+
+<div id="nav-drawer" class="drawer" popover>
+  <div class="drawer-head">
+    <Logo />
+    <button type="button" class="icon-button" popovertarget="nav-drawer" popovertargetaction="hide" aria-label="Close menu">
+      <Icon name="close" />
+    </button>
+  </div>
+  <nav aria-label="Main">
+    {
+      navItems.map((item) => (
+        <a href={item.path} aria-current={isActive(item.path) ? 'page' : undefined}>
+          {item.label}
+        </a>
+      ))
+    }
+  </nav>
+  <a class="button button-filled" href={site.storeLink.url} target="_blank" rel="noopener">
+    <Icon name="store" />{site.storeLink.label}
+  </a>
+  <hr />
+  <div class="socials">
+    {
+      site.socials.map((s) => (
+        <a class="icon-button" href={s.url} target="_blank" rel="noopener" aria-label={s.label} title={s.label}>
+          <Icon name={s.icon} />
+        </a>
+      ))
+    }
+  </div>
+</div>
+
+<style>
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    height: var(--nav-h);
+    background: var(--surface);
+    border-bottom: 1px solid var(--border);
+    view-transition-name: site-nav;
+  }
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    height: 100%;
+    padding-inline: var(--gutter);
+  }
+  .tabs { display: none; margin-left: 28px; height: 100%; }
+  .tabs a {
+    position: relative;
+    display: grid;
+    place-items: center;
+    padding: 0 14px;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-2);
+    transition: color var(--fast);
+  }
+  .tabs a:hover, .tabs a[aria-current='page'] { color: var(--text); }
+  .tabs a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    width: 24px;
+    height: 2px;
+    margin-left: -12px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transition: transform var(--normal) var(--ease);
+  }
+  .tabs a[aria-current='page']::after { transform: scaleX(1); }
+  .spacer { flex: 1; }
+
+  .search-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    height: 40px;
+    padding: 0 10px;
+    border-radius: var(--r-md);
+    border: 1px solid transparent;
+    background: none;
+    color: var(--text-2);
+  }
+  .search-pill .icon { font-size: 20px; }
+  .search-label, .search-pill kbd { display: none; }
+  .search-pill kbd {
+    margin-left: auto;
+    padding: 2px 6px;
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    font: 600 11px/1.4 var(--font);
+    color: var(--text-3);
+  }
+
+  .store { display: none; min-height: 40px; padding: 0 16px; margin-left: 8px; }
+  .menu-button { display: inline-grid; }
+
+  @media (min-width: 720px) {
+    .tabs { display: flex; }
+    .menu-button { display: none; }
+    .search-pill {
+      width: 340px;
+      max-width: 30vw;
+      padding: 0 12px;
+      border-color: var(--border);
+      background: var(--surface-raised);
+      color: var(--text-3);
+      font-size: 14.5px;
+      transition: border-color var(--fast);
+    }
+    .search-pill:hover { border-color: color-mix(in srgb, var(--text) 30%, transparent); }
+    .search-pill .icon { font-size: 18px; }
+    .search-label, .search-pill kbd { display: inline; }
+  }
+  @media (min-width: 1100px) {
+    .store { display: inline-flex; }
+  }
+
+  /* Popovers: the theme menu under its button, the drawer from the right. */
+  .menu {
+    margin: 0;
+    inset: auto;
+    top: calc(var(--nav-h) - 6px);
+    right: var(--gutter);
+    min-width: 220px;
+    padding: 6px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--surface-raised);
+    color: var(--text);
+    box-shadow: 0 12px 32px var(--shadow);
+  }
+  .theme-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    padding: 10px 12px;
+    border: 0;
+    border-radius: var(--r-sm);
+    background: none;
+    font-size: 14.5px;
+    text-align: left;
+  }
+  .theme-item:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+  .theme-item span:nth-child(2) { flex: 1; }
+  .theme-item :global(.icon) { color: var(--accent); visibility: hidden; font-size: 18px; }
+  :global([data-theme='unreal-dark']) .theme-item[data-set-theme='unreal-dark'] :global(.icon),
+  :global([data-theme='elmarath-gold']) .theme-item[data-set-theme='elmarath-gold'] :global(.icon) { visibility: visible; }
+  .swatch {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: conic-gradient(var(--a) 0 50%, var(--b) 50% 100%);
+  }
+
+  .drawer {
+    margin: 0;
+    inset: 0 0 0 auto;
+    width: min(320px, 86vw);
+    height: 100dvh;
+    max-height: none;
+    padding: 16px;
+    border: 0;
+    border-left: 1px solid var(--border);
+    background: var(--surface);
+    color: var(--text);
+    overflow-y: auto;
+  }
+  .drawer::backdrop { background: rgb(0 0 0 / 0.5); }
+  @media (prefers-reduced-motion: no-preference) {
+    .drawer:popover-open { animation: drawer-in 200ms var(--ease); }
+  }
+  @keyframes drawer-in { from { transform: translateX(100%); } }
+  .drawer-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px; }
+  .drawer nav { display: grid; gap: 2px; margin-bottom: 16px; }
+  .drawer nav a { padding: 12px 14px; border-radius: var(--r-sm); font-size: 15px; font-weight: 500; }
+  .drawer nav a:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
+  .drawer nav a[aria-current='page'] { color: var(--accent); background: color-mix(in srgb, var(--accent) 10%, transparent); }
+  .drawer .button { width: 100%; }
+  .drawer hr { border: 0; border-top: 1px solid var(--border); margin: 24px 0 8px; }
+  .socials { display: flex; flex-wrap: wrap; gap: 4px; }
+  .socials :global(.icon) { font-size: 18px; }
+</style>

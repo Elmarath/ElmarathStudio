@@ -1,0 +1,32 @@
+---
+// A blog post preview in the style of the Unreal Engine feed: an inset cover
+// with badges, then the date, title and excerpt.
+import { formatDate, type BlogPost } from '../../content/repository.ts';
+import PostCover from './PostCover.astro';
+import PostBadges from './PostBadges.astro';
+
+interface Props {
+  post: BlogPost;
+  eager?: boolean;
+}
+const { post, eager = false } = Astro.props;
+---
+
+<a class="card post-card" href={post.route}>
+  <div class="cover zoom-media">
+    <PostCover post={post} width={400} eager={eager} />
+    <PostBadges post={post} />
+  </div>
+  <time class="body-md date" datetime={post.date.toISOString().slice(0, 10)}>{formatDate(post.date)}</time>
+  <h3 class="title">{post.title}</h3>
+  <p class="excerpt body-md">{post.excerpt}</p>
+</a>
+
+<style>
+  .post-card { padding: 18px; border-radius: var(--r-lg); }
+  .cover { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-md); }
+  .cover :global(.badges) { position: absolute; left: 12px; right: 12px; bottom: 12px; }
+  .date { display: block; margin-top: 18px; color: var(--text-3); }
+  .title { margin-top: 6px; font-size: 17px; font-weight: 700; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .excerpt { margin-top: 8px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+</style>

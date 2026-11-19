@@ -1,0 +1,48 @@
+---
+// /about: the profile header plus the text from ../content/pages/about.md.
+import Base from '../layouts/Base.astro';
+import Icon from '../components/Icon.astro';
+import Prose from '../components/Prose.astro';
+import ContactSection from '../components/ContactSection.astro';
+import { site } from '../config.ts';
+import { render } from '../content/markdown.ts';
+import { content } from '../content/repository.ts';
+
+const page = content().pages.get('about');
+const rendered = page ? await render(page.body, { sourcePath: page.assetPath }) : undefined;
+---
+
+<Base title="About" description={page?.description}>
+  <div class="container reading about">
+    <header>
+      <img src={site.avatarUrl} alt="" width="112" height="112" />
+      <div>
+        <span class="eyebrow">{site.role}</span>
+        <h1 class="display-sm fluid">{site.ownerName}</h1>
+        {page?.description && <p class="body-lg">{page.description}</p>}
+      </div>
+    </header>
+    <div class="button-row links">
+      <a class="button button-filled" href={site.resumeUrl}><Icon name="doc" />View CV</a>
+      {
+        site.socials.map((s) => (
+          <a class="button button-outlined" href={s.url} target="_blank" rel="noopener">
+            <Icon name={s.icon} />
+            {s.label}
+          </a>
+        ))
+      }
+    </div>
+    {rendered && <Prose rendered={rendered} />}
+  </div>
+  <ContactSection />
+</Base>
+
+<style>
+  .about { padding-top: 56px; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 32px; }
+  header img { width: 112px; height: 112px; border-radius: 50%; }
+  header > div { display: grid; gap: 8px; flex: 1; min-width: min(100%, 300px); }
+  .links { margin-top: 24px; }
+  .about :global(.prose) { margin-top: 48px; }
+</style>

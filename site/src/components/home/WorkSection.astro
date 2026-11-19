@@ -1,0 +1,29 @@
+---
+// The portfolio on the home page: the first project (lowest `order:`) large,
+// and the next few as cards below it.
+import { content } from '../../content/repository.ts';
+import SectionHeader from '../SectionHeader.astro';
+import CaseStudyCard from '../work/CaseStudyCard.astro';
+import FeaturedCaseStudy from '../work/FeaturedCaseStudy.astro';
+
+const work = content().work;
+const rest = work.slice(1, 4);
+---
+
+{
+  work.length > 0 && (
+    <section class="container section">
+      <SectionHeader eyebrow="Portfolio" title="Selected work" actionLabel="All work" actionHref="/work" />
+      <FeaturedCaseStudy study={work[0]} />
+      {rest.length > 0 && (
+        <div class="grid more" style="--min: 300px">
+          {rest.map((s) => <CaseStudyCard study={s} />)}
+        </div>
+      )}
+    </section>
+  )
+}
+
+<style>
+  .more { margin-top: 64px; }
+</style>

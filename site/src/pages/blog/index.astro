@@ -1,0 +1,15 @@
+---
+import Base from '../../layouts/Base.astro';
+import BlogList from '../../components/blog/BlogList.astro';
+import { site } from '../../config.ts';
+---
+
+<Base title="Blog" description={`Devlogs and articles by ${site.ownerName}.`}>
+  <!-- Old links (/blog?tag=x) go to the tag's page. Netlify redirects them
+       too (dist/_redirects); this covers anywhere else the site is served. -->
+  <script is:inline slot="head">
+    const t = new URLSearchParams(location.search).get('tag');
+    if (t) location.replace('/blog/tag/' + encodeURIComponent(t.toLowerCase()));
+  </script>
+  <BlogList />
+</Base>

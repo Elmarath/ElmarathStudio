@@ -1,0 +1,48 @@
+---
+// The big post at the top of the blog: a glowing cover on the left, the date,
+// title, excerpt and "Read more" on the right.
+import { formatDate, type BlogPost } from '../../content/repository.ts';
+import PostCover from '../cards/PostCover.astro';
+import PostBadges from '../cards/PostBadges.astro';
+
+interface Props {
+  post: BlogPost;
+}
+const { post } = Astro.props;
+---
+
+<article class="featured">
+  <a class="cover-link" href={post.route} tabindex="-1" aria-hidden="true">
+    <div class="cover zoom-media">
+      <PostCover post={post} width={640} eager />
+      <div class="badges-wrap"><PostBadges post={post} /></div>
+    </div>
+  </a>
+  <div class="details">
+    <time class="title-sm date" datetime={post.date.toISOString().slice(0, 10)}>{formatDate(post.date)}</time>
+    <h2 class="display-sm fluid"><a href={post.route}>{post.title}</a></h2>
+    <p class="body-lg excerpt">{post.excerpt}</p>
+    <a class="button button-filled" href={post.route}>Read more</a>
+  </div>
+</article>
+
+<style>
+  .featured { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 720px) { .featured { grid-template-columns: 11fr 10fr; gap: 64px; } }
+  .cover-link { position: relative; display: block; }
+  /* A gradient glow rather than a blurred shadow: same look, cheap to draw. */
+  .cover-link::before {
+    content: '';
+    position: absolute;
+    inset: -120px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 24%, transparent), transparent);
+    pointer-events: none;
+  }
+  .cover { position: relative; aspect-ratio: 16 / 9; border-radius: 24px; }
+  .badges-wrap { position: absolute; left: 20px; right: 20px; bottom: 20px; }
+  .details { display: grid; justify-items: start; gap: 20px; }
+  .date { font-weight: 700; }
+  h2 { line-height: 1.15; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .excerpt { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+  .button { margin-top: 8px; }
+</style>

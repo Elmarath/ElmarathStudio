@@ -1,0 +1,42 @@
+---
+// « Previous · Next » at the end of a doc page, in sidebar order.
+import { rootCategory, type DocPage } from '../../content/repository.ts';
+
+interface Props {
+  previous?: DocPage;
+  next?: DocPage;
+}
+const { previous, next } = Astro.props;
+---
+
+<nav class="pager" aria-label="More docs">
+  {
+    previous ? (
+      <a class="card" href={previous.route} rel="prev">
+        <span class="label-sm">Previous</span>
+        <span class="title">«&nbsp; {previous.title}</span>
+        {rootCategory(previous) && <span class="body-sm">{rootCategory(previous)!.label}</span>}
+      </a>
+    ) : (
+      <span />
+    )
+  }
+  {
+    next && (
+      <a class="card next" href={next.route} rel="next">
+        <span class="label-sm">Next</span>
+        <span class="title">{next.title} &nbsp;»</span>
+        {rootCategory(next) && <span class="body-sm">{rootCategory(next)!.label}</span>}
+      </a>
+    )
+  }
+</nav>
+
+<style>
+  .pager { display: grid; gap: 8px; }
+  @media (min-width: 720px) { .pager { grid-template-columns: 1fr 1fr; gap: 16px; } }
+  .card { display: grid; align-content: start; gap: 4px; padding: 18px; }
+  .next { text-align: right; justify-items: end; }
+  @media (max-width: 719px) { .next { order: -1; } }
+  .title { font-size: 16px; font-weight: 600; line-height: 1.35; color: var(--accent); }
+</style>

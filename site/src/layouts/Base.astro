@@ -1,0 +1,126 @@
+---
+// The frame around every page: <head> (title, link previews, theme), the nav
+// bar, the page, the footer, and the dialogs every page can open (search, CV,
+// image viewer).
+import '@fontsource-variable/inter/wght.css';
+import '../styles/global.css';
+import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import { site, themes } from '../config.ts';
+import Nav from '../components/Nav.astro';
+import Footer from '../components/Footer.astro';
+import SearchDialog from '../components/SearchDialog.astro';
+import CvDialog from '../components/CvDialog.astro';
+
+interface Props {
+  /** Page title; the site name is added. Leave out on the home page. */
+  title?: string;
+  description?: string;
+  /** Link-preview image: a site path or URL. */
+  image?: string;
+  footer?: boolean;
+  /** Keep the page out of search engines (the 404 page). */
+  noindex?: boolean;
+}
+
+const { title, description, image = site.shareImage, footer = true, noindex = false } = Astro.props;
+const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Unreal Engine tools & devlog`;
+const summary = description ?? 'Unreal Engine plugins, documentation and devlogs by Denizhan Toprak.';
+const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
+const canonical = new URL(path, site.url).href;
+const imageUrl = new URL(image, site.url).href;
+const themeIds = themes.map((t) => t.id);
+const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
+---
+
+<!doctype html>
+<html lang="en" data-theme={themes[0].id}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{fullTitle}</title>
+    <meta name="description" content={summary} />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex" />}
+
+    <!-- The theme picked last time, before anything is painted (no flash of the other theme). -->
+    <script is:inline define:vars={{ themeIds, themeColors }}>
+      (() => {
+        let id;
+        try {
+          id = localStorage.getItem('theme');
+          // The Flutter site stored it as JSON under this key.
+          if (!id) id = JSON.parse(localStorage.getItem('flutter.theme') || 'null');
+        } catch {}
+        if (!themeIds.includes(id)) id = themeIds[0];
+        document.documentElement.dataset.theme = id;
+        window.__themeColors = themeColors;
+      })();
+    </script>
+    <meta name="theme-color" content={themes[0].background} />
+    <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+
+    <!-- Link previews (Discord, LinkedIn, X...). -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={site.name} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={summary} />
+    <meta property="og:image" content={imageUrl} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" type="image/png" href="/favicon.png" />
+    <link rel="apple-touch-icon" href="/icons/Icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <link rel="sitemap" href="/sitemap.xml" />
+    <slot name="head" />
+
+    {
+      site.analyticsId && (
+        <script is:inline define:vars={{ id: site.analyticsId }}>
+          // Google Analytics, loaded once the page is idle so it never delays it. Skipped on localhost.
+          if (!/^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname)) {
+            window.dataLayer = window.dataLayer || [];
+            window.gtag = function () { dataLayer.push(arguments); };
+            gtag('js', new Date());
+            gtag('config', id);
+            const load = () => {
+              const s = document.createElement('script');
+              s.async = true;
+              s.src = 'https://www.googletagmanager.com/gtag/js?id=' + id;
+              document.head.appendChild(s);
+            };
+            addEventListener('load', () => (window.requestIdleCallback || setTimeout)(load, { timeout: 4000 }));
+          }
+        </script>
+      )
+    }
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <Nav path={path} />
+    <main id="main">
+      <slot />
+    </main>
+    {footer && <Footer />}
+    <SearchDialog />
+    <CvDialog />
+    <script>
+      import '../scripts/site.ts';
+    </script>
+  </body>
+</html>
+
+<style>
+  .skip {
+    position: absolute;
+    left: 12px;
+    top: -60px;
+    z-index: 100;
+    padding: 10px 14px;
+    border-radius: var(--r-sm);
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 700;
+  }
+  .skip:focus { top: 12px; }
+</style>

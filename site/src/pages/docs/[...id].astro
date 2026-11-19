@@ -1,0 +1,104 @@
+---
+// /docs/<id>: a doc page, or the overview of a folder (its index.md when it has one).
+import Docs from '../../layouts/Docs.astro';
+import Icon from '../../components/Icon.astro';
+import Prose from '../../components/Prose.astro';
+import Breadcrumbs from '../../components/docs/Breadcrumbs.astro';
+import Pager from '../../components/docs/Pager.astro';
+import PluginThumbnail from '../../components/docs/PluginThumbnail.astro';
+import { site } from '../../config.ts';
+import { linkButtons, render } from '../../content/markdown.ts';
+import { allPages, content, pitch, rootCategory, type DocCategory, type DocPage } from '../../content/repository.ts';
+import { plainText } from '../../content/text.ts';
+
+export function getStaticPaths() {
+  const repo = content();
+  const ids = new Set([...repo.docPages.map((d) => d.id), ...repo.categories.map((c) => c.id)]);
+  return [...ids].map((id) => ({ params: { id } }));
+}
+
+const repo = content();
+const id = Astro.params.id!;
+const doc: DocPage | undefined = repo.doc(id);
+const category: DocCategory | undefined = doc ? undefined : repo.category(id);
+
+const index = doc ? repo.docPages.indexOf(doc) : -1;
+const previous = index > 0 ? repo.docPages[index - 1] : undefined;
+const next = index >= 0 ? repo.docPages[index + 1] : undefined;
+const plugin = doc ? rootCategory(doc) : undefined;
+const rendered = doc ? await render(doc.body, { sourcePath: doc.assetPath, links: plugin?.links ?? {} }) : undefined;
+
+const firstSentence = (s: string) => {
+  const end = s.search(/[.!?](\s|$)/);
+  const sentence = end > 0 ? s.slice(0, end + 1) : s;
+  return sentence.length > 160 ? `${sentence.slice(0, 157)}…` : sentence;
+};
+const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : category ? pitch(category) : '';
+---
+
+{
+  doc && rendered && (
+    <Docs title={doc.title} description={summary} headings={rendered.headings}>
+      <article class="doc">
+        <Breadcrumbs category={doc.category} current={doc.category?.indexPage === doc ? undefined : doc.title} />
+        <h1 class="display-sm fluid">{doc.title}</h1>
+        {doc.description && <p class="body-lg description">{doc.description}</p>}
+        <Prose rendered={rendered} />
+        {site.editBaseUrl && (
+          <a class="edit" href={`${site.editBaseUrl}${doc.assetPath}`} target="_blank" rel="noopener">
+            Edit this page <Icon name="edit" />
+          </a>
+        )}
+        <hr />
+        <Pager previous={previous} next={next} />
+      </article>
+    </Docs>
+  )
+}
+{
+  category && (
+    <Docs title={category.label} description={summary}>
+      <div class="category">
+        <Breadcrumbs category={category.parent} />
+        <header>
+          {category.thumbnail && <PluginThumbnail category={category} size={120} />}
+          <div>
+            <h1 class="display-sm fluid">{category.label}</h1>
+            {pitch(category) && <p class="body-lg">{pitch(category)}</p>}
+            {Object.keys(category.links).length > 0 && <Fragment set:html={linkButtons(category.links)} />}
+          </div>
+        </header>
+        <div class="grid" style="--min: 320px">
+          {category.children.map((child) => (
+            <a class="card child" href={child.route}>
+              <Icon name={child.kind === 'page' ? 'doc' : 'folder'} />
+              <h2 class="title-md">{child.label}</h2>
+              <p class="body-md">
+                {child.kind === 'page'
+                  ? (child.description ?? firstSentence(plainText(child.body)))
+                  : pitch(child) || `${allPages(child).length} pages`}
+              </p>
+            </a>
+          ))}
+        </div>
+        {category.children.length === 0 && <p class="body-md empty">No pages yet.</p>}
+      </div>
+    </Docs>
+  )
+}
+
+<style>
+  .doc { max-width: var(--reading); margin-inline: auto; }
+  .doc h1 { margin-top: 16px; }
+  .description { margin-top: 8px; font-size: 18px; }
+  .doc :global(.prose) { margin-top: 32px; }
+  .edit { display: inline-flex; align-items: center; gap: 6px; margin-top: 48px; color: var(--accent); font-size: 14px; font-weight: 600; }
+  hr { border: 0; border-top: 1px solid var(--border); margin: 48px 0 24px; }
+  .category { max-width: 960px; margin-inline: auto; }
+  header { display: flex; flex-wrap: wrap; align-items: center; gap: 24px; margin: 24px 0 48px; }
+  header > div { display: grid; gap: 12px; flex: 1; min-width: min(100%, 320px); }
+  .child { display: grid; align-content: start; gap: 6px; padding: 20px; }
+  .child > :global(.icon) { color: var(--accent); font-size: 22px; margin-bottom: 10px; }
+  .child p { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .empty { color: var(--text-3); }
+</style>

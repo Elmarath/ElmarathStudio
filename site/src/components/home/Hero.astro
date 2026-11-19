@@ -1,0 +1,149 @@
+---
+// The top of the home page, after unrealengine.com: who you are and what you
+// make on one side, a looping showreel with a soft glow of it on the other
+// (below, on smaller screens).
+//
+// The glow is two pictures per clip baked by scripts/media.mjs (one per theme),
+// cross-faded when the clip changes. The video and the glow are drawn by the
+// browser's compositor, so the page never repaints for them, even while scrolling.
+import { site } from '../../config.ts';
+import { content } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+
+const repo = content();
+const clips = site.heroVideos.map((src) => {
+  const base = src.replace(/\.\w+$/, '');
+  return { src, poster: `${base}.jpg`, glow: `${base}-glow.webp`, glowBright: `${base}-glow-bright.webp` };
+});
+const [title1, title2] = site.heroTitle.split('\n');
+const posts = repo.posts.length;
+---
+
+<section class="hero container">
+  <div class="intro">
+    <a class="owner" href="/about">
+      <img src={site.avatarUrl} alt="" width="30" height="30" />
+      <span class="name">{site.ownerName}</span>
+      <span class="role">&nbsp;·&nbsp;{site.role}</span>
+      <Icon name="arrow-right" />
+    </a>
+    <h1 class="title">{title1}<br />{title2}</h1>
+    <p class="subtitle">
+      {site.heroSubtitle.split('\n').map((line, i) => (i === 0 ? line : [<br />, line]))}
+    </p>
+    <div class="button-row">
+      <a class="button button-filled" href="/docs"><Icon name="book" />Explore the docs</a>
+      <a class="button button-outlined" href="/blog">Read the blog</a>
+    </div>
+    <div class="stats">
+      <a href="/docs"><strong>{repo.plugins.length}</strong><span>Plugins <Icon name="arrow-right" /></span></a>
+      <a href="/blog"><strong>{posts}</strong><span>{posts === 1 ? 'Blog post' : 'Blog posts'} <Icon name="arrow-right" /></span></a>
+    </div>
+  </div>
+
+  <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))}>
+    <div class="glow" aria-hidden="true">
+      {
+        clips.map((c, i) => (
+          <>
+            <img class:list={['dark', { on: i === 0 }]} src={c.glow} alt="" width="172" height="116" decoding="async" />
+            <img class:list={['bright', { on: i === 0 }]} src={c.glowBright} alt="" width="172" height="116" decoding="async" />
+          </>
+        ))
+      }
+    </div>
+    <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+  </div>
+</section>
+
+<script>
+  import { startShowreel } from '../../scripts/showreel.ts';
+  startShowreel();
+</script>
+
+<style>
+  .hero {
+    --text-w: 400px;
+    --gap: 64px;
+    display: grid;
+    gap: var(--gap);
+    padding-block: 48px;
+  }
+  @media (min-width: 720px) {
+    .hero { padding-block: 96px; }
+  }
+  @media (min-width: 1100px) {
+    /* A narrow column of text, and the video filling the rest of the row. */
+    .hero { grid-template-columns: var(--text-w) 1fr; column-gap: 40px; align-items: center; }
+  }
+
+  .intro { position: relative; z-index: 1; display: grid; justify-items: start; }
+  /* Each line comes in, one after another (transform and opacity only). */
+  .intro > * { animation: rise 500ms var(--ease) both; }
+  .intro > :nth-child(2) { animation-delay: 70ms; }
+  .intro > :nth-child(3) { animation-delay: 140ms; }
+  .intro > :nth-child(4) { animation-delay: 210ms; }
+  .intro > :nth-child(5) { animation-delay: 280ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+
+  .owner {
+    display: inline-flex;
+    align-items: center;
+    max-width: 100%;
+    padding: 4px 12px 4px 4px;
+    border: 1px solid var(--border);
+    border-radius: 99px;
+    background: color-mix(in srgb, var(--surface) 75%, transparent);
+    transition: border-color var(--fast), background-color var(--fast);
+  }
+  .owner:hover { border-color: color-mix(in srgb, var(--text) 40%, transparent); background: color-mix(in srgb, var(--surface-raised) 75%, transparent); }
+  .owner img { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
+  .owner .name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
+  .owner .role { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px; }
+  .owner :global(.icon) { margin-left: 8px; font-size: 16px; transition: transform var(--fast); }
+  .owner:hover :global(.icon) { transform: translateX(4px); }
+
+  .title { margin-top: 32px; font-size: 38px; letter-spacing: -1px; }
+  @media (min-width: 720px) and (max-width: 1099px) {
+    .title { font-size: 64px; letter-spacing: -2px; }
+  }
+  .subtitle { margin-top: 24px; max-width: 560px; font-size: 18px; line-height: 1.7; }
+  .button-row { margin-top: 32px; gap: 16px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 32px 0 0 -12px; }
+  .stats a { display: grid; padding: 8px 16px 8px 12px; border-radius: var(--r-md); transition: background-color var(--fast); }
+  .stats a:hover { background: color-mix(in srgb, var(--surface) 70%, transparent); }
+  .stats strong { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.12; color: var(--text); }
+  .stats span { display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-3); transition: color var(--fast); }
+  .stats a:hover span { color: var(--text); }
+  .stats :global(.icon) { font-size: 14px; transition: transform var(--fast); }
+  .stats a:hover :global(.icon) { transform: translateX(4px); color: var(--accent); }
+
+  /* The showreel in a rounded 16:9 frame. */
+  .reel { position: relative; aspect-ratio: 16 / 9; }
+  video {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 32px;
+    background: #000;
+    transition: opacity 350ms ease;
+  }
+  video.swapping { opacity: 0; }
+
+  /* The glow's margins hang out past the video (22px on a 128×72 frame), and
+     on wide screens it's centred on the whole row so it reaches in behind the text. */
+  .glow {
+    position: absolute;
+    inset: -30.56% -17.19%;
+    pointer-events: none;
+    transform: translateX(calc(-1 * var(--shift, 0px)));
+  }
+  @media (min-width: 1100px) {
+    .glow { --shift: calc((var(--text-w) + 40px) / 2); }
+  }
+  .glow img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 700ms ease; }
+  .glow img.dark.on { opacity: var(--glow-dark); }
+  .glow img.bright.on { opacity: var(--glow-bright); }
+</style>

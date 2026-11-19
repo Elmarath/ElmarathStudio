@@ -1,0 +1,70 @@
+---
+import { footerColumns, site } from '../config.ts';
+import Icon from './Icon.astro';
+import Logo from './Logo.astro';
+import { isExternal } from '../content/text.ts';
+---
+
+<footer class="footer">
+  <div class="container">
+    <div class="top">
+      <div class="brand">
+        <Logo />
+        <p class="body-md">{site.role}. Plugins, documentation and devlogs for Unreal Engine.</p>
+        <div class="socials">
+          {
+            site.socials.map((s) => (
+              <a class="icon-button" href={s.url} target="_blank" rel="noopener" aria-label={s.label} title={s.label}>
+                <Icon name={s.icon} />
+              </a>
+            ))
+          }
+        </div>
+      </div>
+      {
+        footerColumns.map((column) => (
+          <div class="column">
+            <span class="label-sm">{column.title}</span>
+            <ul>
+              {column.links.map((link) => (
+                <li>
+                  <a
+                    href={link.path}
+                    {...(isExternal(link.path) && !link.path.startsWith('mailto:') ? { target: '_blank', rel: 'noopener' } : {})}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
+    </div>
+    <div class="bottom body-sm">
+      <span>© {new Date().getFullYear()} {site.ownerName}. Built with Astro.</span>
+      <span>Denizhan Toprak Portfolio</span>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .footer { background: var(--surface); border-top: 1px solid var(--border); padding: 48px 0; }
+  .top { display: flex; flex-wrap: wrap; gap: 32px 48px; }
+  .brand { width: 300px; max-width: 100%; display: grid; gap: 16px; justify-items: start; }
+  .socials { display: flex; flex-wrap: wrap; gap: 2px; margin-left: -8px; }
+  .socials :global(.icon) { font-size: 18px; }
+  .column { width: 170px; }
+  ul { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 10px; }
+  li a { font-size: 14.5px; color: var(--text-2); }
+  li a:hover { color: var(--text); text-decoration: underline; text-underline-offset: 3px; }
+  .bottom {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px 24px;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+</style>

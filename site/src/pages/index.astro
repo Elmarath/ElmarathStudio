@@ -1,0 +1,19 @@
+---
+// The home page, top to bottom. Reorder, remove or add sections here.
+import { site } from '../config.ts';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/home/Hero.astro';
+import Spotlight from '../components/home/Spotlight.astro';
+import WorkSection from '../components/home/WorkSection.astro';
+import LatestPosts from '../components/home/LatestPosts.astro';
+import ContactSection from '../components/ContactSection.astro';
+---
+
+<Base description={site.heroSubtitle.replace(/\n/g, ' ')}>
+  <link slot="head" rel="preload" as="image" href={site.heroVideos[0].replace(/\.\w+$/, '.jpg')} fetchpriority="high" />
+  <Hero />
+  <Spotlight />
+  {site.showWork && <WorkSection />}
+  <LatestPosts />
+  <ContactSection />
+</Base>

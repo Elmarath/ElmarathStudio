@@ -1,0 +1,51 @@
+---
+// A project shown large, like the blog's featured post: its cover with a soft
+// glow on the left; what it is, the pitch, the tech and a button on the right.
+import type { CaseStudy } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+import CaseStudyCover from './CaseStudyCover.astro';
+import TechTags from './TechTags.astro';
+
+interface Props {
+  study: CaseStudy;
+}
+const { study } = Astro.props;
+---
+
+<article class="featured">
+  <a class="cover-link" href={study.route} tabindex="-1" aria-hidden="true">
+    <div class="cover zoom-media">
+      <CaseStudyCover study={study} width={640} />
+      <div class="badges">
+        <span class="badge">{study.workKind}</span>
+        {study.draft && <span class="badge"><Icon name="edit" />Draft</span>}
+      </div>
+    </div>
+  </a>
+  <div class="details">
+    <p class="title-sm meta">{[study.role, study.period].filter(Boolean).join('  ·  ')}</p>
+    <h3 class="display-sm fluid">{study.title}</h3>
+    <p class="body-lg tagline">{study.tagline}</p>
+    {study.tech.length > 0 && <TechTags tech={study.tech.slice(0, 5)} />}
+    <a class="button button-filled" href={study.route}>View case study</a>
+  </div>
+</article>
+
+<style>
+  .featured { display: grid; gap: 32px; align-items: center; }
+  @media (min-width: 720px) { .featured { grid-template-columns: 11fr 10fr; gap: 64px; } }
+  .cover-link { position: relative; display: block; }
+  .cover-link::before {
+    content: '';
+    position: absolute;
+    inset: -120px;
+    background: radial-gradient(closest-side, color-mix(in srgb, var(--accent) 22%, transparent), transparent);
+    pointer-events: none;
+  }
+  .cover { position: relative; aspect-ratio: 16 / 9; border-radius: 24px; }
+  .badges { position: absolute; left: 20px; bottom: 20px; display: flex; gap: 6px; }
+  .details { display: grid; justify-items: start; gap: 20px; }
+  .meta { font-weight: 700; }
+  .details h3 { line-height: 1.15; }
+  .tagline { display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
+</style>

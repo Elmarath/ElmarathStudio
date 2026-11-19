@@ -1,0 +1,26 @@
+---
+// Standalone pages from ../content/pages/<slug>.md, e.g. /privacy-policy.
+// (about.md has its own page, src/pages/about.astro.)
+import Base from '../layouts/Base.astro';
+import Prose from '../components/Prose.astro';
+import { render } from '../content/markdown.ts';
+import { content } from '../content/repository.ts';
+
+export function getStaticPaths() {
+  return [...content().pages.values()].filter((p) => p.slug !== 'about').map((p) => ({ params: { slug: p.slug } }));
+}
+const page = content().pages.get(Astro.params.slug!)!;
+const rendered = await render(page.body, { sourcePath: page.assetPath });
+---
+
+<Base title={page.title} description={page.description}>
+  <article class="container reading page">
+    <h1 class="display-sm fluid">{page.title}</h1>
+    <Prose rendered={rendered} />
+  </article>
+</Base>
+
+<style>
+  .page { padding-block: 56px var(--section); }
+  .page :global(.prose) { margin-top: 32px; }
+</style>

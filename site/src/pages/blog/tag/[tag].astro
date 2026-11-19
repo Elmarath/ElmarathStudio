@@ -1,0 +1,17 @@
+---
+// /blog/tag/<tag>: the blog filtered to one tag. (/blog?tag=<tag> and the old
+// site's /blog/tags/<tag> redirect here.)
+import Base from '../../../layouts/Base.astro';
+import BlogList from '../../../components/blog/BlogList.astro';
+import { content } from '../../../content/repository.ts';
+import { slugify } from '../../../content/text.ts';
+
+export function getStaticPaths() {
+  return content().tags.map((t) => ({ params: { tag: slugify(t) }, props: { label: t } }));
+}
+const { label } = Astro.props;
+---
+
+<Base title={`${label} · Blog`} description={`Posts tagged ${label}.`}>
+  <BlogList tag={Astro.params.tag} />
+</Base>

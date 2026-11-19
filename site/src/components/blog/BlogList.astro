@@ -1,0 +1,114 @@
+---
+// /blog and /blog/tag/<tag>, laid out like the Unreal Engine feed: tag
+// filters, one featured post, then a grid of cards ("Load more" after nine).
+import { content, type BlogPost } from '../../content/repository.ts';
+import { slugify } from '../../content/text.ts';
+import Icon from '../Icon.astro';
+import PostCard from '../cards/PostCard.astro';
+import FeaturedPost from './FeaturedPost.astro';
+
+interface Props {
+  /** A tag slug, or nothing for every post. */
+  tag?: string;
+}
+const { tag } = Astro.props;
+const repo = content();
+const posts: BlogPost[] = tag ? repo.posts.filter((p) => p.tags.some((t) => slugify(t) === tag)) : repo.posts;
+// The newest featured post leads; the rest follow, featured ones first.
+const hero = posts.find((p) => p.featured) ?? posts[0];
+const rest = posts
+  .filter((p) => p !== hero)
+  .sort((a, b) => (a.featured === b.featured ? b.date.getTime() - a.date.getTime() : a.featured ? -1 : 1));
+const PAGE = 9;
+---
+
+<div class="container blog">
+  <div class="filters">
+    <nav class="pills" aria-label="Tags">
+      <a class="chip" href="/blog" aria-current={tag ? undefined : 'page'}>All</a>
+      {repo.tags.map((t) => <a class="chip" href={`/blog/tag/${slugify(t)}`} aria-current={slugify(t) === tag ? 'page' : undefined}>{t}</a>)}
+    </nav>
+    <label class="tag-search">
+      <Icon name="search" />
+      <input type="search" list="blog-tags" placeholder="Search by tag..." aria-label="Search by tag" data-tag-search />
+      <datalist id="blog-tags">{repo.tags.map((t) => <option value={t} />)}</datalist>
+    </label>
+  </div>
+
+  {
+    hero ? (
+      <div class="hero"><FeaturedPost post={hero} /></div>
+    ) : (
+      <div class="empty">
+        <Icon name="article" />
+        <p class="title-md">No posts with this tag yet.</p>
+        <a class="button button-text" href="/blog">Show all posts</a>
+      </div>
+    )
+  }
+  {
+    rest.length > 0 && (
+      <div class="grid posts" style="--min: 300px; --grid-gap: 20px" data-posts>
+        {rest.map((post, i) => (
+          <div class="item" hidden={i >= PAGE ? true : undefined}>
+            <PostCard post={post} />
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    rest.length > PAGE && (
+      <div class="more">
+        <button type="button" class="button button-outlined" data-load-more>Load more</button>
+      </div>
+    )
+  }
+</div>
+
+<script>
+  const tags = new Map([...document.querySelectorAll<HTMLAnchorElement>('.pills a')].map((a) => [a.textContent!.trim().toLowerCase(), a.href]));
+  document.querySelector<HTMLInputElement>('[data-tag-search]')?.addEventListener('change', (e) => {
+    const href = tags.get((e.target as HTMLInputElement).value.trim().toLowerCase());
+    if (href) location.assign(href);
+  });
+  document.querySelector('[data-load-more]')?.addEventListener('click', (e) => {
+    const hidden = [...document.querySelectorAll<HTMLElement>('[data-posts] .item[hidden]')];
+    hidden.slice(0, 9).forEach((el) => (el.hidden = false));
+    if (hidden.length <= 9) (e.currentTarget as HTMLElement).remove();
+  });
+</script>
+
+<style>
+  .blog { padding-top: 24px; padding-bottom: var(--section); }
+  @media (min-width: 720px) { .blog { padding-top: 48px; } }
+  .filters { display: flex; flex-direction: column-reverse; gap: 16px; }
+  @media (min-width: 720px) { .filters { flex-direction: row; align-items: flex-start; gap: 32px; } }
+  .pills { display: flex; gap: 10px; overflow-x: auto; scrollbar-width: none; flex: 1; }
+  .pills::-webkit-scrollbar { display: none; }
+  @media (min-width: 720px) { .pills { flex-wrap: wrap; overflow: visible; } }
+  .pills .chip { flex: none; min-height: 36px; font-size: 14px; }
+  .tag-search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 44px;
+    padding: 0 14px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-md);
+    background: var(--surface);
+    color: var(--text-3);
+  }
+  @media (min-width: 720px) { .tag-search { width: 340px; flex: none; } }
+  .tag-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: none; color: var(--text); font: 14.5px var(--font); }
+  .tag-search:focus-within { border-color: var(--accent); }
+  .hero { margin-top: 48px; }
+  @media (min-width: 720px) { .hero { margin-top: 104px; } }
+  .posts { margin-top: 48px; }
+  @media (min-width: 720px) { .posts { margin-top: 120px; } }
+  .item[hidden] { display: none; }
+  .item > :global(a) { height: 100%; }
+  .more { display: flex; justify-content: center; margin-top: 32px; }
+  .empty { display: grid; justify-items: center; gap: 12px; padding: 48px 0; color: var(--text-3); text-align: center; }
+  .empty > :global(.icon) { font-size: 40px; }
+</style>
