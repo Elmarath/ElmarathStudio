@@ -1,6 +1,5 @@
-# Netlify: builds the static site in site/ (Astro) and publishes it.
-# Point your Netlify site at this repository and it deploys on every push.
-# (The Flutter app in lib/ is no longer built; its content/ folder is shared.)
+# Netlify: builds the static site in site/ (Astro) from the Markdown in
+# content/, and publishes it. It deploys on every push to master.
 
 [build]
   base = "site"

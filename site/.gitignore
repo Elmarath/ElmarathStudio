@@ -1,13 +1,6 @@
 node_modules/
 dist/
 .astro/
-# Made by `npm run media` from ../content, ../web and ../assets.
+# Made by `npm run media` (converted images, baked glows), before every dev and build.
 .media/
 public/media/
-public/videos/
-public/icons/
-public/brand/
-public/files/
-public/favicon.png
-public/manifest.json
-public/robots.txt

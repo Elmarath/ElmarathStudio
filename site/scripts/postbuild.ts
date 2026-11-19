@@ -9,7 +9,7 @@
 import { existsSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { site } from '../src/config.ts';
-import { content, repoRoot } from '../src/content/repository.ts';
+import { content } from '../src/content/repository.ts';
 import { legacyRoute } from '../src/scripts/legacy-core.ts';
 
 const dist = join(process.cwd(), 'dist');
@@ -26,7 +26,8 @@ const lines: string[] = [
   `https://${site.netlifyHost}/*  ${site.url}/:splat  301!`,
   '',
   '# Blog tag links of the previous sites.',
-  '/blog  tag=:tag  /blog/tag/:tag  301',
+  // Forced (!): /blog is a real page, which Netlify would otherwise serve instead.
+  '/blog  tag=:tag  /blog/tag/:tag  301!',
   '/blog/tags/:tag  /blog/tag/:tag  301',
   '',
   '# Addresses of the previous (Docusaurus) site.',
@@ -34,7 +35,7 @@ const lines: string[] = [
 
 /** Every address the old Docusaurus site had for the docs: its folder and file names, as they were. */
 const oldAddresses = new Set<string>();
-const fixture = join(repoRoot, 'test', 'fixtures', 'old_site_urls.txt');
+const fixture = join(process.cwd(), 'test', 'fixtures', 'old_site_urls.txt');
 if (existsSync(fixture)) {
   for (const line of readFileSync(fixture, 'utf8').split('\n')) {
     const t = line.trim();

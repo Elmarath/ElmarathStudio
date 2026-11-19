@@ -41,6 +41,7 @@ Nothing to register: drop a file in `../content` and it's on the site.
 ## Changing the site
 
 - **Names, links, menus, hero text, showreel clips, analytics, Work on/off:** `src/config.ts`.
+- **Files served as they are** (showreel videos and stills, icons, logo, CV): `public/`.
 - **Colors / themes:** `src/styles/themes.css` (one block per theme) and `themes` in `src/config.ts`.
 - **Home page sections:** `src/pages/index.astro`, one line per section.
 - **Pages:** `src/pages/` (the file path is the URL). Components are in `src/components/`, with their

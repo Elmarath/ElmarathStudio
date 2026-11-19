@@ -26,16 +26,13 @@ const load = () =>
   (manifest ??= existsSync(manifestPath) ? JSON.parse(readFileSync(manifestPath, 'utf8')) : {}) as Record<string, Entry>;
 
 /**
- * An image referenced from content: a URL, a `content/...` file (converted to
- * WebP), or an `assets/...` file (copied into public/ as is).
+ * An image referenced from content: a URL, or a `content/...` file (converted to WebP).
  *
  * [displayWidth] is the widest it's shown, in CSS pixels: `src` is the variant
  * for that width at 2× density, and `srcset` offers all of them.
  */
 export async function image(key: string, displayWidth = 800): Promise<ImageInfo | null> {
   if (isExternal(key)) return { src: key };
-  if (key.startsWith('assets/images/')) return { src: `/brand/${key.slice('assets/images/'.length)}` };
-  if (key.startsWith('assets/files/')) return { src: `/files/${key.slice('assets/files/'.length)}` };
   if (!key.startsWith('content/')) return null;
 
   const all = load();

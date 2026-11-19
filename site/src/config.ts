@@ -68,7 +68,7 @@ export const site = {
   ownerName: 'Denizhan Toprak',
   role: 'C++ Gameplay Programmer',
   avatarUrl: 'https://avatars.githubusercontent.com/u/65414809?v=4',
-  /** Paths below are served from `public/` (copied from ../assets and ../web by `npm run media`). */
+  /** Paths below are files in `public/`, served as they are. */
   logo: '/brand/logo.png',
   /** The image shown in link previews (Discord, LinkedIn, X...). */
   shareImage: '/brand/hero.jpeg',
@@ -85,7 +85,7 @@ export const site = {
 
   /**
    * The showreel next to the hero text: short, muted clips that play one after
-   * another on a loop. Put them in ../web/videos/, each with a still of the same
+   * another on a loop. Put them in public/videos/, each with a still of the same
    * name ending in `.jpg`, shown until the clip can play and used for its glow.
    */
   heroVideos: ['/videos/skeletal-mesh-merge.mp4', '/videos/trace-trail.mp4'],

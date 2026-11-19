@@ -204,13 +204,12 @@ function position(value: unknown, name: string): number {
 
 /**
  * Resolves an image path written in Markdown, relative to the file it's in.
- * Returns a URL unchanged, `/assets/x.png` as `assets/x.png`, other absolute
- * paths under `content/`, and relative paths next to the file.
+ * Returns a URL unchanged, absolute paths under `content/`, and relative paths
+ * next to the file.
  */
 export function resolveAsset(sourcePath: string, src: string): string {
   const s = src.trim();
   if (/^(https?|data):/i.test(s)) return s;
-  if (s.startsWith('/assets/')) return s.slice(1);
   if (s.startsWith('/')) return `content${s}`;
   try {
     const resolved = new URL(s, `file:///${sourcePath}`).pathname.slice(1);

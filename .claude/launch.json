@@ -2,32 +2,18 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "web",
-      "runtimeExecutable": "/Users/denizhan/flutter/bin/flutter",
+      "name": "site-dev",
+      "runtimeExecutable": "npm",
       "runtimeArgs": [
         "run",
-        "-d",
-        "web-server",
-        "--web-port",
-        "8080",
-        "--web-hostname",
-        "localhost"
+        "dev",
+        "--prefix",
+        "site",
+        "--",
+        "--port",
+        "4321"
       ],
-      "port": 8080
-    },
-    {
-      "name": "web-release",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": [
-        "-m",
-        "http.server",
-        "8090",
-        "--bind",
-        "127.0.0.1",
-        "--directory",
-        "build/web"
-      ],
-      "port": 8090
+      "port": 4321
     },
     {
       "name": "site",

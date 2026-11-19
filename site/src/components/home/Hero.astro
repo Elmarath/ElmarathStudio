@@ -18,7 +18,8 @@ import Icon from '../Icon.astro';
 const repo = content();
 const clips = site.heroVideos.map((src) => {
   const base = src.replace(/\.\w+$/, '');
-  const glow = (kind: string, bright = false) => `${base}.glow-${GLOW_VERSION}-${kind}${bright ? '-bright' : ''}.webp`;
+  const name = base.split('/').at(-1);
+  const glow = (kind: string, bright = false) => `/media/glow/${name}.glow-${GLOW_VERSION}-${kind}${bright ? '-bright' : ''}.webp`;
   return { src, poster: `${base}.jpg`, glow };
 });
 const [title1, title2] = site.heroTitle.split('\n');

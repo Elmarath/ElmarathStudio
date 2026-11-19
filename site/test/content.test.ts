@@ -3,10 +3,9 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { FrontMatter, slugify } from '../src/content/text.ts';
 import { preprocess, parseYoutube } from '../src/content/markdown-source.ts';
-import { content, repoRoot, resolveAsset } from '../src/content/repository.ts';
+import { content, resolveAsset } from '../src/content/repository.ts';
 import { legacyRoute } from '../src/scripts/legacy-core.ts';
 import { searchEntries } from '../src/scripts/search-core.ts';
 
@@ -78,7 +77,7 @@ test('resolves Docusaurus links and relative files', () => {
 });
 
 test('every address from the old site lands on a page', () => {
-  const old = readFileSync(join(repoRoot, 'test', 'fixtures', 'old_site_urls.txt'), 'utf8')
+  const old = readFileSync(new URL('./fixtures/old_site_urls.txt', import.meta.url), 'utf8')
     .split('\n')
     .map((l) => l.trim())
     .filter((l) => l && !l.startsWith('#'));
