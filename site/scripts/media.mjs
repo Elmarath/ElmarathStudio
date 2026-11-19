@@ -62,9 +62,8 @@ for (const key of Object.keys(manifest)) if (!seen.has(key)) delete manifest[key
 // The showreel glow, made the way unrealengine.com makes it: the clip's still
 // stretched to cover a box (object-fit: cover) and its colours blurred by 80px.
 // It fades out more gently than Unreal's: over 300px past the box on every
-// side (GLOW_SPREAD; src/components/home/Hero.astro places it to match). Two
-// boxes: the whole hero row (text and video side by side, wide screens) and
-// the 16:9 video (smaller screens). One set per clip in public/videos/.
+// side (GLOW_SPREAD; src/components/home/Hero.astro places it to match),
+// around the 16:9 video. One per clip in public/videos/ and theme.
 // Baked once here at 1/6 scale; the browser just scales the picture up, so
 // the page never blurs anything while it scrolls. On a bright page dark parts
 // fade out, so it reads as coloured light rather than a grey shadow.
@@ -77,7 +76,7 @@ const GLOW_FADE = 130;
 /** How strongly it fades: 1 follows the blur; higher keeps the middle as bright
     and makes the outer parts fainter, sooner. */
 const GLOW_FADE_STRENGTH = 2.475;
-const GLOW_BOXES = { wide: [1240, 470], video: [800, 450] };
+const GLOW_BOXES = { video: [800, 450] };
 
 async function bakeGlow(poster, [boxW, boxH], out, outBright) {
   const w = Math.round(boxW * GLOW_SCALE);

@@ -1,16 +1,16 @@
 ---
-// The top of the home page, after unrealengine.com: who you are and what you
-// make on one side, a looping showreel with a soft glow of it on the other
-// (below, on smaller screens).
+// The top of the home page. A full-width statement, then the showreel framed
+// like an editor viewport (with the clip that's playing named under it), and
+// what you do, the two main links and the counts beside it (below it, on
+// smaller screens). A faint engine grid sits behind it all.
 //
-// The glow is made the way unrealengine.com makes it: the clip stretched over
-// the whole hero row (text and video; just the video on smaller screens),
-// blurred by 80px and fading out over 300px past it. scripts/media.mjs bakes it per
-// clip, layout and theme; here it cross-fades when the clip changes. The video
-// and the glow are drawn by the browser's compositor, so the page never
-// repaints for them, even while scrolling.
+// The glow around the showreel is baked by scripts/media.mjs per clip and
+// theme, and cross-fades when the clip changes. The video, the glow and the
+// grid are drawn by the browser's compositor, so the page never repaints for
+// them, even while scrolling.
 import { site } from '../../config.ts';
 import { content } from '../../content/repository.ts';
+import { humanize } from '../../content/text.ts';
 // @ts-expect-error: plain JavaScript module shared with the media script.
 import { GLOW_VERSION } from '../../../scripts/media-lib.mjs';
 import Icon from '../Icon.astro';
@@ -18,51 +18,67 @@ import Icon from '../Icon.astro';
 const repo = content();
 const clips = site.heroVideos.map((src) => {
   const base = src.replace(/\.\w+$/, '');
-  const name = base.split('/').at(-1);
-  const glow = (kind: string, bright = false) => `/media/glow/${name}.glow-${GLOW_VERSION}-${kind}${bright ? '-bright' : ''}.webp`;
-  return { src, poster: `${base}.jpg`, glow };
+  const name = base.split('/').at(-1)!;
+  const glow = (bright: boolean) => `/media/glow/${name}.glow-${GLOW_VERSION}-video${bright ? '-bright' : ''}.webp`;
+  return { src, poster: `${base}.jpg`, label: humanize(name), glow };
 });
 const [title1, title2] = site.heroTitle.split('\n');
 const posts = repo.posts.length;
+const two = (n: number) => String(n).padStart(2, '0');
 ---
 
-<section class="hero container">
-  <div class="intro">
-    <a class="owner" href="/about">
-      <img src={site.avatarUrl} alt="" width="30" height="30" />
-      <span class="name">{site.ownerName}</span>
-      <span class="role">&nbsp;·&nbsp;{site.role}</span>
-      <Icon name="arrow-right" />
-    </a>
-    <h1 class="title">{title1}<br />{title2}</h1>
-    <p class="subtitle">
-      {site.heroSubtitle.split('\n').map((line, i) => (i === 0 ? line : [<br />, line]))}
-    </p>
-    <div class="button-row">
-      <a class="button button-filled" href="/docs"><Icon name="book" />Explore the docs</a>
-      <a class="button button-outlined" href="/blog">Read the blog</a>
-    </div>
-    <div class="stats">
-      <a href="/docs"><strong>{repo.plugins.length}</strong><span>Plugins <Icon name="arrow-right" /></span></a>
-      <a href="/blog"><strong>{posts}</strong><span>{posts === 1 ? 'Blog post' : 'Blog posts'} <Icon name="arrow-right" /></span></a>
-    </div>
-  </div>
+<section class="hero">
+  <div class="grid-bg" aria-hidden="true"></div>
+  <div class="container inner">
+    <header class="head">
+      <a class="owner" href="/about">
+        <img src={site.avatarUrl} alt="" width="28" height="28" />
+        <span class="name">{site.ownerName}</span>
+        <span class="role">{site.role}</span>
+        <Icon name="arrow-right" />
+      </a>
+      <h1 class="title">{title1}<br /><span class="accent">{title2}</span></h1>
+    </header>
 
-  <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))}>
-    <div class="glow" aria-hidden="true">
-      {
-        clips.map((c, i) =>
-          [false, true].map((bright) => (
-            <picture class:list={[bright ? 'bright' : 'dark', { on: i === 0 }]}>
-              <source media="(min-width: 1100px)" srcset={c.glow('wide', bright)} />
-              <img src={c.glow('video', bright)} alt="" decoding="async" />
-            </picture>
-          )),
-        )
-      }
+    <div class="side">
+      <p class="subtitle">
+        {site.heroSubtitle.split('\n').map((line, i) => (i === 0 ? line : [<br />, line]))}
+      </p>
+      <div class="button-row">
+        <a class="button button-filled" href="/docs"><Icon name="book" />Explore the docs</a>
+        <a class="button button-outlined" href="/blog">Read the blog</a>
+      </div>
+      <nav class="stats" aria-label="At a glance">
+        <a href="/docs"><strong>{two(repo.plugins.length)}</strong><span>Plugins</span><Icon name="arrow-right" /></a>
+        <a href="/blog"><strong>{two(posts)}</strong><span>{posts === 1 ? 'Blog post' : 'Blog posts'}</span><Icon name="arrow-right" /></a>
+      </nav>
     </div>
-    <div class="screen">
-      <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+
+    <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))} data-labels={JSON.stringify(clips.map((c) => c.label))}>
+      <div class="glow" aria-hidden="true">
+        {
+          clips.map((c, i) =>
+            [false, true].map((bright) => (
+              <img class:list={[bright ? 'bright' : 'dark', { on: i === 0 }]} src={c.glow(bright)} alt="" decoding="async" />
+            )),
+          )
+        }
+      </div>
+      <figure class="viewport">
+        <div class="screen">
+          <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+        </div>
+        <span class="corner tl" aria-hidden="true"></span>
+        <span class="corner tr" aria-hidden="true"></span>
+        <span class="corner bl" aria-hidden="true"></span>
+        <span class="corner br" aria-hidden="true"></span>
+        <figcaption class="hud">
+          <span class="live" aria-hidden="true"></span>
+          <span class="now">Now playing</span>
+          <span class="clip" data-clip-label>{clips[0].label}</span>
+          <span class="count" data-clip-count>01 / {two(clips.length)}</span>
+        </figcaption>
+      </figure>
     </div>
   </div>
 </section>
@@ -74,132 +90,157 @@ const posts = repo.posts.length;
 </script>
 
 <style>
-  .hero {
-    --text-w: 400px;
-    --gap: 64px;
-    /* The glow sits behind everything in here, and nothing outside. */
-    position: relative;
-    isolation: isolate;
-    display: grid;
-    gap: var(--gap);
-    padding-block: 48px;
-  }
-  @media (min-width: 720px) {
-    .hero { padding-block: 96px; }
-  }
-  @media (min-width: 1100px) {
-    /* A narrow column of text, and the video filling the rest of the row. */
-    .hero { grid-template-columns: var(--text-w) 1fr; column-gap: 40px; align-items: center; }
+  .hero { position: relative; isolation: isolate; padding-block: 40px 32px; }
+  @media (min-width: 720px) { .hero { padding-block: 72px 48px; } }
+
+  /* The engine grid: faint lines that fade out from the top of the page. */
+  .grid-bg {
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 56px 56px;
+    background-position: center top;
+    mask-image: radial-gradient(ellipse 75% 70% at 50% 20%, #000 35%, transparent 80%);
+    pointer-events: none;
   }
 
-  .intro { position: relative; z-index: 1; display: grid; justify-items: start; }
-  /* Each line comes in, one after another (transform and opacity only). */
-  .intro > * { animation: rise 500ms var(--ease) both; }
-  .intro > :nth-child(2) { animation-delay: 70ms; }
-  .intro > :nth-child(3) { animation-delay: 140ms; }
-  .intro > :nth-child(4) { animation-delay: 210ms; }
-  .intro > :nth-child(5) { animation-delay: 280ms; }
-  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+  /* Phones and tablets: statement, text, then the showreel. Wide screens: the
+     statement across the top, the showreel and the text side by side under it. */
+  .inner {
+    display: grid;
+    grid-template-areas: 'head' 'side' 'reel';
+    row-gap: clamp(28px, 5vw, 48px);
+  }
+  @media (min-width: 1100px) {
+    .inner {
+      grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+      grid-template-areas: 'head head' 'reel side';
+      column-gap: 56px;
+      row-gap: 48px;
+      align-items: center;
+    }
+  }
+  .head { grid-area: head; display: grid; justify-items: start; }
+  .side { grid-area: side; display: grid; justify-items: start; position: relative; z-index: 1; }
+  .reel { grid-area: reel; }
+
+  /* Each part comes in, one after another (transform and opacity only). */
+  .head > *, .side > *, .reel { animation: rise 520ms var(--ease) both; }
+  .head > :nth-child(2) { animation-delay: 60ms; }
+  .side > :nth-child(1) { animation-delay: 140ms; }
+  .side > :nth-child(2) { animation-delay: 200ms; }
+  .side > :nth-child(3) { animation-delay: 260ms; }
+  .reel { animation-delay: 160ms; }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } }
 
   .owner {
     display: inline-flex;
     align-items: center;
+    gap: 10px;
     max-width: 100%;
     padding: 4px 12px 4px 4px;
     border: 1px solid var(--border);
-    border-radius: 99px;
-    background: color-mix(in srgb, var(--surface) 75%, transparent);
-    transition: border-color var(--fast), background-color var(--fast);
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--surface) 80%, transparent);
+    font-size: 13.5px;
+    transition: border-color var(--fast);
   }
-  .owner:hover { border-color: color-mix(in srgb, var(--text) 40%, transparent); background: color-mix(in srgb, var(--surface-raised) 75%, transparent); }
-  .owner img { width: 30px; height: 30px; border-radius: 50%; margin-right: 10px; }
-  .owner .name { font-size: 14px; font-weight: 600; color: var(--text); white-space: nowrap; }
-  .owner .role { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 12.5px; font-weight: 600; letter-spacing: 0.3px; }
-  .owner :global(.icon) { margin-left: 8px; font-size: 16px; transition: transform var(--fast); }
-  .owner:hover :global(.icon) { transform: translateX(4px); }
+  .owner:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+  .owner img { width: 28px; height: 28px; border-radius: 3px; }
+  .owner .name { font-weight: 600; color: var(--text); white-space: nowrap; }
+  .owner .role {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    padding-left: 10px;
+    border-left: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+    letter-spacing: 0.02em;
+    color: var(--text-3);
+  }
+  .owner :global(.icon) { flex: none; color: var(--accent); font-size: 15px; transition: transform var(--fast); }
+  .owner:hover :global(.icon) { transform: translateX(3px); }
 
-  .title { margin-top: 32px; font-size: 38px; letter-spacing: -1px; }
-  @media (min-width: 720px) and (max-width: 1099px) {
-    .title { font-size: 64px; letter-spacing: -2px; }
+  .title {
+    margin-top: clamp(20px, 3vw, 32px);
+    font-size: clamp(36px, 6.2vw, 58px);
+    font-weight: 700;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
   }
-  .subtitle { margin-top: 24px; max-width: 560px; font-size: 18px; line-height: 1.7; }
-  .button-row { margin-top: 32px; gap: 16px; }
-  .stats { display: flex; flex-wrap: wrap; gap: 8px 16px; margin: 32px 0 0 -12px; }
-  .stats a { display: grid; padding: 8px 16px 8px 12px; border-radius: var(--r-md); transition: background-color var(--fast); }
-  .stats a:hover { background: color-mix(in srgb, var(--surface) 70%, transparent); }
-  .stats strong { font-size: 32px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.12; color: var(--text); }
-  .stats span { display: inline-flex; align-items: center; gap: 6px; margin-top: 2px; font-size: 11px; font-weight: 700; letter-spacing: 1.2px; text-transform: uppercase; color: var(--text-3); transition: color var(--fast); }
-  .stats a:hover span { color: var(--text); }
-  .stats :global(.icon) { font-size: 14px; transition: transform var(--fast); }
-  .stats a:hover :global(.icon) { transform: translateX(4px); color: var(--accent); }
+  @media (min-width: 1100px) { .title { font-size: clamp(60px, 5.6vw, 82px); } }
+  .accent { color: var(--accent); }
 
-  /* The showreel in a rounded 16:9 frame. The frame is black, so between clips
-     the video dips to black rather than showing the glow through it. */
-  .reel { --radius: 32px; position: relative; aspect-ratio: 16 / 9; }
-  .screen { position: relative; height: 100%; border-radius: var(--radius); background: #000; }
-  video {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: var(--radius);
-    background: #000;
-    transition: opacity 350ms ease;
-  }
-  video.swapping { opacity: 0; }
-
-  /* The glow (--spread: GLOW_SPREAD in scripts/media.mjs): around the video on
-     smaller screens, and the whole of it shrunk to 70% on phones, as on
-     unrealengine.com ... */
-  .hero { --spread: 300px; }
-  .glow { position: absolute; z-index: -1; inset: calc(-1 * var(--spread)); pointer-events: none; }
-  @media (max-width: 719px) { .glow { transform: scale(0.7); } }
-  /* ... and on wide screens around the whole row, text and video together:
-     the frame steps aside (position: static) so the glow measures the section. */
-  @media (min-width: 1100px) {
-    .reel { position: static; }
-    .glow { inset: calc(96px - var(--spread)) calc(var(--gutter) - var(--spread)); }
-  }
-  .glow picture { position: absolute; inset: 0; opacity: 0; transition: opacity 700ms ease; }
-  .glow img { width: 100%; height: 100%; }
-
-  /* Below 1100px everything stacks, laid out like unrealengine.com at that
-     size: the name chip (where Unreal has its logo), a big two-line statement,
-     the paragraph, two large buttons, then the showreel across the full width.
-     Sizes scale with the window between a phone and a small laptop. */
-  @media (max-width: 1099px) {
-    .hero { --gap: clamp(40px, 7.3vw, 72px); padding-block: clamp(28px, 4.3vw, 48px) clamp(24px, 4vw, 48px); }
-    .stats { display: none; }
-    .title {
-      margin-top: clamp(20px, 3.3vw, 36px);
-      font-size: clamp(32px, 4.9vw, 52px);
-      font-weight: 800;
-      letter-spacing: -0.035em;
-      line-height: 1.08;
-    }
-    .subtitle {
-      margin-top: clamp(16px, 3.6vw, 32px);
-      max-width: 680px;
-      font-size: clamp(15px, 2.05vw, 18px);
-      line-height: 1.55;
-      color: color-mix(in srgb, var(--text) 88%, transparent);
-    }
-    .button-row { margin-top: clamp(20px, 3vw, 32px); gap: clamp(12px, 1.9vw, 16px); }
-    .button-row .button {
-      min-height: clamp(44px, 6vw, 52px);
-      padding: 0 clamp(18px, 2.6vw, 26px);
-      font-size: clamp(15px, 2vw, 16px);
-      font-weight: 600;
-      letter-spacing: 0.01em;
-    }
-    .button-row :global(.icon) { display: none; }
-    .reel { --radius: clamp(16px, 2.7vw, 28px); }
-  }
-  /* Phones: the two buttons share the width. */
+  .subtitle { max-width: 560px; font-size: clamp(15.5px, 1.9vw, 17.5px); line-height: 1.65; color: var(--text-2); }
+  .side .button-row { margin-top: 28px; gap: 12px; }
   @media (max-width: 479px) {
-    .button-row { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
-    .button-row .button { padding: 0 12px; }
+    .side .button-row { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
+    .side .button-row .button { padding: 0 12px; }
   }
-  .glow .dark.on { opacity: var(--glow-dark); }
+
+  /* The counts, as a small readout. */
+  .stats { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 28px; }
+  .stats a {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--r-sm);
+    font-family: var(--mono);
+    transition: border-color var(--fast), color var(--fast);
+  }
+  .stats strong { font-size: 18px; font-weight: 700; color: var(--text); }
+  .stats span { font-size: 11.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-3); }
+  .stats :global(.icon) { align-self: center; font-size: 13px; color: var(--text-3); transition: transform var(--fast), color var(--fast); }
+  .stats a:hover { border-color: color-mix(in srgb, var(--accent) 60%, transparent); }
+  .stats a:hover :global(.icon) { color: var(--accent); transform: translateX(3px); }
+
+  /* The showreel, framed like an editor viewport. The frame is black, so
+     between clips the video dips to black rather than showing the glow. */
+  .reel { position: relative; }
+  .viewport { position: relative; margin: 0; }
+  .screen {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border: 1px solid var(--border-strong);
+    border-radius: var(--r-md);
+    background: #000;
+  }
+  video { display: block; width: 100%; height: 100%; object-fit: cover; transition: opacity 350ms ease; }
+  video.swapping { opacity: 0; }
+  .corner { position: absolute; width: 14px; height: 14px; border: 0 solid var(--accent); pointer-events: none; }
+  .corner.tl { top: -6px; left: -6px; border-top-width: 2px; border-left-width: 2px; }
+  .corner.tr { top: -6px; right: -6px; border-top-width: 2px; border-right-width: 2px; }
+  .corner.bl { bottom: 30px; left: -6px; border-bottom-width: 2px; border-left-width: 2px; }
+  .corner.br { bottom: 30px; right: -6px; border-bottom-width: 2px; border-right-width: 2px; }
+  .hud {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    height: 36px;
+    padding-top: 12px;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-3);
+  }
+  .live { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .clip { color: var(--text); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .count { margin-left: auto; flex: none; }
+
+  /* The glow: the clip's colours spreading past the frame and fading out
+     (GLOW_SPREAD in scripts/media.mjs), 70% of that on phones. */
+  .glow { position: absolute; z-index: -1; inset: -300px -300px -264px; pointer-events: none; }
+  @media (max-width: 719px) { .glow { transform: scale(0.7); } }
+  .glow img { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; transition: opacity 700ms ease; }
+  .glow .dark.on { opacity: calc(var(--glow-dark) * 0.85); }
   .glow .bright.on { opacity: var(--glow-bright); }
 </style>

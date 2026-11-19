@@ -27,7 +27,15 @@ const { title, eyebrow, actionLabel, actionHref } = Astro.props;
 </div>
 
 <style>
-  .section-header { display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; margin-bottom: 24px; }
+  .section-header {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 28px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
   .section-header > div { display: grid; gap: 8px; }
   .action { display: inline-flex; align-items: center; gap: 6px; flex: none; color: var(--accent); font-size: 14px; font-weight: 600; }
   .action :global(.icon) { transition: transform var(--fast); }

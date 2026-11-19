@@ -63,8 +63,10 @@ const items = await Promise.all(
         <div class="tabs" role="tablist" aria-label="Plugins">
           {items.map(({ plugin, tab }, i) => (
             <button type="button" class="tab" role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-index={i} title={plugin.label}>
-              {tab ? <img src={tab.src} alt="" width="48" height="48" loading="lazy" decoding="async" /> : <span class="blank" />}
+              <span class="num" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+              {tab ? <img src={tab.src} alt="" width="40" height="40" loading="lazy" decoding="async" /> : <span class="blank" />}
               <span class="label">{plugin.label}</span>
+              <span class="progress" aria-hidden="true"></span>
             </button>
           ))}
         </div>
@@ -85,7 +87,7 @@ const items = await Promise.all(
     .carousel { grid-template-columns: 1fr 290px; gap: 16px; height: 440px; }
   }
 
-  .banner { position: relative; height: 560px; border-radius: var(--r-lg); overflow: hidden; background: #0b0b0e; isolation: isolate; }
+  .banner { position: relative; height: 560px; border: 1px solid var(--border); border-radius: var(--r-lg); overflow: hidden; background: #0d0c0a; isolation: isolate; }
   @media (min-width: 720px) { .banner { height: 480px; } }
   @media (min-width: 1100px) { .banner { height: 100%; } }
 
@@ -127,8 +129,8 @@ const items = await Promise.all(
   }
   .details { display: grid; justify-items: start; gap: 8px; flex: 1; min-width: 0; }
   .details .eyebrow { color: rgb(255 255 255 / 0.7); }
-  .name { color: #fff; font-size: 32px; letter-spacing: -0.5px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-  @media (min-width: 720px) { .name { font-size: 38px; letter-spacing: -1px; } }
+  .name { color: #fff; font-size: 32px; letter-spacing: -0.03em; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  @media (min-width: 720px) { .name { font-size: 40px; } }
   .pitch { margin-top: 8px; color: rgb(255 255 255 / 0.8); display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .details .button-row { margin-top: 16px; }
   .details .button { min-height: 40px; min-width: 168px; }
@@ -179,26 +181,46 @@ const items = await Promise.all(
     scroll-snap-type: x proximity;
   }
   .tabs::-webkit-scrollbar { display: none; }
+  /* A numbered list; the plugin on show is marked in gold, with a bar that
+     fills while the carousel waits to move on (transform only: no repaints). */
   .tab {
+    position: relative;
     display: flex;
     align-items: center;
-    gap: 14px;
+    gap: 12px;
     flex: 0 0 auto;
-    width: min(240px, 60vw);
+    width: min(250px, 66vw);
     height: 100%;
     padding: 0 12px;
-    border: 0;
+    border: 1px solid transparent;
     border-radius: var(--r-md);
     background: none;
+    overflow: hidden;
     text-align: left;
     scroll-snap-align: start;
-    transition: background-color var(--fast);
+    transition: background-color var(--fast), border-color var(--fast);
   }
-  .tab:hover { background: color-mix(in srgb, var(--surface) 60%, transparent); }
-  .tab[aria-selected='true'] { background: var(--surface); }
-  .tab img, .blank { width: 48px; height: 48px; flex: none; border-radius: var(--r-sm); object-fit: cover; }
+  .tab:hover { background: color-mix(in srgb, var(--surface) 70%, transparent); }
+  .tab[aria-selected='true'] { background: var(--surface); border-color: var(--border); }
+  .num { flex: none; width: 20px; font-family: var(--mono); font-size: 12px; font-weight: 600; color: var(--text-3); }
+  .tab[aria-selected='true'] .num { color: var(--accent); }
+  .tab img, .blank { width: 40px; height: 40px; flex: none; border-radius: var(--r-sm); object-fit: cover; }
   .label { font-size: 14px; font-weight: 600; color: var(--text-2); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .tab[aria-selected='true'] .label { color: var(--text); }
+  .progress {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 2px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  .tab[aria-selected='true'] .progress { transform: scaleX(1); opacity: 0.35; }
+  .tab.running .progress { opacity: 1; animation: fill var(--interval, 7s) linear both; }
+  @keyframes fill { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: reduce) { .tab.running .progress { animation: none; } }
   @media (min-width: 1100px) {
     .tabs { flex-direction: column; height: auto; gap: 4px; overflow-x: hidden; overflow-y: auto; scroll-snap-type: y proximity; }
     .tab { width: 100%; height: auto; min-height: 72px; flex: 1 0 72px; max-height: 112px; }

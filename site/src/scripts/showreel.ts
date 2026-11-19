@@ -9,6 +9,9 @@ export function startShowreel(signal: AbortSignal) {
   const video = reel?.querySelector('video');
   if (!reel || !video) return;
   const clips: string[] = JSON.parse(reel.dataset.clips ?? '[]');
+  const labels: string[] = JSON.parse(reel.dataset.labels ?? '[]');
+  const label = reel.querySelector('[data-clip-label]');
+  const count = reel.querySelector('[data-clip-count]');
   const darkGlows = reel.querySelectorAll('.glow .dark');
   const brightGlows = reel.querySelectorAll('.glow .bright');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -26,6 +29,8 @@ export function startShowreel(signal: AbortSignal) {
     video.src = clips[clip];
     darkGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
     brightGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
+    if (label) label.textContent = labels[clip] ?? '';
+    if (count) count.textContent = `${String(clip + 1).padStart(2, '0')} / ${String(clips.length).padStart(2, '0')}`;
     update();
   };
   video.addEventListener('ended', () => {

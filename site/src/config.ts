@@ -173,8 +173,8 @@ export const footerColumns: { title: string; links: NavItem[] }[] = [
  * entry here to make a new one.
  */
 export const themes = [
-  { id: 'unreal-dark', name: 'Dark', background: '#0E0E11', accent: '#26BBFF', dark: true },
-  { id: 'elmarath-gold', name: 'Elmarath Gold', background: '#FAF7F2', accent: '#A0650A', dark: false },
+  { id: 'elmarath-dark', name: 'Forge (dark)', background: '#0D0C0A', accent: '#E3AA3E', dark: true },
+  { id: 'elmarath-gold', name: 'Parchment (light)', background: '#F6F1E8', accent: '#9A6210', dark: false },
 ] as const;
 
 export type ThemeId = (typeof themes)[number]['id'];

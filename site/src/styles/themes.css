@@ -2,53 +2,64 @@
  * Every color the site uses, per theme. Pages only use these variables, so a
  * new look is one more block here (and an entry in `themes` in src/config.ts).
  * <html data-theme="…"> picks the block; it's set before the first paint.
+ *
+ * Both themes take their accent from the Elmarath logo's gold.
  */
 :root,
-[data-theme='unreal-dark'] {
+[data-theme='elmarath-dark'] {
   color-scheme: dark;
-  --bg: #0e0e11;
-  --surface: #18181c;
-  --surface-raised: #232328;
-  --border: rgb(255 255 255 / 0.12);
-  --text: #f5f5f7;
-  --text-2: #b4b4bc;
-  --text-3: #7d7d86;
-  --accent: #26bbff;
-  --on-accent: #041722;
-  --accent-hover: #4cc6ff;
-  --hero-glow: #0b4f7a;
-  --code-bg: #121216;
-  --note: #9ca3af;
-  --tip: #34d399;
-  --info: #26bbff;
-  --warning: #fbbf24;
-  --danger: #f87171;
-  --shadow: rgb(0 0 0 / 0.45);
+  /* Forge: warm near-black, like metal cooling in the dark. */
+  --bg: #0d0c0a;
+  --surface: #161411;
+  --surface-raised: #211d18;
+  --border: rgb(255 238 205 / 0.1);
+  --border-strong: rgb(255 238 205 / 0.2);
+  --text: #f4efe7;
+  --text-2: #bfb6a8;
+  --text-3: #8a8072;
+  --accent: #e3aa3e;
+  --on-accent: #1a1205;
+  --accent-hover: #f0bc57;
+  --accent-soft: rgb(227 170 62 / 0.12);
+  --hero-glow: #4a3112;
+  --grid-line: rgb(255 232 190 / 0.05);
+  --code-bg: #12100d;
+  --note: #a8a29e;
+  --tip: #6fcf97;
+  --info: #7db4e6;
+  --warning: #f2b544;
+  --danger: #ef6f5e;
+  --shadow: rgb(0 0 0 / 0.5);
   --glow-dark: 1;
   --glow-bright: 0;
+  --code-dark: 1;
 }
 
 [data-theme='elmarath-gold'] {
   color-scheme: light;
-  --bg: #faf7f2;
-  --surface: #ffffff;
-  --surface-raised: #f1ebe2;
-  --border: rgb(58 42 16 / 0.12);
-  --text: #1c1712;
-  --text-2: #5a5046;
-  --text-3: #736859;
-  /* A deeper gold than the logo's, so links and labels stay readable on white. */
-  --accent: #a0650a;
+  /* Parchment: warm paper and ink, with the logo's gold deepened for contrast. */
+  --bg: #f6f1e8;
+  --surface: #fffdf8;
+  --surface-raised: #ede5d7;
+  --border: rgb(60 42 15 / 0.13);
+  --border-strong: rgb(60 42 15 / 0.24);
+  --text: #1e1912;
+  --text-2: #5b5145;
+  --text-3: #75695a;
+  --accent: #9a6210;
   --on-accent: #ffffff;
-  --accent-hover: #b87a1c;
-  --hero-glow: #f5d7a1;
-  --code-bg: #f7f2ea;
+  --accent-hover: #b1741c;
+  --accent-soft: rgb(154 98 16 / 0.1);
+  --hero-glow: #f0d49c;
+  --grid-line: rgb(60 42 15 / 0.06);
+  --code-bg: #f3ede2;
   --note: #78716c;
   --tip: #15803d;
   --info: #2563eb;
   --warning: #b45309;
   --danger: #dc2626;
-  --shadow: rgb(0 0 0 / 0.12);
+  --shadow: rgb(60 42 15 / 0.14);
   --glow-dark: 0;
   --glow-bright: 1;
+  --code-dark: 0;
 }

@@ -23,10 +23,13 @@ const { post, eager = false } = Astro.props;
 </a>
 
 <style>
-  .post-card { padding: 18px; border-radius: var(--r-lg); }
-  .cover { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-md); }
+  /* The cover runs edge to edge across the top; the text sits below it. */
+  .post-card { display: flex; flex-direction: column; overflow: hidden; border-radius: var(--r-lg); }
+  .cover { position: relative; aspect-ratio: 16 / 9; border-bottom: 1px solid var(--border); }
   .cover :global(.badges) { position: absolute; left: 12px; right: 12px; bottom: 12px; }
-  .date { display: block; margin-top: 18px; color: var(--text-3); }
-  .title { margin-top: 6px; font-size: 17px; font-weight: 700; line-height: 1.35; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .date, .title, .excerpt { margin-inline: 20px; }
+  .date { display: block; margin-top: 18px; font-family: var(--mono); font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); }
+  .excerpt { margin-bottom: 22px; }
+  .title { margin-top: 8px; font-family: var(--display); font-size: 19px; font-weight: 700; letter-spacing: -0.01em; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .excerpt { margin-top: 8px; line-height: 1.7; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 </style>

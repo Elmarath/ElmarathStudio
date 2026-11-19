@@ -45,7 +45,7 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
         ))
       }
     </div>
-    <a class="button button-filled store" href={site.storeLink.url} target="_blank" rel="noopener">
+    <a class="button store" href={site.storeLink.url} target="_blank" rel="noopener">
       <Icon name="store" />{site.storeLink.label}
     </a>
     <button type="button" class="icon-button menu-button" popovertarget="nav-drawer" aria-label="Menu">
@@ -113,20 +113,22 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
     color: var(--text-2);
     transition: color var(--fast);
   }
-  .tabs a:hover, .tabs a[aria-current='page'] { color: var(--text); }
+  .tabs a:hover { color: var(--text); }
+  .tabs a[aria-current='page'] { color: var(--accent); }
+  /* The page you're on: a small gold square under its tab. */
   .tabs a::after {
     content: '';
     position: absolute;
-    bottom: 0;
+    bottom: 12px;
     left: 50%;
-    width: 24px;
-    height: 2px;
-    margin-left: -12px;
+    width: 4px;
+    height: 4px;
+    margin-left: -2px;
     background: var(--accent);
-    transform: scaleX(0);
+    transform: scale(0);
     transition: transform var(--normal) var(--ease);
   }
-  .tabs a[aria-current='page']::after { transform: scaleX(1); }
+  .tabs a[aria-current='page']::after { transform: scale(1); }
   .spacer { flex: 1; }
 
   .search-pill {
@@ -151,7 +153,15 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
     color: var(--text-3);
   }
 
-  .store { display: none; min-height: 40px; padding: 0 16px; margin-left: 8px; }
+  .store {
+    display: none;
+    min-height: 38px;
+    padding: 0 14px;
+    margin-left: 8px;
+    border-color: color-mix(in srgb, var(--accent) 60%, transparent);
+    color: var(--accent);
+  }
+  .store:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
   .menu-button { display: inline-grid; }
 
   @media (min-width: 720px) {
@@ -204,7 +214,7 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
   .theme-item:hover { background: color-mix(in srgb, var(--text) 6%, transparent); }
   .theme-item span:nth-child(2) { flex: 1; }
   .theme-item :global(.icon) { color: var(--accent); visibility: hidden; font-size: 18px; }
-  :global([data-theme='unreal-dark']) .theme-item[data-set-theme='unreal-dark'] :global(.icon),
+  :global([data-theme='elmarath-dark']) .theme-item[data-set-theme='elmarath-dark'] :global(.icon),
   :global([data-theme='elmarath-gold']) .theme-item[data-set-theme='elmarath-gold'] :global(.icon) { visibility: visible; }
   .swatch {
     width: 22px;

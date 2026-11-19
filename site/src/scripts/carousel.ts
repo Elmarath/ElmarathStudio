@@ -55,8 +55,12 @@ function start(root: HTMLElement, signal: AbortSignal) {
   const schedule = () => {
     clearTimeout(timer);
     timer = undefined;
+    tabs.forEach((t) => t.classList.remove('running'));
     if (paused || !onScreen || document.hidden) return;
     timer = setTimeout(() => select(index + 1), INTERVAL);
+    // The bar under the plugin on show fills over the same time.
+    void tabs[index].offsetWidth;
+    tabs[index].classList.add('running');
   };
 
   signal.addEventListener('abort', () => clearTimeout(timer));
@@ -81,7 +85,10 @@ function start(root: HTMLElement, signal: AbortSignal) {
       clearTimeout(settle);
       settle = setTimeout(settled, 120);
     }, { passive: true, signal });
-  track.addEventListener('pointerdown', () => clearTimeout(timer), { passive: true, signal });
+  track.addEventListener('pointerdown', () => {
+    clearTimeout(timer);
+    tabs.forEach((t) => t.classList.remove('running'));
+  }, { passive: true, signal });
 
   // Keep the slide in place when the window is resized.
   const resize = new ResizeObserver(() => track.scrollTo({ left: index * track.clientWidth }));

@@ -3,8 +3,11 @@
 // bar, the page, the footer, and the dialogs every page can open (search, CV,
 // image viewer).
 import '@fontsource-variable/inter/wght.css';
+import '@fontsource-variable/space-grotesk/wght.css';
+import '@fontsource-variable/jetbrains-mono/wght.css';
 import '../styles/global.css';
 import interLatin from '@fontsource-variable/inter/files/inter-latin-wght-normal.woff2?url';
+import displayLatin from '@fontsource-variable/space-grotesk/files/space-grotesk-latin-wght-normal.woff2?url';
 import { ClientRouter } from 'astro:transitions';
 import { site, themes } from '../config.ts';
 import Nav from '../components/Nav.astro';
@@ -54,6 +57,8 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
           // The Flutter site stored it as JSON under this key.
           if (!id) id = JSON.parse(localStorage.getItem('flutter.theme') || 'null');
         } catch {}
+        // Earlier names of the dark theme.
+        if (id === 'unreal-dark') id = 'elmarath-dark';
         if (!themeIds.includes(id)) id = themeIds[0];
         document.documentElement.dataset.theme = id;
         document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[id]);
@@ -67,6 +72,7 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
          and the docs sidebar stay put, and the content cross-fades. -->
     <ClientRouter />
     <link rel="preload" href={interLatin} as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href={displayLatin} as="font" type="font/woff2" crossorigin />
 
     <!-- Link previews (Discord, LinkedIn, X...). -->
     <meta property="og:type" content="website" />

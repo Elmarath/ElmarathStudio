@@ -29,13 +29,21 @@ const linkedIn = site.socials.find((s) => s.label === 'LinkedIn');
 
 <style>
   .contact { padding-block: var(--section); }
+  /* A panel with a gold edge on the left and the engine grid behind. */
   .box {
+    position: relative;
     display: grid;
     gap: 24px;
-    padding: 24px;
+    padding: 28px 24px;
+    overflow: hidden;
     border: 1px solid var(--border);
+    border-left: 3px solid var(--accent);
     border-radius: var(--r-lg);
-    background: linear-gradient(135deg, color-mix(in srgb, var(--hero-glow) 50%, transparent), var(--surface));
+    background:
+      linear-gradient(90deg, var(--surface) 35%, color-mix(in srgb, var(--surface) 70%, transparent)),
+      linear-gradient(var(--grid-line) 1px, transparent 1px) 0 0 / 40px 40px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) 0 0 / 40px 40px,
+      var(--surface);
   }
   .copy { display: grid; gap: 8px; }
   @media (min-width: 720px) {

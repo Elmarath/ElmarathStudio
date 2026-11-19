@@ -96,7 +96,8 @@
 .prose pre.shiki { margin: 0; padding: 16px; overflow-x: auto; background: none !important; font: 13.5px/1.6 var(--mono); tab-size: 4; }
 .prose pre.shiki code { font: inherit; }
 .prose .shiki span { color: var(--shiki-dark); }
-[data-theme='elmarath-gold'] .prose .shiki span { color: var(--shiki-light); }
+[data-theme] .prose .shiki span { color: var(--shiki-light); }
+[data-theme='elmarath-dark'] .prose .shiki span { color: var(--shiki-dark); }
 
 /* Mermaid diagrams: drawn once the page is idle; until then the source shows. */
 .prose pre.mermaid { margin: 24px 0; padding: 16px; border: 1px solid var(--border); border-radius: var(--r-md); background: var(--surface); text-align: center; overflow-x: auto; font: 13px/1.5 var(--mono); color: var(--text-3); white-space: pre; }
