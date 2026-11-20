@@ -7,24 +7,29 @@ period: Jul 2021 – Jul 2023
 logo: logo.webp
 summary: >-
   Before games, I was a Software Developer at Retter Business Services, working remotely on the backends
-  of retail web projects running on AWS. I wrote the Node.js methods behind login, orders, cart and
-  payment, and joined projects such as Pınaronline, Jotun Usta Fırçalar, Koçailem and Unishop from the
-  start, documenting and resolving issues along the way. I also built generic automated backend tests,
-  mainly in n8n, to catch bugs earlier and keep the projects stable.
+  of retail projects running on AWS. I joined projects such as Pınaronline, Jotun Usta Fırçalar,
+  Koçailem and Unishop from the start, writing the Node.js methods behind login, orders, cart and
+  payment, and documenting and resolving issues along the way. I built reusable n8n backend testing
+  workflows used across 20+ customer projects, which improved stability and cut developer testing time
+  by 80%.
 tech: [Node.js, JavaScript, AWS, n8n, Jira]
 links:
   website: https://www.retter.io/
 stats:
-  - { value: "4+", label: retail projects joined from the start }
+  - { value: "80%", label: less developer testing time }
+  - { value: "20+", label: customer projects covered by my test workflows }
   - { value: "2 yrs", label: on production commerce backends }
 features:
   - title: Commerce backends
     text: >-
-      Node.js backend methods for retail sites on AWS: login, orders, cart and payment.
+      Node.js backend methods for retail projects on AWS, from login to orders, cart and payment, for
+      [Pınaronline](https://www.pinaronline.com), [Jotun Usta Fırçalar](https://play.google.com/store/apps/details?id=com.jotun.jotunustafircalar),
+      [Koçailem](https://www.kocailem.com) and [Unishop](https://www.unishopturkiye.com).
     tags: [Node.js, AWS]
-  - title: Automated backend tests
+  - title: Reusable test workflows
     text: >-
-      Generic automated tests, mainly in n8n, that caught bugs earlier and kept the projects stable.
+      Generic backend testing workflows in n8n, reused across 20+ customer projects. They caught bugs
+      earlier and cut the time developers spent testing by 80%.
     tags: [n8n, Testing]
   - title: Documentation and planning
     text: >-

@@ -105,10 +105,10 @@ export const site = {
    * `{ src, label }` to write it yourself.
    */
   heroVideos: [
-    '/videos/skeletal-mesh-merge.mp4',
     '/videos/trace-trail.mp4',
-    '/videos/staged-interaction-system.mp4',
     '/videos/easy-game-user-settings.mp4',
+    '/videos/skeletal-mesh-merge.mp4',
+    '/videos/staged-interaction-system.mp4',
     { src: '/videos/crafting-ability-and-ui.mp4', label: 'Crafting ability and UI' },
   ] as (string | { src: string; label?: string })[],
 
@@ -143,6 +143,8 @@ export const site = {
     '/blog/archive': '/blog',
     '/blog/authors': '/blog',
     '/blog/tags': '/blog',
+    // Work entries that were renamed.
+    '/work/tigerroll-studios': '/work/the-freeblades',
     '/docs/Ability-Queue-Task-System/UseCaseExample copy': '/docs/ability-queue-task-system/use-case-example',
     // Docusaurus template pages.
     '/helloReact': '/',

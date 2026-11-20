@@ -14,6 +14,8 @@ export function linkLook(key: string): [IconName, string] {
     case 'docs': return ['book', 'Documentation'];
     case 'website': case 'site': case 'company': return ['globe', 'Website'];
     case 'devlog': case 'blog': return ['article', 'Devlog'];
+    case 'projects': case 'portfolio': return ['external', 'See the projects'];
+    case 'plugins': return ['store', 'My plugins on Fab'];
     default: return ['external', key[0].toUpperCase() + key.slice(1)];
   }
 }

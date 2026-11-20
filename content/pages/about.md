@@ -1,9 +1,9 @@
 ---
 title: About me
-description: Computer engineer specialised in game development. I build gameplay systems, tools and plugins with Unreal Engine 5.
+description: Gameplay programmer and computer engineer. I build dependable Unreal Engine 5 systems and tools that help teams build and ship efficiently.
 ---
 
-I'm Denizhan Toprak, a computer engineer specialised in game development, based in İzmir, Türkiye. I've worked with game studios and software companies, remotely and in the office, which strengthened both my technical and my collaboration skills.
+I'm Denizhan Toprak, a gameplay programmer with a computer engineering background, based in İzmir, Türkiye. I focus on dependable systems that help teams build and ship efficiently: shaping technical workflows, creating and extending development tools, and balancing performance with maintainability. I've worked with game studios and software companies, remotely and in the office.
 
 What I enjoy most is creating tools and robust system designs that make projects more enjoyable, efficient and scalable to work on. Every plugin on this site started that way.
 
@@ -13,37 +13,34 @@ What I enjoy most is creating tools and robust system designs that make projects
 
 [Tigerroll Studios](https://www.tigerrollstudios.co.uk/) · United Kingdom, remote · Dec 2025 – present
 
-- Developed core gameplay systems for MMORPG experiences, including player-to-player and NPC interaction frameworks built on Unreal Engine 5's Gameplay Ability System (GAS).
-- Led the implementation of a cross-platform, gamepad-friendly UI architecture using Unreal's Common UI framework.
-- Organised Figma workflows between design and engineering, with a clear pipeline for turning UI designs into interactive in-game UI.
-- Designed complex NPC AI with State Trees: combat, dialogue systems and NPC-to-NPC interactions.
+- Designing and implementing core gameplay systems for [The Freeblades](https://store.steampowered.com/app/3983160/The_Freeblades/), a co-op action-adventure RPG combat game in Unreal Engine 5, in a remote studio of 5 to 10 people.
+- Leading the game's technical development: developer tools, pipelines and gameplay systems, while keeping it above 60 FPS on target hardware.
+- Own gameplay AI, NPC AI dialogue, multiplayer combat and interaction abilities, inventory, in-game chat, save systems and more, in C++ and Blueprints.
+- Built the game's UI/UX on Unreal Engine's Common UI framework, extending it into a cross-platform, gamepad-friendly interface architecture.
+- Coordinate design and engineering through organised Figma workflows, with clear pipelines for turning hundreds of UI designs into in-game UI.
+
+### C++ Developer
+
+[Archinord Software](https://www.archinord.com/en) · Türkiye, office · Jul 2024 – Jul 2025
+
+- Led the development of multiple [architectural visualisation projects](https://archinord.com/moduller/sunum) in Unreal Engine 5 and AWS, as part of a three-person team, helping the studio partner with 20+ construction companies within six months of its launch.
+- Architected a modular content delivery system, built on Game Features and custom delivery tools, so many visualisation projects could be deployed and updated independently across kiosk devices from a single Unreal Engine project. It streamlined maintenance, cut development costs and made the business easier to scale.
 
 ### Lead Developer, indie game project
 
 Self-directed · Dec 2023 – present
 
-- Building a full-scale game: gameplay systems, AI, UI, tools and core mechanics.
-- Designed a modular, scalable architecture in C++ on top of Unreal Engine's frameworks.
-- Built custom interaction, combat, inventory and tooling systems, later turned into the [standalone plugins](/docs) documented here.
-- Built a cross-platform UI framework on top of Epic's Common UI.
-- Handle everything from planning and prototyping to optimisation, multiplayer beta builds, unit tests and technical documentation.
-
-### C++ Developer
-
-[Archinord Software](https://www.archinord.com/en) · Türkiye, office · Sep 2024 – Jul 2025
-
-- Led the development of several architectural visualisation projects in Unreal Engine 5.
-- Created engine tools that pull live data from AWS (prices, media and other metadata) to show up-to-date residence information to users and developers.
-- Built a DLC and patch system on AWS to update client projects, cutting development time and shortening the feedback loop.
+- Developing [Thrall Guard](/blog/how-i-create-my-game-thrall-guard), a top-down co-op medieval slasher, in Unreal Engine 5.
+- Created and published [Unreal Engine plugins](https://www.fab.com/sellers/Elmarath) for the community, with over 4,500 sales. They're documented [here](/docs).
+- Implementing and extending Unreal Engine frameworks: the Gameplay Ability System (GAS), Common UI, MVVM, Mover 2.0, Gameplay Cameras and StateTree.
+- Creating custom shaders, UI materials, animations, VFX, cinematics and level designs.
 
 ### Software Developer
 
 [Retter Business Services](https://www.retter.io/) · Türkiye, remote · Jul 2021 – Jul 2023
 
-- Wrote Node.js backend methods for retail web projects (login, orders, cart and payment) running on AWS.
-- Joined projects such as Pınaronline, Jotun Usta Fırçalar, Koçailem and Unishop from the start, documenting and resolving issues.
-- Built generic automated backend tests, mainly in n8n, to catch bugs earlier and keep projects stable.
-- Managed tasks in Jira and wrote documentation for Retter's in-house web development tools.
+- Developed retail backend projects from the start, documenting and addressing issues, including [Pınaronline](https://www.pinaronline.com), [Jotun Usta Fırçalar](https://play.google.com/store/apps/details?id=com.jotun.jotunustafircalar), [Koçailem](https://www.kocailem.com) and [Unishop](https://www.unishopturkiye.com).
+- Built reusable n8n backend testing workflows for 20+ customer projects, improving stability and cutting developer testing time by 80%.
 
 ## Plugins
 
@@ -60,12 +57,12 @@ Each of these began as a system my own projects needed. The docs cover setup and
 
 | Area | Tools and technologies |
 | --- | --- |
-| Engine | Unreal Engine 5, Gameplay Ability System, State Trees, Common UI |
-| Specialities | Tools development, user interface, shaders and VFX |
-| Programming | C++, C#, Java, Python, JavaScript and Node.js |
+| Engine | Unreal Engine 5, Blueprints, Gameplay Ability System, StateTree, Common UI, MVVM, Mover 2.0, Gameplay Cameras, Game Features |
+| Specialities | Gameplay systems, network replication, software architecture, tools, UI/UX, shaders and VFX |
+| Programming | C++, C#, Java, Python, JavaScript and Node.js, OOP |
 | Art and animation | Blender, Cascadeur |
-| Cloud and source control | AWS, Git, Plastic SCM, Perforce |
-| Workflow | Visual Studio, Rider, VS Code, Jira, Figma, Agile, remote work |
+| Cloud and source control | AWS, Git, Perforce, Plastic SCM |
+| Workflow | Project management, Jira, Figma, Visual Studio, Rider, VS Code, Agile, remote work |
 
 ## Education
 
