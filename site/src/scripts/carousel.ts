@@ -31,8 +31,11 @@ function start(root: HTMLElement, signal: AbortSignal) {
   const select = (i: number, { scroll = true } = {}) => {
     index = (i + slides.length) % slides.length;
     tabs.forEach((t, n) => t.setAttribute('aria-selected', String(n === index)));
-    if (scroll) {
+    // Already there (the plugin on show was clicked): nothing to move, and no scroll end would come.
+    if (scroll && Math.abs(track.scrollLeft - index * track.clientWidth) > 1) {
       target = index;
+      // Snapping can pull a moving row onto a neighbouring slide; it comes back on arrival.
+      track.style.scrollSnapType = 'none';
       track.scrollTo({ left: index * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
     }
     reveal();
@@ -84,11 +87,15 @@ function start(root: HTMLElement, signal: AbortSignal) {
   // click-and-drag on wide screens can nudge the hidden row through text
   // selection; both are put back on the slide that was picked.
   let settle: ReturnType<typeof setTimeout> | undefined;
+  const arrive = () => {
+    target = undefined;
+    track.style.scrollSnapType = '';
+  };
   const swipeable = () => getComputedStyle(track).overflowX !== 'hidden';
   const settled = () => {
     const i = Math.round(track.scrollLeft / track.clientWidth);
     if (target !== undefined) {
-      if (i === target) target = undefined;
+      if (i === target) arrive();
       else track.scrollTo({ left: target * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
       return;
     }
@@ -104,7 +111,7 @@ function start(root: HTMLElement, signal: AbortSignal) {
     }, { passive: true, signal });
   // A finger or a trackpad on the row: from here on the person is steering.
   const takeOver = () => {
-    target = undefined;
+    arrive();
     clearTimeout(timer);
     tabs.forEach((t) => t.classList.remove('running'));
   };
@@ -117,7 +124,7 @@ function start(root: HTMLElement, signal: AbortSignal) {
 
   // Keep the slide in place when the window is resized.
   const resize = new ResizeObserver(() => {
-    target = undefined;
+    arrive();
     track.scrollTo({ left: index * track.clientWidth });
   });
   resize.observe(track);
