@@ -18,13 +18,14 @@ import { join } from 'node:path';
 import Icon from '../Icon.astro';
 
 const repo = content();
-const clips = site.heroVideos.map((src) => {
+const clips = site.heroVideos.map((entry) => {
+  const { src, label } = typeof entry === 'string' ? { src: entry, label: undefined } : entry;
   const base = src.replace(/\.\w+$/, '');
   const name = base.split('/').at(-1)!;
   const glow = (bright: boolean) => `/media/glow/${name}.glow-${GLOW_VERSION}-video${bright ? '-bright' : ''}.webp`;
   // The smaller AV1 copy made by `npm run video`, when there is one.
   const av1 = existsSync(join(pub, `${base}.av1.mp4`)) ? `${base}.av1.mp4` : undefined;
-  return { src, av1, poster: `${base}.jpg`, label: humanize(name), glow };
+  return { src, av1, poster: `${base}.jpg`, label: label ?? humanize(name), glow };
 });
 const AV1_TYPE = 'video/mp4; codecs="av01.0.08M.08"';
 const [title1, title2] = site.heroTitle.split('\n');
@@ -84,7 +85,6 @@ const two = (n: number) => String(n).padStart(2, '0');
           <span class="live" aria-hidden="true"></span>
           <span class="now">Now playing</span>
           <span class="clip" data-clip-label>{clips[0].label}</span>
-          <span class="count" data-clip-count>01 / {two(clips.length)}</span>
         </figcaption>
       </figure>
     </div>
@@ -242,7 +242,6 @@ const two = (n: number) => String(n).padStart(2, '0');
   }
   .live { flex: none; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
   .clip { color: var(--text); font-weight: 600; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .count { margin-left: auto; flex: none; }
 
   /* The glow: the clip's colours spreading past the frame and fading out
      (GLOW_SPREAD in scripts/media.mjs), 70% of that on phones. */

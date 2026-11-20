@@ -10,7 +10,7 @@ import ContactSection from '../components/ContactSection.astro';
 ---
 
 <Base description={site.heroSubtitle.replace(/\n/g, ' ')}>
-  <link slot="head" rel="preload" as="image" href={site.heroVideos[0].replace(/\.\w+$/, '.jpg')} fetchpriority="high" />
+  <link slot="head" rel="preload" as="image" href={(typeof site.heroVideos[0] === 'string' ? site.heroVideos[0] : site.heroVideos[0].src).replace(/\.\w+$/, '.jpg')} fetchpriority="high" />
   <Hero />
   <Spotlight />
   {site.showWork && <WorkSection />}

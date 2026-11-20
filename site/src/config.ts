@@ -101,8 +101,16 @@ export const site = {
    * Make each one with `npm run video -- <export> public/videos/<name>.mp4 --size card`;
    * its smaller `.av1.mp4` copy is used where the browser can play it. (Keep the
    * old `.jpg` if you want the same glow: the command writes a new one.)
+   * The "Now playing" label comes from the file name; give an entry as
+   * `{ src, label }` to write it yourself.
    */
-  heroVideos: ['/videos/skeletal-mesh-merge.mp4', '/videos/trace-trail.mp4'],
+  heroVideos: [
+    '/videos/skeletal-mesh-merge.mp4',
+    '/videos/trace-trail.mp4',
+    '/videos/staged-interaction-system.mp4',
+    '/videos/easy-game-user-settings.mp4',
+    { src: '/videos/crafting-ability-and-ui.mp4', label: 'Crafting ability and UI' },
+  ] as (string | { src: string; label?: string })[],
 
   /**
    * The portfolio: case studies from ../content/work at /work, a Work tab in

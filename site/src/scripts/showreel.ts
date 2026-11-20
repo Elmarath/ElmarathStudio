@@ -14,7 +14,6 @@ export function startShowreel(signal: AbortSignal) {
   const av1: (string | null)[] = JSON.parse(reel.dataset.av1 ?? '[]');
   const playsAv1 = video.canPlayType('video/mp4; codecs="av01.0.08M.08"') !== '';
   const label = reel.querySelector('[data-clip-label]');
-  const count = reel.querySelector('[data-clip-count]');
   const darkGlows = reel.querySelectorAll('.glow .dark');
   const brightGlows = reel.querySelectorAll('.glow .bright');
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -33,7 +32,6 @@ export function startShowreel(signal: AbortSignal) {
     darkGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
     brightGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
     if (label) label.textContent = labels[clip] ?? '';
-    if (count) count.textContent = `${String(clip + 1).padStart(2, '0')} / ${String(clips.length).padStart(2, '0')}`;
     update();
   };
   video.addEventListener('ended', () => {
