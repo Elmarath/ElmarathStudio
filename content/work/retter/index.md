@@ -33,7 +33,8 @@ features:
     tags: [n8n, Testing]
   - title: Documentation and planning
     text: >-
-      Managed tasks in Jira and wrote the documentation for Retter's in-house web development tools.
+      Wrote the first version of the [Retter platform's developer documentation](https://docs.retter.io),
+      covering its in-house web development tools, and managed tasks in Jira.
     tags: [Jira, Docs]
 order: 6
 ---

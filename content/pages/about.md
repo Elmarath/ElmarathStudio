@@ -43,6 +43,7 @@ Self-directed · Dec 2023 – present
 
 - Developed retail backend projects from the start, documenting and addressing issues, including [Pınaronline](https://www.pinaronline.com), [Jotun Usta Fırçalar](https://play.google.com/store/apps/details?id=com.jotun.jotunustafircalar), [Koçailem](https://www.kocailem.com) and [Unishop](https://www.unishopturkiye.com).
 - Built reusable n8n backend testing workflows for 20+ customer projects, improving stability and cutting developer testing time by 80%.
+- Wrote the first version of the [Retter platform's developer documentation](https://docs.retter.io), covering its in-house web development tools.
 
 ## Plugins
 

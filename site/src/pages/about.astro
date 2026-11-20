@@ -15,7 +15,7 @@ const rendered = page ? await render(page.body, { sourcePath: page.assetPath }) 
 <Base title="About" description={page?.description}>
   <div class="container reading about">
     <header>
-      <img src={site.avatarUrl} alt="" width="112" height="112" />
+      <img src={site.portraitUrl} alt={site.ownerName} width="160" height="160" />
       <div>
         <span class="eyebrow">{site.role}</span>
         <h1 class="display-sm fluid">{site.ownerName}</h1>
@@ -41,7 +41,7 @@ const rendered = page ? await render(page.body, { sourcePath: page.assetPath }) 
 <style>
   .about { padding-top: 56px; }
   header { display: flex; flex-wrap: wrap; align-items: center; gap: 24px 32px; }
-  header img { width: 112px; height: 112px; border-radius: 50%; }
+  header img { width: 160px; height: 160px; border-radius: 50%; object-fit: cover; border: 3px solid var(--accent-soft); box-shadow: 0 0 0 1px var(--border-strong); }
   header > div { display: grid; gap: 8px; flex: 1; min-width: min(100%, 300px); }
   .links { margin-top: 24px; }
   .about :global(.prose) { margin-top: 48px; }

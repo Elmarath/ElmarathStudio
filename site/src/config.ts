@@ -78,7 +78,9 @@ export const site = {
   netlifyHost: 'elmarathstudio.netlify.app',
   ownerName: 'Denizhan Toprak',
   role: 'C++ Gameplay Programmer',
-  avatarUrl: 'https://avatars.githubusercontent.com/u/65414809?v=4',
+  /** Your photo: small for chips and bylines, larger on the About page (files in `public/`). */
+  avatarUrl: '/brand/avatar.jpg',
+  portraitUrl: '/brand/portrait.jpg',
   /** Paths below are files in `public/`, served as they are. */
   logo: '/brand/logo.png',
   /** The image shown in link previews (Discord, LinkedIn, X...). */
@@ -159,7 +161,6 @@ export const site = {
     { label: 'LinkedIn', url: 'https://www.linkedin.com/in/denizhan-toprak-006073193/', icon: 'linkedin' },
     { label: 'Discord', url: 'https://discord.gg/mUm4hYvG3x', icon: 'discord' },
     { label: 'YouTube', url: 'https://www.youtube.com/channel/UCVE1fkgWSSXIa-jZFVdDsaQ', icon: 'youtube' },
-    { label: 'X', url: 'https://twitter.com/denizhan_toprak', icon: 'x' },
   ] as SocialLink[],
 };
 
