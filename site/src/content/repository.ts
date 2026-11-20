@@ -41,6 +41,8 @@ export interface BlogPost {
   assetPath: string;
   /** Cover image: a `content/...` path or a URL. */
   image?: string;
+  /** Looping clip shown instead of the cover image (`content/...` .mp4 made by `npm run video`). */
+  video?: string;
   draft: boolean;
   /** `featured: true`: pinned as the blog's hero and badged. */
   featured: boolean;
@@ -98,25 +100,78 @@ export interface MarkdownPage {
   route: string;
 }
 
+/** An impact number on a Work entry: "6" / "plugins on Fab". */
+export interface WorkStat {
+  value: string;
+  label: string;
+}
+
+/** One thing built for a Work entry ("What I built"), with an optional image or clip. */
+export interface WorkFeature {
+  title: string;
+  /** Markdown. */
+  text: string;
+  /** `content/...` image or .mp4 clip, or a URL. */
+  media?: string;
+  tags: string[];
+}
+
+/** A piece of code worth reading ("Code spotlight"). */
+export interface WorkCode {
+  title: string;
+  /** Markdown: why it's interesting. */
+  note?: string;
+  lang: string;
+  source: string;
+}
+
+export interface WorkMilestone {
+  date: string;
+  text: string;
+}
+
+export interface WorkQuote {
+  text: string;
+  author: string;
+  role?: string;
+}
+
+/**
+ * An entry on the Work page: a studio worked at, a personal project or a plugin.
+ * Every one has a picture or clip, one main link and a 50 to 100 word summary;
+ * the widgets (stats, features, code, milestones, quote) are optional.
+ */
 export interface CaseStudy {
   kind: 'work';
   slug: string;
   title: string;
-  /** One sentence: what it is and why it matters. */
-  tagline: string;
-  /** Groups projects on the Work page, e.g. "Professional", "Personal project", "Plugin". */
+  /** 50 to 100 words: what it is, what you did, why it matters. On cards and at the top of its page. */
+  summary: string;
+  /** Groups entries on the Work page: "Studio", "Personal project", "Plugin" (see `workGroups`). */
   workKind: string;
   role?: string;
+  /** For studio work: who it was for (defaults to the title). */
+  company?: string;
+  /** The company's or project's logo (`content/...` image, ideally transparent): shown on the title card when there's no picture or clip. */
+  logo?: string;
+  location?: string;
   period?: string;
   team?: string;
   engine?: string;
   cover?: string;
-  /** The project's video, shown at the top instead of the cover. */
+  /** Looping clip shown instead of the cover, on cards and at the top (`content/...` .mp4 made by `npm run video`). */
+  video?: string;
+  /** A YouTube video, shown at the top instead of the cover. */
   reel?: Youtube;
   tech: string[];
   /** Results and facts worth seeing at a glance. */
   highlights: string[];
-  /** Buttons under the title, in order: label key → URL or site route. */
+  stats: WorkStat[];
+  features: WorkFeature[];
+  code: WorkCode[];
+  timeline: WorkMilestone[];
+  quote?: WorkQuote;
+  /** Buttons under the title, in order: label key → URL or site route. The first is the entry's main link. */
   links: Record<string, string>;
   order: number;
   draft: boolean;
@@ -124,6 +179,13 @@ export interface CaseStudy {
   assetPath: string;
   route: string;
 }
+
+/** The Work page's groups, in order, by `kind:` (case-insensitive). Other kinds follow, as written. */
+export const workGroups: { kinds: string[]; title: string; blurb: string }[] = [
+  { kinds: ['studio', 'professional', 'experience'], title: 'Studios', blurb: 'Where I\'ve worked, and what I built there.' },
+  { kinds: ['personal project', 'project', 'game'], title: 'Projects', blurb: 'Games and systems I build on my own.' },
+  { kinds: ['plugin'], title: 'Plugins', blurb: 'Unreal Engine tools, published with documentation.' },
+];
 
 export const pitch = (c: DocCategory) => c.summary ?? c.description ?? '';
 
@@ -268,6 +330,7 @@ function parsePosts(files: Map<string, string>, authors: Map<string, Author>): B
 
     const words = plainText(body).split(' ').length;
     const image = fm.string('image');
+    const video = fm.string('video');
     posts.push({
       kind: 'post',
       slug,
@@ -279,6 +342,7 @@ function parsePosts(files: Map<string, string>, authors: Map<string, Author>): B
       body,
       assetPath: path,
       image: image == null ? undefined : resolveAsset(path, image),
+      video: video == null ? undefined : resolveAsset(path, video),
       draft,
       featured: fm.flag('featured'),
       readingMinutes: Math.min(999, Math.max(1, Math.ceil(words / 220))),
@@ -398,22 +462,46 @@ function parseWork(files: Map<string, string>): CaseStudy[] {
     const [h1, body] = extractTitle(fm.body);
     const cover = fm.string('cover');
     const reel = fm.string('reel');
+    const video = fm.string('video');
     const links = fm.data.links && typeof fm.data.links === 'object' ? (fm.data.links as Record<string, unknown>) : {};
     const slug = slugify(fm.string('slug') ?? name);
+    const records = (key: string) => (Array.isArray(fm.data[key]) ? (fm.data[key] as unknown[]) : fm.data[key] ? [fm.data[key]] : [])
+      .filter((r): r is Record<string, unknown> => !!r && typeof r === 'object');
+    const text = (v: unknown) => (v == null ? '' : String(v).trim());
+    const tags = (v: unknown) => (Array.isArray(v) ? v.map(String) : typeof v === 'string' ? v.split(',').map((t) => t.trim()).filter(Boolean) : []);
+    const quote = records('quote')[0];
+    const summary = fm.string('summary') ?? fm.string('tagline') ?? fm.string('description') ?? '';
+    const words = summary.split(/\s+/).filter(Boolean).length;
+    if (summary && (words < 40 || words > 110)) {
+      console.warn(`[content] ${path}: the summary is ${words} words; 50 to 100 reads best on the cards.`);
+    }
     work.push({
       kind: 'work',
       slug,
       title: fm.string('title') ?? h1 ?? humanize(name),
-      tagline: fm.string('tagline') ?? fm.string('description') ?? '',
+      summary,
       workKind: fm.string('kind') ?? 'Project',
       role: fm.string('role'),
+      company: fm.string('company'),
+      logo: fm.string('logo') == null ? undefined : resolveAsset(path, fm.string('logo')!),
+      location: fm.string('location'),
       period: fm.string('period'),
       team: fm.string('team'),
       engine: fm.string('engine'),
       cover: cover == null ? undefined : resolveAsset(path, cover),
+      video: video == null ? undefined : resolveAsset(path, video),
       reel: reel == null ? undefined : parseYoutube(reel),
       tech: fm.list('tech'),
       highlights: fm.list('highlights'),
+      stats: records('stats').map((r) => ({ value: text(r.value), label: text(r.label) })).filter((r) => r.value),
+      features: records('features')
+        .map((r) => ({ title: text(r.title), text: text(r.text), media: r.media ? resolveAsset(path, text(r.media)) : undefined, tags: tags(r.tags) }))
+        .filter((f) => f.title),
+      code: records('code')
+        .map((r) => ({ title: text(r.title), note: text(r.note) || undefined, lang: text(r.lang) || 'cpp', source: String(r.source ?? '').replace(/\s+$/, '') }))
+        .filter((c) => c.source),
+      timeline: records('timeline').map((r) => ({ date: text(r.date), text: text(r.text) })).filter((m) => m.text),
+      quote: quote && quote.text ? { text: text(quote.text), author: text(quote.author), role: text(quote.role) || undefined } : undefined,
       links: Object.fromEntries(Object.entries(links).map(([k, v]) => [k, String(v)])),
       order: fm.number('order') ?? 1e6,
       draft,
@@ -513,7 +601,7 @@ export class ContentRepository {
         context: `Work · ${w.workKind}`,
         route: w.route,
         headings: [...w.tech, ...headingsOf(w.body)].join(' · '),
-        text: plainText(`${w.tagline} ${w.body}`),
+        text: plainText(`${w.summary} ${w.features.map((f) => `${f.title} ${f.text}`).join(' ')} ${w.body}`),
       })),
       ...[...this.pages.values()].map((p) => ({
         kind: 'page' as const,

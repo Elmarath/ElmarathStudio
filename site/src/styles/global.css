@@ -188,10 +188,16 @@ p { margin: 0; }
   a.card:hover::after, .card.interactive:hover::after { opacity: 1; }
 }
 .zoom-media { overflow: hidden; }
-.zoom-media > img { transition: transform var(--slow) var(--ease); }
+.zoom-media > img, .zoom-media > video { transition: transform var(--slow) var(--ease); }
 @media (hover: hover) {
-  a:hover .zoom-media > img { transform: scale(1.04); }
+  a:hover .zoom-media > img, a:hover .zoom-media > video { transform: scale(1.04); }
 }
+
+/* Silent looping clips (src/content/video.ts): never show the browser's own
+   play button, even on an iPhone in Low Power Mode before the first tap. */
+.loop-video { display: block; pointer-events: none; }
+.loop-video::-webkit-media-controls-start-playback-button { display: none !important; -webkit-appearance: none; }
+.loop-video::-webkit-media-controls { display: none !important; }
 
 /* Responsive card grid: as many columns as fit. */
 .grid {

@@ -55,7 +55,18 @@ export type IconName =
   | 'work'
   | 'check-circle'
   | 'globe'
-  | 'gamepad';
+  | 'gamepad'
+  | 'code'
+  | 'map-pin'
+  | 'calendar'
+  | 'users'
+  | 'trending-up'
+  | 'cpu'
+  | 'building'
+  | 'sparkles'
+  | 'quote'
+  | 'milestone'
+  | 'layers';
 
 const email = 'toprakdenizhan19@gmail.com';
 
@@ -87,6 +98,9 @@ export const site = {
    * The showreel next to the hero text: short, muted clips that play one after
    * another on a loop. Put them in public/videos/, each with a still of the same
    * name ending in `.jpg`, shown until the clip can play and used for its glow.
+   * Make each one with `npm run video -- <export> public/videos/<name>.mp4 --size card`;
+   * its smaller `.av1.mp4` copy is used where the browser can play it. (Keep the
+   * old `.jpg` if you want the same glow: the command writes a new one.)
    */
   heroVideos: ['/videos/skeletal-mesh-merge.mp4', '/videos/trace-trail.mp4'],
 
@@ -95,7 +109,7 @@ export const site = {
    * the nav and a "Selected work" section on the home page. Off until the case
    * studies are written; set to true to show all of it.
    */
-  showWork: false,
+  showWork: true,
 
   /** The call-to-action button at the right of the nav bar. */
   storeLink: { label: 'Fab Store', url: 'https://www.fab.com/sellers/Elmarath' },

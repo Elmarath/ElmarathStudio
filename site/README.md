@@ -23,15 +23,39 @@ Nothing to register: drop a file in `../content` and it's on the site.
 | Doc page | `content/docs/<Plugin-Folder>/My-Page.md` | `npm run new-doc -- Plugin-Folder "Page title"` |
 | Plugin (docs folder) | `content/docs/<Plugin-Folder>/_category_.yaml` (name, pitch, thumbnail, Fab link, `featured`) | `new-doc` makes one with a new folder |
 | Page | `content/pages/<slug>.md` → `/<slug>` | |
-| Case study | `content/work/<slug>/index.md` (shown once `showWork` is on) | `npm run new-work -- "Project"` |
+| Work entry (a studio, project or plugin) | `content/work/<slug>/index.md`: a picture or clip, one main link, a 50–100 word summary, and optional widgets (impact numbers, "What I built" tiles, code spotlight, milestones, a quote) | `npm run new-work -- "Project"` |
 
 - **Drafts:** `draft: true` in the front matter shows a post or case study in `npm run dev` only.
 - **Images:** put them next to the Markdown and link them relatively (`![Alt](./img/shot.png)`).
   They're converted to WebP at several widths automatically, sized (no layout jumps), lazy-loaded,
-  and open full size on click. GIFs stay animated.
+  and open full size on click. GIFs stay animated, but use a clip instead (below).
+- **Looping clips (instead of GIFs):** export from your editor, then make a small silent clip next to
+  the Markdown (needs ffmpeg once: `brew install ffmpeg`):
+
+  ```bash
+  npm run video -- ~/Exports/build-mode.mov ../content/blog/my-post --size inline
+  ```
+
+  It writes `build-mode.mp4` (H.264, plays everywhere), `build-mode.av1.mp4` (smaller, for browsers
+  that can play it) and `build-mode.jpg` (the poster); commit those, not the export. Show it with
+  `::video ./build-mode.mp4 Optional caption` in a post or doc, or with `video: build-mode.mp4` in a
+  post's or case study's front matter (it replaces the cover, on the cards too).
+  Clips always play, muted and on repeat, while they're on screen, and pause when scrolled away.
+
+  | `--size` | Width | For | Budget (AV1 file) |
+  | --- | --- | --- | --- |
+  | `card` | 960 px | covers and cards | under 1 MB |
+  | `inline` (default) | 1280 px | inside a post or doc | under 3 MB |
+  | `hero` | 1600 px | full width | under 5 MB |
+
+  It picks the settings itself: for each format it searches for the smallest file that still
+  looks like your export (a VMAF score of 93/100), and only softens it further if that's over the
+  size's budget, telling you when it did. It keeps the export's frame rate (at most 30). 4–10
+  seconds loops best. Options: `--length 6` and `--start 3` to cut, `--quality 95` for sharper,
+  `--fps 30`, or `--crf 28` to skip the search.
 - **Markdown extras** (as on the old Docusaurus site): `:::note Title` … `:::` callouts (`note`,
   `tip`, `info`, `warning`, `danger`, nestable), GitHub `> [!NOTE]` alerts, `::youtube <link>`
-  (loads only when played), `::plugin-links` (the plugin's Fab/GitHub buttons), ```` ```cpp ````
+  (loads only when played), `::video ./clip.mp4 Caption` (a looping clip), `::plugin-links` (the plugin's Fab/GitHub buttons), ```` ```cpp ````
   highlighted code with a copy button, ```` ```mermaid ```` diagrams, tables.
 - **Old links keep working:** every address of the previous site redirects to its page (made into
   Netlify's `_redirects` at build time), and the 404 page matches anything else loosely (letter
@@ -56,8 +80,8 @@ Nothing to register: drop a file in `../content` and it's on the site.
 - **Work done at build time, not on screen:** code highlighting, image resizing, the hero glow and
   the carousel's blurred backgrounds are all made once by `npm run build` (`scripts/media.mjs`).
 - **Only the compositor animates.** Hovers, the hero glow and page transitions change `transform`
-  and `opacity` only, which the browser animates without repainting. The showreel and the carousel
-  pause when they're off screen.
+  and `opacity` only, which the browser animates without repainting. The showreel, the carousel and
+  looping clips pause when they're off screen; a clip downloads only when it nears the screen.
 - **Loaded only when needed:** the search index loads when search opens, the YouTube player when a
   video is played, the diagram library only on pages with a diagram, and images as they scroll in.
   Hovering a link fetches its page in advance, so opening it is instant.

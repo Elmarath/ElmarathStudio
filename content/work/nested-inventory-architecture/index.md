@@ -1,11 +1,17 @@
 ---
 title: Nested Inventory Architecture
-tagline: A replicated, object-based inventory for Unreal Engine where any item can hold its own inventory, from backpacks inside backpacks to attachments inside weapons.
+summary: >-
+  Nested Inventory Architecture is a replicated, object-based inventory framework for Unreal Engine,
+  where any item can hold an inventory of its own: pouches in backpacks in chests, attachments inside
+  weapons. It started as the inventory for my own game and became a standalone plugin on Fab. Items are
+  objects instead of structs, so nesting and per-item runtime state come from the design rather than
+  special cases, and every editing operation can be overridden in Blueprints or C++.
 kind: Plugin
 role: "Solo developer: architecture, C++, Blueprint API and documentation"
 engine: Unreal Engine 5
 reel: https://youtu.be/sX3nIh14bYM
 cover: /docs/Nested-Inventory-Architecture/img/T_NIA_Gallery1.png
+team: Solo
 tech: [C++, Blueprints, Replication, Gameplay Tags, Data Assets]
 highlights:
   - No limit on nesting: every item can carry a full inventory of its own
@@ -16,7 +22,35 @@ links:
   reel: https://youtu.be/sX3nIh14bYM
   fab: https://www.fab.com/listings/320f157f-9241-47ee-9f32-63aaf744f509
   docs: /docs/nested-inventory-architecture
-order: 20
+stats:
+  - { value: "∞", label: "levels of nesting, every level working the same way" }
+  - { value: "1", label: component that owns and replicates the whole inventory }
+  - { value: "4", label: "editing operations, each one overridable in Blueprints or C++" }
+features:
+  - title: Looping item hierarchy
+    text: >-
+      An Inventory Item holds a Payload, the Payload holds an Inventory System, and the Inventory
+      System's sections hold more Inventory Items. The loop is part of the data model, so depth is
+      unlimited and every level behaves the same.
+    tags: [Data model, C++]
+  - title: Templates for starting inventories
+    text: >-
+      Payload Template Data Assets describe an item's inventory when it's created: its sections, their
+      grid sizes and the items already inside. The plugin checks them for overlaps and reports problems
+      in the Output Log.
+    tags: [Data Assets, Tools]
+  - title: Server-authoritative replication
+    text: >-
+      Every inventory object is owned by an Inventory Manager Component, registered with Unreal's
+      replicated sub-object list. Changes go through server-side functions, so clients can't put the
+      inventory into a state the server didn't approve.
+    tags: [Replication, Multiplayer]
+  - title: An open editing API
+    text: >-
+      Add, Discard, SetSlot and TransformSlots ship as defaults. Each can be overridden or replaced with
+      a game-specific operation, so the architecture adapts to the game rather than the other way round.
+    tags: [API design, Blueprints]
+order: 5
 ---
 
 ## Overview
@@ -47,24 +81,6 @@ Each item is split into three parts:
 An Inventory System is made of **sections**, each identified by a Gameplay Tag. A section knows its grid size and which item types it accepts, so rules like "only rings go in ring slots" become a tag match instead of custom code.
 
 ![The inventory in action](/docs/Nested-Inventory-Architecture/img/T_NIA_Gallery1.png)
-
-## Systems
-
-### Looping item hierarchy
-
-An Inventory Item holds a Payload, the Payload holds an Inventory System, and the Inventory System's sections hold more Inventory Items. Because the loop is part of the data model, the depth is unlimited and every level works the same way.
-
-### Templates for starting inventories
-
-Payload Template Data Assets describe what an item's inventory looks like when it is created: its sections, their grid sizes and the items already inside. Designers build these in the editor, and the plugin checks them for overlapping items and reports problems in the Output Log.
-
-### Replication
-
-All inventory objects share a base class managed by an **Inventory Manager Component** on the owning actor. The component owns the objects, registers them with Unreal's replicated sub-object list, and routes RPCs through itself. Item creation goes through server-side functions, so clients can never put the inventory into a state the server didn't approve.
-
-### Open editing API
-
-The plugin ships the common operations (Add, Discard, SetSlot, TransformSlots) but treats them as defaults. Each one can be overridden, or replaced with a game-specific operation, in Blueprints or C++, so the architecture adapts to the game rather than the other way round.
 
 ## Results
 

@@ -44,6 +44,17 @@ const lucide: Partial<Record<IconName, string>> = {
   'check-circle': 'circle-check',
   globe: 'globe',
   gamepad: 'gamepad-2',
+  code: 'code',
+  'map-pin': 'map-pin',
+  calendar: 'calendar',
+  users: 'users',
+  'trending-up': 'trending-up',
+  cpu: 'cpu',
+  building: 'building-2',
+  sparkles: 'sparkles',
+  quote: 'quote',
+  milestone: 'milestone',
+  layers: 'layers',
 };
 
 const brands: Partial<Record<IconName, { icon: [number, number, unknown, unknown, string | string[]] }>> = {

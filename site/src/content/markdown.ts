@@ -14,6 +14,7 @@ import type { Element, ElementContent, Root, Parent } from 'hast';
 import { site } from '../config.ts';
 import { iconSvg } from './icons.ts';
 import { image } from './media.ts';
+import { loopVideo, loopVideoHtml } from './video.ts';
 import { preprocess } from './markdown-source.ts';
 import { content, resolveAsset } from './repository.ts';
 import { escapeHtml, isExternal, slugify } from './text.ts';
@@ -62,7 +63,8 @@ const languageNames: Record<string, string> = { cpp: 'C++', csharp: 'C#', javasc
 
 const raw = (value: string) => ({ type: 'raw', value }) as unknown as ElementContent;
 const cls = (node: Element) => {
-  const c = node.properties?.className;
+  // Markdown's nodes name it `className`; Shiki's own <pre> names it `class`.
+  const c = node.properties?.className ?? node.properties?.class;
   return Array.isArray(c) ? c.map(String) : typeof c === 'string' ? c.split(' ') : [];
 };
 
@@ -95,6 +97,7 @@ function sitePlugin(options: Options, state: { headings: Heading[]; mermaid: boo
   const repo = content();
   return async (tree: Root) => {
     const images: { node: Element; parent: Parent; index: number }[] = [];
+    const videos: { args: string; parent: Parent; index: number }[] = [];
     const ids = new Map<string, number>();
 
     visit(tree, 'element', (node: Element, index, parent) => {
@@ -118,6 +121,10 @@ function sitePlugin(options: Options, state: { headings: Heading[]; mermaid: boo
 
       if (node.tagName === 'div' && p.dataDirective && parent && index != null) {
         const name = String(p.dataDirective);
+        if (name === 'video') {
+          videos.push({ args: String(p.dataArgs ?? ''), parent, index });
+          return SKIP;
+        }
         parent.children[index] =
           name === 'plugin-links'
             ? raw(linkButtons(options.links ?? {}))
@@ -181,8 +188,23 @@ function sitePlugin(options: Options, state: { headings: Heading[]; mermaid: boo
       }
     });
 
-    // Images: real sizes (no layout shift), WebP variants, lazy loading, and a click to enlarge.
     const width = options.imageWidth ?? 780;
+
+    // `::video ./clip.mp4 Caption`: a silent clip that loops, with the caption under it.
+    await Promise.all(
+      videos.map(async ({ args, parent, index }) => {
+        const [src = '', ...rest] = args.split(/\s+/);
+        const caption = rest.join(' ').replace(/^["'](.*)["']$/, '$1').trim();
+        const video = src ? await loopVideo(resolveAsset(options.sourcePath, src), width) : null;
+        parent.children[index] = raw(
+          video
+            ? `<figure class="loop-figure">${loopVideoHtml(video, { label: caption || undefined })}${caption ? `<figcaption>${escapeHtml(caption)}</figcaption>` : ''}</figure>`
+            : `<span class="broken-image" title="Video not found: ${escapeHtml(src)}">${iconSvg('file')} ${escapeHtml(caption || src || '::video needs a file')}</span>`,
+        );
+      }),
+    );
+
+    // Images: real sizes (no layout shift), WebP variants, lazy loading, and a click to enlarge.
     await Promise.all(
       images.map(async ({ node, parent, index }) => {
         const src = String(node.properties?.src ?? '');
@@ -252,6 +274,14 @@ export function render(markdown: string, options: Options): Promise<Rendered> {
           langs: languages,
           fallbackLanguage: 'text',
           defaultLanguage: 'text',
+          // Shiki makes a new <pre>; carry the language over for the code frame's label.
+          transformers: [
+            {
+              pre(node) {
+                node.properties.dataLang = this.options.lang === 'text' ? '' : this.options.lang;
+              },
+            },
+          ],
         })
         .use(codeFrames)
         .use(rehypeStringify, { allowDangerousHtml: true })

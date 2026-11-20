@@ -1,0 +1,17 @@
+---
+// The heading over each widget on a Work entry's page: a "// label" and a title.
+interface Props {
+  eyebrow: string;
+  title: string;
+}
+const { eyebrow, title } = Astro.props;
+---
+
+<header class="widget-title">
+  <span class="eyebrow">{eyebrow}</span>
+  <h2 class="headline-md">{title}</h2>
+</header>
+
+<style>
+  .widget-title { display: grid; gap: 8px; margin-bottom: 24px; }
+</style>

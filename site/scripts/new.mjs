@@ -50,6 +50,7 @@ authors: [denizhan]
 tags: [${tags.split(',').map((t) => t.trim()).filter(Boolean).join(', ')}]
 description: One or two sentences shown on the post card.
 # image: cover.jpg   # optional cover, relative to this file
+# video: cover.mp4   # optional looping clip instead of the cover (npm run video -- <export> <this folder> --size card)
 # featured: true     # pin as the big post at the top of the blog
 draft: true          # visible only while running locally (npm run dev); delete this line to publish
 ---
@@ -108,33 +109,59 @@ Callouts: note, tip, info, warning, danger.
     join(content, 'work', slug(title), 'index.md'),
     `---
 title: ${yamlString(title)}
-# One sentence: what it is and why someone should care.
-tagline: A short pitch shown under the title and on the Work page.
-# Groups projects on the Work page, e.g. Professional, Personal project, Plugin.
+# Studio (a place you worked), Personal project or Plugin: picks the group on the Work page.
 kind: Personal project
 role: "Solo developer: gameplay, AI, UI and tools"
+# company: Studio name       # for studio work, when the title is the project's name
+# location: Türkiye · Remote
 period: 2025 – present
 # team: Solo
-# engine: Unreal Engine 5.5
-# The video at the top. Without one, the cover image is shown instead.
-# reel: https://youtu.be/...
+# engine: Unreal Engine 5
+# 50 to 100 words: what it is, what you did, why it matters. On the cards and at the top of the page.
+summary: >-
+  Write the summary here.
+# The picture: a looping clip (npm run video -- <export> <this folder> --size card), a cover image,
+# or a YouTube reel (shown at the top of the page; its thumbnail on cards). Without any, a title card.
+# video: cover.mp4
 # cover: cover.jpg
+# reel: https://youtu.be/...
+# logo: logo.png     # transparent logo, shown on the title card when there is no picture or clip
 tech: [C++, Gameplay Ability System, State Trees]
-# Facts and results worth seeing at a glance. Concrete beats vague.
-highlights:
-  - Something you shipped, measured or made possible
-# Buttons under the title; the first one is the main one.
+# Links; the first is the main one, shown on the cards too.
 links:
-  # reel: https://youtu.be/...
-  # github: https://github.com/...
-  # docs: /docs/...
-order: 10          # lower comes first on the Work page
+  website: https://example.com
+  # reel: https://youtu.be/...   github: ...   fab: ...   steam: ...   docs: /docs/...   devlog: /blog/...
+
+# --- Widgets: each optional, shown on the entry's page in this order. ---
+# Impact numbers. Concrete beats vague; only what you can back up.
+# stats:
+#   - { value: "60 fps", label: on Steam Deck with 200 NPCs }
+# "What I built": one tile per feature, each with an optional image or clip next to this file.
+features:
+  - title: First feature
+    text: What it does, how it works, and the detail you're proud of. Markdown works here.
+    # media: feature.mp4
+    tags: [C++]
+# Code spotlight: a short excerpt of real code and why it's interesting.
+# code:
+#   title: The heart of it
+#   note: Why this code is worth reading.
+#   lang: cpp
+#   source: |
+#     void UMyComponent::DoTheThing() {}
+# Milestones, oldest first.
+# timeline:
+#   - { date: Jan 2025, text: First playable }
+# What a lead, client or user said.
+# quote: { text: "...", author: Name, role: Lead Programmer }
+# Key results, listed in the "At a glance" panel.
+# highlights:
+#   - Shipped to ... / Reused by ...
+order: 10          # lower comes first (the first four are on the home page)
 draft: true        # visible only while running locally; delete this line to publish
 ---
 
-## Overview
-
-Two or three sentences: what the project is, who it's for, and what you were responsible for.
+<!-- Optional deep dive, shown under the widgets as "How it was built". Delete it to leave it out. -->
 
 ## The challenge
 
@@ -142,18 +169,7 @@ What made this hard? Constraints, scale, multiplayer, performance, team or deadl
 
 ## My approach
 
-The key decisions and why you made them. A diagram or a screenshot helps here: put the image
-next to this file and add it with Markdown's image syntax.
-
-## Systems
-
-### First system
-
-What it does, how it works, and one detail you're proud of. Show it with a gif or a clip.
-
-## Results
-
-What came out of it: shipped, reused, faster, fewer bugs, positive reviews.
+The key decisions and why you made them.
 
 ## What I learned
 

@@ -1,0 +1,34 @@
+---
+// Milestones: what happened when, as a vertical timeline.
+import type { WorkMilestone } from '../../../content/repository.ts';
+import WidgetTitle from './WidgetTitle.astro';
+
+interface Props {
+  timeline: WorkMilestone[];
+}
+const { timeline } = Astro.props;
+---
+
+<section class="milestones">
+  <WidgetTitle eyebrow="Milestones" title="How it went" />
+  <ol>
+    {
+      timeline.map((m) => (
+        <li>
+          <span class="date">{m.date}</span>
+          <p>{m.text}</p>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  ol { position: relative; display: grid; gap: 22px; margin: 0; padding: 0 0 0 26px; list-style: none; }
+  ol::before { content: ''; position: absolute; left: 5px; top: 8px; bottom: 8px; width: 1px; background: var(--border-strong); }
+  li { position: relative; display: grid; gap: 4px; }
+  li::before { content: ''; position: absolute; left: -26px; top: 5px; width: 11px; height: 11px; border-radius: 2px; background: var(--bg); border: 2px solid var(--accent); }
+  li:last-child::before { background: var(--accent); }
+  .date { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
+  p { font-size: 15px; line-height: 1.6; color: var(--text); }
+</style>

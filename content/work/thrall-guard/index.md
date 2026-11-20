@@ -1,56 +1,40 @@
 ---
-title: "Thrall Guard"
-# One sentence: what it is and why someone should care.
-tagline: A short pitch shown under the title and on the Work page.
-# Groups projects on the Work page, e.g. Professional, Personal project, Plugin.
+title: Thrall Guard
 kind: Personal project
-role: "Solo developer: gameplay, AI, UI and tools"
-period: 2025 – present
-# team: Solo
-# engine: Unreal Engine 5.5
-# The video at the top. Without one, the cover image is shown instead.
-# reel: https://youtu.be/...
-# cover: cover.jpg
-tech: [C++, Gameplay Ability System, State Trees]
-# Facts and results worth seeing at a glance. Concrete beats vague.
-highlights:
-  - Something you shipped, measured or made possible
-# Buttons under the title; the first one is the main one.
+role: Lead Developer
+period: Dec 2023 – present
+team: Solo
+engine: Unreal Engine 5
+summary: >-
+  Thrall Guard is the game I've been building on my own since December 2023, in Unreal Engine 5 and C++.
+  As its lead developer I handle everything from planning and prototyping to optimisation: gameplay
+  systems, AI, UI, tools, multiplayer beta builds, unit tests and technical documentation. Its
+  interaction, combat, inventory and tooling systems are modular by design, and they grew into the
+  standalone Unreal Engine plugins documented on this site. The devlog video shows how it fits together.
+reel: https://youtu.be/FfebDCzKWy4
+tech: [C++, Gameplay Ability System, State Trees, Common UI, Multiplayer]
 links:
-  # reel: https://youtu.be/...
-  # github: https://github.com/...
-  # docs: /docs/...
-order: 1           # lower comes first on the Work page
-draft: true        # visible only while running locally; delete this line to publish
+  reel: https://youtu.be/FfebDCzKWy4
+  devlog: /blog/how-i-create-my-game-thrall-guard
+  docs: /docs
+features:
+  - title: Modular C++ architecture
+    text: >-
+      A scalable architecture in C++ on top of Unreal Engine's own frameworks, so systems can be
+      added, swapped and reused without touching the rest of the game.
+    tags: [C++, Architecture]
+  - title: Systems that became plugins
+    text: >-
+      Custom interaction, combat, inventory and tooling systems, later turned into
+      [standalone plugins](/docs) with full documentation.
+    tags: [Plugins, Tools]
+  - title: Cross-platform UI framework
+    text: >-
+      A UI framework built on Epic's Common UI, for mouse, keyboard and gamepad alike.
+    tags: [Common UI]
+  - title: Multiplayer builds and tests
+    text: >-
+      Multiplayer beta builds, unit tests and technical documentation, kept up by one developer.
+    tags: [Multiplayer, Testing]
+order: 3
 ---
-
-## Overview
-
-Two or three sentences: what the project is, who it's for, and what you were responsible for.
-
-## The challenge
-
-What made this hard? Constraints, scale, multiplayer, performance, team or deadline.
-
-## My approach
-
-The key decisions and why you made them. A diagram or a screenshot helps here: put the image
-next to this file and add it with Markdown's image syntax.
-
-## Systems
-
-### First system
-
-What it does, how it works, and one detail you're proud of. Show it with a gif or a clip.
-
-### Second system
-
-...
-
-## Results
-
-What came out of it: shipped, reused, faster, fewer bugs, positive reviews.
-
-## What I learned
-
-What you'd keep, and what you'd do differently next time.

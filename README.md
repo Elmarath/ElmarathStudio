@@ -27,6 +27,7 @@ cd site
 npm run new-post -- "Shipping the Dialogue System" --tags "Unreal, Devlog"
 npm run new-doc  -- Nested-Inventory-Architecture "Saving and Loading"
 npm run new-work -- "Thrall Guard"
+npm run video    -- ~/Exports/clip.mov ../content/blog/my-post   # a small silent loop, instead of a GIF
 ```
 
 Each makes a Markdown file in `content/` to fill in (as a draft where that applies). Drop images next

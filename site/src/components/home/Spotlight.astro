@@ -26,7 +26,7 @@ const items = await Promise.all(
 {
   items.length > 0 && (
     <section class="container section spotlight" data-carousel>
-      <SectionHeader eyebrow="Featured" title="Unreal Engine plugins" actionLabel="All plugins" actionHref="/docs" />
+      <SectionHeader eyebrow="Featured" title="Unreal Engine plugins" actionLabel="All plugins" actionHref="/docs" count={content().plugins.length} />
       <div class="carousel">
         <div class="banner">
           <div class="slides" tabindex="-1">

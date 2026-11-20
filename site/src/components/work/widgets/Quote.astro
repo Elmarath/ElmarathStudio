@@ -1,0 +1,28 @@
+---
+// What someone who worked with you said: a lead, a client, a user.
+import type { WorkQuote } from '../../../content/repository.ts';
+import Icon from '../../Icon.astro';
+
+interface Props {
+  quote: WorkQuote;
+}
+const { quote } = Astro.props;
+---
+
+<figure class="quote">
+  <Icon name="quote" />
+  <blockquote>{quote.text}</blockquote>
+  <figcaption>
+    <strong>{quote.author}</strong>
+    {quote.role && <span>{quote.role}</span>}
+  </figcaption>
+</figure>
+
+<style>
+  .quote { display: grid; gap: 18px; margin: 0; padding: 28px 30px; border: 1px solid var(--border); border-left: 3px solid var(--accent); border-radius: var(--r-lg); background: var(--surface); align-self: start; }
+  .quote > :global(.icon) { font-size: 26px; color: var(--accent); }
+  blockquote { margin: 0; font-family: var(--display); font-size: 21px; font-weight: 500; letter-spacing: -0.01em; line-height: 1.45; color: var(--text); }
+  figcaption { display: grid; gap: 2px; font-size: 14px; }
+  strong { color: var(--text); }
+  span { color: var(--text-3); }
+</style>

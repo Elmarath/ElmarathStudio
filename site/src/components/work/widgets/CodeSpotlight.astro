@@ -1,0 +1,51 @@
+---
+// "Code spotlight": a short piece of real code, highlighted, next to why it's
+// interesting. Hiring teams for programming roles read code first.
+import type { WorkCode } from '../../../content/repository.ts';
+import { render } from '../../../content/markdown.ts';
+import WidgetTitle from './WidgetTitle.astro';
+import '../../../styles/prose.css';
+
+interface Props {
+  code: WorkCode[];
+  sourcePath: string;
+}
+const { code, sourcePath } = Astro.props;
+const blocks = await Promise.all(
+  code.map(async (c) => {
+    const fence = c.source.includes('```') ? '~~~~' : '```';
+    return {
+      ...c,
+      note: c.note ? (await render(c.note, { sourcePath })).html : '',
+      html: (await render(`${fence}${c.lang}\n${c.source}\n${fence}`, { sourcePath })).html,
+    };
+  }),
+);
+---
+
+<section class="code-spotlight">
+  <WidgetTitle eyebrow="Code spotlight" title={code.length === 1 ? code[0].title : 'Code worth reading'} />
+  {
+    blocks.map((b) => (
+      <div class="block">
+        <div class="note">
+          {code.length > 1 && <h3>{b.title}</h3>}
+          {b.note && <div class="prose" set:html={b.note} />}
+        </div>
+        <div class="prose source" set:html={b.html} />
+      </div>
+    ))
+  }
+</section>
+
+<style>
+  .code-spotlight { display: grid; gap: 0; }
+  .block { display: grid; gap: 20px; align-items: start; }
+  .block + .block { margin-top: 40px; }
+  @media (min-width: 1000px) { .block { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px; } }
+  .note { display: grid; gap: 12px; }
+  .note h3 { font-size: 18px; }
+  .note .prose { font-size: 15px; }
+  .source :global(figure.code) { margin: 0; }
+  .source :global(pre) { max-height: 520px; }
+</style>

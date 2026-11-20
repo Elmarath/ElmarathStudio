@@ -1,5 +1,6 @@
 ---
-// Heading for a page section, with an optional "View all" link on the right.
+// Heading for a page section, with an optional "All …" button on the right:
+// gold-outlined, with how many there are, so the way to the full list is plain to see.
 import Icon from './Icon.astro';
 
 interface Props {
@@ -7,8 +8,10 @@ interface Props {
   eyebrow?: string;
   actionLabel?: string;
   actionHref?: string;
+  /** How many the button leads to, shown on it ("All posts 12"). */
+  count?: number;
 }
-const { title, eyebrow, actionLabel, actionHref } = Astro.props;
+const { title, eyebrow, actionLabel, actionHref, count } = Astro.props;
 ---
 
 <div class="section-header">
@@ -20,6 +23,8 @@ const { title, eyebrow, actionLabel, actionHref } = Astro.props;
     actionLabel && actionHref && (
       <a class="action" href={actionHref}>
         {actionLabel}
+        {count != null && <span class="count" aria-hidden="true">{String(count).padStart(2, '0')}</span>}
+        {count != null && <span class="visually-hidden">, {count}</span>}
         <Icon name="arrow-right" />
       </a>
     )
@@ -37,7 +42,25 @@ const { title, eyebrow, actionLabel, actionHref } = Astro.props;
     border-bottom: 1px solid var(--border);
   }
   .section-header > div { display: grid; gap: 8px; }
-  .action { display: inline-flex; align-items: center; gap: 6px; flex: none; color: var(--accent); font-size: 14px; font-weight: 600; }
-  .action :global(.icon) { transition: transform var(--fast); }
+  .action {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+    min-height: 42px;
+    padding: 0 14px 0 16px;
+    border: 1px solid color-mix(in srgb, var(--accent) 55%, transparent);
+    border-radius: var(--r-sm);
+    background: var(--accent-soft);
+    color: var(--accent);
+    font-size: 14.5px;
+    font-weight: 650;
+    white-space: nowrap;
+    transition: background-color var(--fast), color var(--fast), border-color var(--fast);
+  }
+  .action:hover { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .count { font-family: var(--mono); font-size: 12px; font-weight: 600; opacity: 0.75; }
+  .action :global(.icon) { font-size: 16px; transition: transform var(--fast); }
   .action:hover :global(.icon) { transform: translateX(3px); }
+  @media (max-width: 479px) { .action { min-height: 38px; padding: 0 10px 0 12px; font-size: 13.5px; } .count { display: none; } }
 </style>

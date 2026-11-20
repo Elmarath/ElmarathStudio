@@ -1,0 +1,82 @@
+---
+// "What I built": the features and systems behind an entry, as numbered
+// tiles, the same size and layout on every entry: three to a row, each with a
+// picture or looping clip on top, or a numbered placeholder when it has none.
+import type { WorkFeature } from '../../../content/repository.ts';
+import { render } from '../../../content/markdown.ts';
+import { image } from '../../../content/media.ts';
+import { isVideo, loopVideo, loopVideoHtml } from '../../../content/video.ts';
+import TechTags from '../TechTags.astro';
+import WidgetTitle from './WidgetTitle.astro';
+
+interface Props {
+  features: WorkFeature[];
+  sourcePath: string;
+}
+const { features, sourcePath } = Astro.props;
+const tiles = await Promise.all(
+  features.map(async (f, i) => {
+    const html = (await render(f.text, { sourcePath })).html;
+    const clip = f.media && isVideo(f.media) ? await loopVideo(f.media, 600) : null;
+    const picture = f.media && !clip ? await image(f.media, 600) : null;
+    return { ...f, n: String(i + 1).padStart(2, '0'), html, clip, picture };
+  }),
+);
+---
+
+<section class="features">
+  <WidgetTitle eyebrow="What I built" title={features.length === 1 ? 'The feature' : `${features.length} things I built`} />
+  <div class="tiles">
+    {
+      tiles.map((t) => (
+        <article class="tile">
+          {t.clip && <div class="tile-media"><Fragment set:html={loopVideoHtml(t.clip, { label: t.title })} /></div>}
+          {t.picture && (
+            <div class="tile-media">
+              <img src={t.picture.src} srcset={t.picture.srcset} sizes="(max-width: 719px) 100vw, 600px" width={t.picture.width} height={t.picture.height} alt="" loading="lazy" decoding="async" />
+            </div>
+          )}
+          {!t.clip && !t.picture && (
+            <div class="tile-media blank" aria-hidden="true">
+              <span>{t.n}</span>
+            </div>
+          )}
+          <div class="tile-body">
+            <span class="n">{t.n}</span>
+            <h3>{t.title}</h3>
+            <div class="text" set:html={t.html} />
+            {t.tags.length > 0 && <TechTags tech={t.tags} dense />}
+          </div>
+        </article>
+      ))
+    }
+  </div>
+</section>
+
+<style>
+  /* Every tile the same width and height: the tallest one sets the height for all rows. */
+  .tiles { display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); grid-auto-rows: 1fr; }
+  @media (min-width: 640px) { .tiles { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+  /* One height for every entry too, unless a tile has more text than usual. */
+  @media (min-width: 1000px) { .tiles { grid-template-columns: repeat(3, minmax(0, 1fr)); grid-auto-rows: minmax(490px, 1fr); } }
+  .tile { display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); transition: border-color var(--normal) var(--ease); }
+  .tile:hover { border-color: color-mix(in srgb, var(--accent) 45%, transparent); }
+  .tile-media { aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--border); background: #000; }
+  .tile-media :global(img), .tile-media :global(video) { width: 100%; height: 100%; object-fit: cover; }
+  .blank {
+    display: grid;
+    place-items: center;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) center / 24px 24px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) center / 24px 24px,
+      radial-gradient(120% 120% at 20% 10%, color-mix(in srgb, var(--accent) 14%, var(--surface)), var(--surface) 70%);
+  }
+  .blank span { font-family: var(--display); font-size: 56px; font-weight: 700; letter-spacing: -0.04em; color: color-mix(in srgb, var(--accent) 55%, transparent); }
+  .tile-body { display: grid; align-content: start; gap: 10px; padding: 20px 22px 22px; }
+  .n { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.08em; color: var(--accent); }
+  h3 { font-size: 18.5px; letter-spacing: -0.01em; line-height: 1.3; }
+  .text { font-size: 14.5px; line-height: 1.7; }
+  .text :global(p + p) { margin-top: 8px; }
+  .text :global(code) { font-family: var(--mono); font-size: 0.88em; padding: 1px 5px; border-radius: 3px; background: var(--surface-raised); color: var(--text); }
+  .text :global(a) { color: var(--accent); }
+</style>

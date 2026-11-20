@@ -6,6 +6,7 @@
 //   `> [!NOTE]` alerts → a callout box
 // * `::youtube <id or url> [start=90]` or a YouTube `<iframe>` → a video that
 //   loads only when played
+// * `::video ./clip.mp4 Caption` → a silent clip that loops (made by `npm run video`)
 // * `::plugin-links` → the plugin's Fab / GitHub buttons
 // * `<!-- truncate -->` (the blog excerpt marker) and MDX imports are dropped
 import { escapeHtml } from './text.ts';

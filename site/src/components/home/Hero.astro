@@ -12,7 +12,9 @@ import { site } from '../../config.ts';
 import { content } from '../../content/repository.ts';
 import { humanize } from '../../content/text.ts';
 // @ts-expect-error: plain JavaScript module shared with the media script.
-import { GLOW_VERSION } from '../../../scripts/media-lib.mjs';
+import { GLOW_VERSION, pub } from '../../../scripts/media-lib.mjs';
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 import Icon from '../Icon.astro';
 
 const repo = content();
@@ -20,8 +22,11 @@ const clips = site.heroVideos.map((src) => {
   const base = src.replace(/\.\w+$/, '');
   const name = base.split('/').at(-1)!;
   const glow = (bright: boolean) => `/media/glow/${name}.glow-${GLOW_VERSION}-video${bright ? '-bright' : ''}.webp`;
-  return { src, poster: `${base}.jpg`, label: humanize(name), glow };
+  // The smaller AV1 copy made by `npm run video`, when there is one.
+  const av1 = existsSync(join(pub, `${base}.av1.mp4`)) ? `${base}.av1.mp4` : undefined;
+  return { src, av1, poster: `${base}.jpg`, label: humanize(name), glow };
 });
+const AV1_TYPE = 'video/mp4; codecs="av01.0.08M.08"';
 const [title1, title2] = site.heroTitle.split('\n');
 const posts = repo.posts.length;
 const two = (n: number) => String(n).padStart(2, '0');
@@ -54,7 +59,7 @@ const two = (n: number) => String(n).padStart(2, '0');
       </nav>
     </div>
 
-    <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))} data-labels={JSON.stringify(clips.map((c) => c.label))}>
+    <div class="reel" data-showreel data-clips={JSON.stringify(clips.map((c) => c.src))} data-av1={JSON.stringify(clips.map((c) => c.av1 ?? null))} data-labels={JSON.stringify(clips.map((c) => c.label))}>
       <div class="glow" aria-hidden="true">
         {
           clips.map((c, i) =>
@@ -66,7 +71,10 @@ const two = (n: number) => String(n).padStart(2, '0');
       </div>
       <figure class="viewport">
         <div class="screen">
-          <video muted playsinline preload="metadata" poster={clips[0].poster} src={clips[0].src} aria-hidden="true" tabindex="-1"></video>
+          <video muted playsinline preload="metadata" poster={clips[0].poster} aria-hidden="true" tabindex="-1">
+            {clips[0].av1 && <source src={clips[0].av1} type={AV1_TYPE} />}
+            <source src={clips[0].src} type="video/mp4" />
+          </video>
         </div>
         <span class="corner tl" aria-hidden="true"></span>
         <span class="corner tr" aria-hidden="true"></span>

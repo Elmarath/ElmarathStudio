@@ -1,7 +1,8 @@
 ---
-// A post's cover image, or a branded gradient with the logo when it has none.
+// A post's looping clip or cover image, or a branded gradient with the logo when it has none.
 import { site } from '../../config.ts';
 import { image } from '../../content/media.ts';
+import { loopVideo, loopVideoHtml } from '../../content/video.ts';
 import type { BlogPost } from '../../content/repository.ts';
 
 interface Props {
@@ -11,11 +12,14 @@ interface Props {
   eager?: boolean;
 }
 const { post, width = 400, eager = false } = Astro.props;
-const info = post.image ? await image(post.image, width) : null;
+const video = post.video ? await loopVideo(post.video, width) : null;
+const info = !video && post.image ? await image(post.image, width) : null;
 ---
 
 {
-  info ? (
+  video ? (
+    <Fragment set:html={loopVideoHtml(video, { className: 'post-cover' })} />
+  ) : info ? (
     <img
       class="post-cover"
       src={info.src}
@@ -36,7 +40,7 @@ const info = post.image ? await image(post.image, width) : null;
 }
 
 <style>
-  .post-cover { width: 100%; height: 100%; object-fit: cover; }
+  .post-cover, :global(video.post-cover) { width: 100%; height: 100%; object-fit: cover; }
   .placeholder { display: grid; place-items: center; background: radial-gradient(140% 140% at 20% 10%, var(--hero-glow), #0b0b0e); }
   /* 36% of the cover's height (a 16:9 cover is 0.5625 as tall as wide). */
   .placeholder img { width: 20%; height: auto; opacity: 0.9; }

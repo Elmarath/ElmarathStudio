@@ -1,6 +1,6 @@
 // Image conversion shared by scripts/media.mjs (everything, before a build) and
 // the content loader (one new image at a time, while `npm run dev` is running).
-import { mkdir, stat } from 'node:fs/promises';
+import { copyFile, mkdir, stat } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -19,6 +19,11 @@ export const manifestPath = join(site, '.media', 'manifest.json');
 /** Widths offered for content images; each image gets those up to its own width. */
 export const WIDTHS = [480, 960, 1600];
 export const IMAGE = /\.(png|jpe?g|webp|gif)$/i;
+/** Looping videos in content, as made by `npm run video` (scripts/video.mjs). */
+export const VIDEO = /\.mp4$/i;
+
+/** Where `content/...` file [key] is served from once it's copied into public/media. */
+export const mediaUrl = (key) => `/media/${key.slice('content/'.length)}`;
 
 /** In the hero glow's file names; bump it to remake every glow after changing how they're made (media.mjs). */
 export const GLOW_VERSION = 'v7';
@@ -55,4 +60,17 @@ export async function convertImage(key) {
     variants.push({ url, width: w });
   }
   return { width, height, animated, variants };
+}
+
+/**
+ * Copies `content/...` video [key] into public/media as it is (`npm run video`
+ * already made it small), unless it's there and up to date. Returns whether it copied.
+ */
+export async function copyVideo(key) {
+  const file = join(repo, key);
+  const out = join(pub, mediaUrl(key));
+  if (await fresh(out, file)) return false;
+  await mkdir(dirname(out), { recursive: true });
+  await copyFile(file, out);
+  return true;
 }

@@ -10,6 +10,9 @@ export function startShowreel(signal: AbortSignal) {
   if (!reel || !video) return;
   const clips: string[] = JSON.parse(reel.dataset.clips ?? '[]');
   const labels: string[] = JSON.parse(reel.dataset.labels ?? '[]');
+  // Each clip's smaller AV1 copy, used where the browser can play it.
+  const av1: (string | null)[] = JSON.parse(reel.dataset.av1 ?? '[]');
+  const playsAv1 = video.canPlayType('video/mp4; codecs="av01.0.08M.08"') !== '';
   const label = reel.querySelector('[data-clip-label]');
   const count = reel.querySelector('[data-clip-count]');
   const darkGlows = reel.querySelectorAll('.glow .dark');
@@ -26,7 +29,7 @@ export function startShowreel(signal: AbortSignal) {
   const show = (index: number) => {
     clip = index % clips.length;
     video.poster = clips[clip].replace(/\.\w+$/, '.jpg');
-    video.src = clips[clip];
+    video.src = (playsAv1 && av1[clip]) || clips[clip];
     darkGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
     brightGlows.forEach((g, i) => g.classList.toggle('on', i === clip));
     if (label) label.textContent = labels[clip] ?? '';

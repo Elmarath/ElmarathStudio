@@ -1,30 +1,53 @@
 ---
-// /work: every case study, grouped by kind in the order the groups first
-// appear (see `order:`).
+// /work: every entry, grouped (Studios, Projects, Plugins: `workGroups` in
+// src/content/repository.ts), each group in `order:`. Chips at the top jump to
+// a group; the CV is one click away.
 import Base from '../../layouts/Base.astro';
 import ContactSection from '../ContactSection.astro';
-import CaseStudyCard from './CaseStudyCard.astro';
-import { content, type CaseStudy } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+import WorkCard from './WorkCard.astro';
+import { content, workGroups, type CaseStudy } from '../../content/repository.ts';
+import { slugify } from '../../content/text.ts';
 
-const groups = new Map<string, CaseStudy[]>();
+const groups: { title: string; blurb?: string; studies: CaseStudy[] }[] = workGroups.map((g) => ({ title: g.title, blurb: g.blurb, studies: [] }));
 for (const study of content().work) {
-  if (!groups.has(study.workKind)) groups.set(study.workKind, []);
-  groups.get(study.workKind)!.push(study);
+  const kind = study.workKind.toLowerCase();
+  const known = workGroups.findIndex((g) => g.kinds.includes(kind));
+  let group = known >= 0 ? groups[known] : groups.find((g) => g.title === study.workKind);
+  if (!group) groups.push((group = { title: study.workKind, studies: [] }));
+  group.studies.push(study);
 }
+const shown = groups.filter((g) => g.studies.length > 0).map((g) => ({ ...g, id: slugify(g.title) }));
 ---
 
-<Base title="Work" description="Selected projects: games, studio work and Unreal Engine systems.">
+<Base title="Work" description="Studios I've worked at, games and Unreal Engine plugins I've built: what each needed, and what I made.">
   <section class="container work">
-    <span class="eyebrow">Portfolio</span>
-    <h1 class="display-sm fluid">Selected work</h1>
-    <p class="body-lg intro">Games, studio work and Unreal Engine systems: what each one needed, how I built it, and what I learned.</p>
-    {groups.size === 0 && <p class="body-lg empty">Case studies are on their way.</p>}
+    <span class="eyebrow">Work</span>
+    <h1 class="display-sm fluid">What I've built</h1>
+    <p class="body-lg intro">Studios I've worked at, the games I build and the Unreal Engine plugins I publish. Each one shows what I built, with clips, numbers and code.</p>
+    <div class="jump">
+      {
+        shown.map((g) => (
+          <a class="chip" href={`#${g.id}`}>
+            {g.title}
+            <span class="count">{String(g.studies.length).padStart(2, '0')}</span>
+          </a>
+        ))
+      }
+      <a class="chip cv" href="/cv"><Icon name="doc" />CV</a>
+    </div>
+    {shown.length === 0 && <p class="body-lg empty">Entries are on their way.</p>}
     {
-      [...groups].map(([kind, studies]) => (
-        <section class="group">
-          <h2 class="headline-sm">{kind}</h2>
-          <div class="grid" style="--min: 340px">
-            {studies.map((s) => <CaseStudyCard study={s} />)}
+      shown.map((g) => (
+        <section class="group" id={g.id}>
+          <header>
+            <h2 class="headline-lg">{g.title}</h2>
+            {g.blurb && <p>{g.blurb}</p>}
+          </header>
+          <div class="list">
+            {g.studies.map((s) => (
+              <WorkCard study={s} layout="row" />
+            ))}
           </div>
         </section>
       ))
@@ -35,7 +58,14 @@ for (const study of content().work) {
 
 <style>
   .work { display: grid; gap: 8px; padding-top: 56px; }
-  .intro { max-width: 640px; }
-  .group { margin-top: 48px; display: grid; gap: 16px; }
+  .intro { max-width: 680px; margin-top: 8px; }
+  .jump { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
+  .count { margin-left: 8px; font-family: var(--mono); font-size: 11.5px; color: var(--text-3); }
+  .cv { gap: 6px; }
+  .cv :global(.icon) { font-size: 15px; color: var(--accent); }
+  .group { display: grid; gap: 24px; margin-top: 64px; scroll-margin-top: calc(var(--nav-h) + 24px); }
+  .group header { display: grid; gap: 6px; padding-bottom: 16px; border-bottom: 1px solid var(--border); }
+  .group header p { color: var(--text-3); }
+  .list { display: grid; gap: 24px; }
   .empty { margin-top: 48px; }
 </style>

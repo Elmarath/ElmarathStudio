@@ -5,17 +5,18 @@
 // * Converts every image under ../content to WebP at a few widths (GIFs stay animated),
 //   and records each one's size in .media/manifest.json so pages can reserve the space
 //   (no layout shift) and offer the browser the right width (srcset).
+// * Copies the looping videos under ../content as they are (`npm run video` made them small).
 // * Bakes the soft effects that would otherwise cost on every frame: the hero
 //   showreel's glow (one per clip, both themes) and the plugin carousel's blurred
 //   backgrounds.
 //
 // Work is cached: an output newer than its source is left alone, so reruns are quick.
-import { mkdir, readdir, readFile, rm, writeFile } from 'node:fs/promises';
+import { mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { dirname, join, relative, extname, basename } from 'node:path';
 import os from 'node:os';
 import sharp from 'sharp';
-import { GLOW_VERSION, IMAGE, convertImage, fresh, manifestPath, pub, repo } from './media-lib.mjs';
+import { GLOW_VERSION, IMAGE, VIDEO, convertImage, copyVideo, fresh, manifestPath, pub, repo } from './media-lib.mjs';
 
 async function* walk(dir) {
   if (!existsSync(dir)) return;
@@ -42,13 +43,24 @@ async function pool(tasks, size = Math.max(2, Math.min(8, os.cpus().length))) {
   return results;
 }
 
-// --- 1. Content images -----------------------------------------------------
+// --- 1. Content images and videos -------------------------------------------
+/** A looping video bigger than this slows its page down (see `npm run video`). */
+const VIDEO_WARN_BYTES = 6 * 1024 * 1024;
 const manifest = existsSync(manifestPath) ? JSON.parse(await readFile(manifestPath, 'utf8')) : {};
 const seen = new Set();
 const tasks = [];
+let videos = 0;
+const bigVideos = [];
 for await (const file of walk(join(repo, 'content'))) {
-  if (!IMAGE.test(file)) continue;
   const key = relative(repo, file).split('\\').join('/'); // content/docs/X/img/a.png
+  if (VIDEO.test(file)) {
+    tasks.push(async () => {
+      if (await copyVideo(key)) videos++;
+      if ((await stat(file)).size > VIDEO_WARN_BYTES) bigVideos.push(key);
+    });
+    continue;
+  }
+  if (!IMAGE.test(file)) continue;
   seen.add(key);
   tasks.push(async () => {
     manifest[key] = await convertImage(key);
@@ -155,5 +167,8 @@ for await (const file of walk(join(repo, 'content', 'docs'))) {
 await mkdir(dirname(manifestPath), { recursive: true });
 await writeFile(manifestPath, JSON.stringify(manifest, null, 1));
 console.log(
-  `media: ${Object.keys(manifest).length} content images, ${glows} glows and ${blurs} blurred backgrounds made`,
+  `media: ${Object.keys(manifest).length} content images, ${videos} videos copied, ${glows} glows and ${blurs} blurred backgrounds made`,
 );
+for (const key of bigVideos) {
+  console.warn(`media: ${key} is over ${VIDEO_WARN_BYTES / 2 ** 20} MB. Make it smaller with npm run video (shorter, a smaller --size or a higher --crf).`);
+}

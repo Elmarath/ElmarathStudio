@@ -1,6 +1,6 @@
 ---
-// A case study's buttons (reel, repository, store, docs...), the first one filled.
-import type { IconName } from '../../config.ts';
+// A Work entry's buttons (reel, repository, store, docs...), the first one filled.
+import { linkLook } from '../../content/work-links.ts';
 import { isExternal } from '../../content/text.ts';
 import Icon from '../Icon.astro';
 
@@ -8,24 +8,12 @@ interface Props {
   links: Record<string, string>;
 }
 const { links } = Astro.props;
-const look = (key: string): [IconName, string] => {
-  switch (key.toLowerCase()) {
-    case 'reel': case 'youtube': case 'video': return ['youtube', 'Watch the reel'];
-    case 'github': case 'repo': case 'repository': return ['github', 'Repository'];
-    case 'fab': return ['store', 'Get it on Fab'];
-    case 'steam': return ['gamepad', 'Steam page'];
-    case 'itch': return ['gamepad', 'Play on itch.io'];
-    case 'docs': return ['book', 'Documentation'];
-    case 'website': case 'site': return ['globe', 'Website'];
-    default: return ['external', key[0].toUpperCase() + key.slice(1)];
-  }
-};
 ---
 
 <div class="button-row">
   {
     Object.entries(links).map(([key, url], i) => {
-      const [icon, label] = look(key);
+      const [icon, label] = linkLook(key);
       return (
         <a class:list={['button', i === 0 ? 'button-filled' : 'button-outlined']} href={url} {...(isExternal(url) ? { target: '_blank', rel: 'noopener' } : {})}>
           <Icon name={icon} />

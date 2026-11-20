@@ -18,14 +18,15 @@ const index = repo.posts.indexOf(post);
 const newer = index > 0 ? repo.posts[index - 1] : undefined;
 const older = repo.posts[index + 1];
 const rendered = await render(post.body, { sourcePath: post.assetPath });
-// Skip the cover if the post already shows the same image in its body.
-const showCover = post.image != null && !post.body.includes(post.image.split('/').at(-1)!);
+// Skip the cover if the post already shows the same image (or clip) in its body.
+const inBody = (key?: string) => key != null && post.body.includes(key.split('/').at(-1)!);
+const showCover = post.video != null ? !inBody(post.video) : post.image != null && !inBody(post.image);
 const author = post.authors[0];
 ---
 
-<Base title={post.title} description={post.excerpt} image={showCover && post.image?.startsWith('http') ? post.image : undefined}>
+<Base title={post.title} description={post.excerpt} image={showCover && !post.video && post.image?.startsWith('http') ? post.image : undefined}>
   <article class="container reading post">
-    <a class="button button-text back" href="/blog"><Icon name="arrow-left" />All posts</a>
+    <a class="button button-outlined back" href="/blog"><Icon name="arrow-left" />All posts</a>
     {
       post.tags.length > 0 && (
         <div class="tags">
@@ -92,7 +93,7 @@ const author = post.authors[0];
 
 <style>
   .post { padding-top: 32px; padding-bottom: var(--section); }
-  .back { margin-left: -12px; }
+  .back { min-height: 38px; padding: 0 14px 0 10px; font-size: 13.5px; }
   .tags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 24px; }
   h1 { margin-top: 16px; }
   .meta { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 16px; }

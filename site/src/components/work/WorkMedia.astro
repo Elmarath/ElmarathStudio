@@ -1,0 +1,77 @@
+---
+// A Work entry's picture, 16:9: its looping clip; else its cover image; else
+// its YouTube reel's thumbnail; else a title card in the site's style (the
+// logo, or the name, on an engine grid, framed like the home page's viewport).
+import { image } from '../../content/media.ts';
+import { loopVideo, loopVideoHtml } from '../../content/video.ts';
+import type { CaseStudy } from '../../content/repository.ts';
+
+interface Props {
+  study: CaseStudy;
+  /** The widest it's shown, in CSS pixels. */
+  width?: number;
+  eager?: boolean;
+}
+const { study, width = 560, eager = false } = Astro.props;
+const video = study.video ? await loopVideo(study.video, width) : null;
+const info = video
+  ? null
+  : study.cover
+    ? await image(study.cover, width)
+    : study.reel
+      ? { src: `https://i.ytimg.com/vi/${study.reel.videoId}/hqdefault.jpg`, width: 480, height: 360 }
+      : null;
+const logo = !video && !info && study.logo ? await image(study.logo, 360) : null;
+---
+
+{
+  video ? (
+    <Fragment set:html={loopVideoHtml(video, { className: 'work-media' })} />
+  ) : info ? (
+    <img
+      class="work-media"
+      src={info.src}
+      srcset={(info as { srcset?: string }).srcset}
+      sizes={`(max-width: 719px) 100vw, ${width}px`}
+      width={info.width}
+      height={info.height}
+      alt=""
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
+    />
+  ) : (
+    <div class="work-media title-card" aria-hidden="true">
+      {logo ? (
+        <img class="logo" src={logo.src} srcset={logo.srcset} sizes="360px" width={logo.width} height={logo.height} alt={study.company ?? study.title} loading={eager ? 'eager' : 'lazy'} decoding="async" />
+      ) : (
+        <strong>{study.company ?? study.title}</strong>
+      )}
+      {study.role && <span class="role">{study.role}</span>}
+      <i class="c tl" /><i class="c tr" /><i class="c br" />
+    </div>
+  )
+}
+
+<style>
+  .work-media, :global(video.work-media) { display: block; width: 100%; height: 100%; object-fit: cover; }
+
+  .title-card {
+    position: relative;
+    display: grid;
+    align-content: center;
+    gap: 0.6em;
+    padding: 0 9%;
+    container-type: inline-size;
+    background:
+      linear-gradient(var(--grid-line) 1px, transparent 1px) center / 28px 28px,
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px) center / 28px 28px,
+      radial-gradient(120% 120% at 15% 10%, color-mix(in srgb, var(--accent) 20%, var(--surface)), var(--surface) 70%);
+  }
+  strong { font-family: var(--display); font-size: max(22px, 8.5cqi); font-weight: 700; letter-spacing: -0.03em; line-height: 1.02; color: var(--text); }
+  .logo { width: min(62%, 360px); height: auto; margin-bottom: 0.3em; }
+  .role { font-size: max(12.5px, 3.2cqi); color: var(--text-2); }
+  .c { position: absolute; width: 12px; height: 12px; border: 0 solid var(--accent); opacity: 0.8; }
+  .tl { top: 14px; left: 14px; border-top-width: 2px; border-left-width: 2px; }
+  .tr { top: 14px; right: 14px; border-top-width: 2px; border-right-width: 2px; }
+  .br { bottom: 14px; right: 14px; border-bottom-width: 2px; border-right-width: 2px; }
+</style>
