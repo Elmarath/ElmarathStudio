@@ -13,7 +13,7 @@ summary: >-
   one core project with a Game Feature plugin per client, delivered from AWS S3: clients sign in, see
   only their own projects, and get the latest version on opening one. Every improvement to the core
   reached all of them at once.
-video: cover.mp4
+video: reel.mp4
 tech: [C++, Game Features, AWS, World Partition, Mass, Cesium, MetaHumans, Common UI, UI materials, ChunkDownloader, Plastic SCM]
 links:
   projects: https://archinord.com/moduller/sunum
