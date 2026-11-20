@@ -12,7 +12,7 @@ const page = content().pages.get('about');
 const rendered = page ? await render(page.body, { sourcePath: page.assetPath }) : undefined;
 ---
 
-<Base title="About" description={page?.description}>
+<Base title="About me" description={page?.description}>
   <div class="container reading about">
     <header>
       <img src={site.portraitUrl} alt={site.ownerName} width="160" height="160" />

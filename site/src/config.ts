@@ -170,7 +170,7 @@ export const navItems: NavItem[] = [
   ...(site.showWork ? [{ label: 'Work', path: '/work' }] : []),
   { label: 'Docs', path: '/docs' },
   { label: 'Blog', path: '/blog' },
-  { label: 'About', path: '/about' },
+  { label: 'About me', path: '/about' },
 ];
 
 /** Footer link columns. */
