@@ -15,7 +15,7 @@ summary: >-
   integration, multiplayer combat and interaction abilities, inventory, in-game chat and save systems,
   in C++ and Blueprints.
 video: freeblades.mp4
-tech: [C++, Blueprints, Gameplay Ability System, Game Features, StateTree, Common UI, UI materials, Multiplayer, Perforce, Figma, Trello]
+tech: [C++, Blueprints, Common UI, Gameplay Ability System, StateTree, UI materials, Multiplayer, Perforce, Figma, Trello]
 links:
   steam: https://store.steampowered.com/app/3983160/The_Freeblades/
   website: https://www.tigerrollstudios.co.uk/

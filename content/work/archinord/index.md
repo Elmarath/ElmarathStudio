@@ -14,7 +14,7 @@ summary: >-
   only their own projects, and get the latest version on opening one. Every improvement to the core
   reached all of them at once.
 video: cover.mp4
-tech: [C++, Game Features, World Partition, Mass, Cesium, MetaHumans, Common UI, UI materials, ChunkDownloader, AWS S3, Plastic SCM]
+tech: [C++, Game Features, AWS, World Partition, Mass, Cesium, MetaHumans, Common UI, UI materials, ChunkDownloader, Plastic SCM]
 links:
   projects: https://archinord.com/moduller/sunum
   website: https://www.archinord.com/en
