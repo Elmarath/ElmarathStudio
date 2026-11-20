@@ -39,8 +39,8 @@ const blocks = await Promise.all(
 </section>
 
 <style>
-  .code-spotlight { display: grid; gap: 0; }
-  .block { display: grid; gap: 20px; align-items: start; }
+  .code-spotlight { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .block { display: grid; grid-template-columns: minmax(0, 1fr); gap: 20px; align-items: start; }
   .block + .block { margin-top: 40px; }
   @media (min-width: 1000px) { .block { grid-template-columns: minmax(0, 4fr) minmax(0, 7fr); gap: 40px; } }
   .note { display: grid; gap: 12px; }

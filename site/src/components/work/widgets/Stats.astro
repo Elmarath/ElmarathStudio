@@ -21,17 +21,18 @@ const { stats } = Astro.props;
 </dl>
 
 <style>
+  /* Always one row: on narrow screens the numbers and padding shrink with the row's width. */
   .stats {
+    container-type: inline-size;
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+    grid-template-columns: repeat(var(--n), minmax(0, 1fr));
     margin: 0;
     border: 1px solid var(--border);
     border-radius: var(--r-lg);
     background: var(--surface);
     overflow: hidden;
   }
-  @media (min-width: 900px) { .stats { grid-template-columns: repeat(var(--n), minmax(0, 1fr)); } }
-  .stats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; padding: 22px 24px; border-left: 1px solid var(--border); margin-left: -1px; }
-  dd { margin: 0; font-family: var(--display); font-size: clamp(30px, 4vw, 42px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--accent); }
-  dt { font-size: 13.5px; line-height: 1.45; color: var(--text-2); }
+  .stats div { display: flex; flex-direction: column-reverse; justify-content: flex-end; gap: 6px; padding: clamp(14px, 5cqi, 22px) clamp(10px, 4cqi, 24px); border-left: 1px solid var(--border); margin-left: -1px; }
+  dd { margin: 0; font-family: var(--display); font-size: clamp(18px, calc(19cqi / var(--n)), 42px); font-weight: 700; letter-spacing: -0.03em; line-height: 1; color: var(--accent); white-space: nowrap; }
+  dt { font-size: clamp(11.5px, 3.4cqi, 13.5px); line-height: 1.4; color: var(--text-2); overflow-wrap: anywhere; hyphens: auto; }
 </style>

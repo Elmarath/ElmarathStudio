@@ -192,7 +192,7 @@ const side = study.timeline.length > 0 && !!study.quote;
   .results li { display: flex; gap: 8px; font-size: 14.5px; color: var(--text); }
   .results :global(.icon) { margin-top: 3px; color: var(--accent); font-size: 17px; }
 
-  .widgets { display: grid; gap: 72px; padding-top: 56px; }
+  .widgets { display: grid; grid-template-columns: minmax(0, 1fr); gap: 72px; padding-top: 56px; }
   .widgets:empty { display: none; }
   .story { display: grid; gap: 72px; }
   @media (min-width: 1000px) { .story.side { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; } }
