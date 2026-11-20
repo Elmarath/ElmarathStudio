@@ -136,7 +136,7 @@ links:
 # Impact numbers. Concrete beats vague; only what you can back up.
 # stats:
 #   - { value: "60 fps", label: on Steam Deck with 200 NPCs }
-# "What I built": one tile per feature, each with an optional image or clip next to this file.
+# "What I did": one tile per feature, each with an optional image or clip next to this file.
 features:
   - title: First feature
     text: What it does, how it works, and the detail you're proud of. Markdown works here.

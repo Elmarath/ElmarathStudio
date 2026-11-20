@@ -106,7 +106,7 @@ export interface WorkStat {
   label: string;
 }
 
-/** One thing built for a Work entry ("What I built"), with an optional image or clip. */
+/** One thing built for a Work entry ("What I did"), with an optional image or clip. */
 export interface WorkFeature {
   title: string;
   /** Markdown. */
@@ -502,7 +502,8 @@ function parseWork(files: Map<string, string>): CaseStudy[] {
         .filter((c) => c.source),
       timeline: records('timeline').map((r) => ({ date: text(r.date), text: text(r.text) })).filter((m) => m.text),
       quote: quote && quote.text ? { text: text(quote.text), author: text(quote.author), role: text(quote.role) || undefined } : undefined,
-      links: Object.fromEntries(Object.entries(links).map(([k, v]) => [k, String(v)])),
+      // Site addresses are lower case; `/docs/My-Plugin` is accepted as written.
+      links: Object.fromEntries(Object.entries(links).map(([k, v]) => [k, String(v).startsWith('/') ? String(v).toLowerCase() : String(v)])),
       order: fm.number('order') ?? 1e6,
       draft,
       body,

@@ -1,5 +1,5 @@
 ---
-// "What I built": the features and systems behind an entry, as numbered
+// "What I did": the features and systems behind an entry, as numbered
 // tiles, the same size and layout on every entry: three to a row, each with a
 // picture or looping clip on top, or a numbered placeholder when it has none.
 import type { WorkFeature } from '../../../content/repository.ts';
@@ -25,7 +25,7 @@ const tiles = await Promise.all(
 ---
 
 <section class="features">
-  <WidgetTitle eyebrow="What I built" title={features.length === 1 ? 'The feature' : `${features.length} things I built`} />
+  <WidgetTitle eyebrow="Features" title="What I did" />
   <div class="tiles">
     {
       tiles.map((t) => (

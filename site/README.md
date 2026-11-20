@@ -23,7 +23,7 @@ Nothing to register: drop a file in `../content` and it's on the site.
 | Doc page | `content/docs/<Plugin-Folder>/My-Page.md` | `npm run new-doc -- Plugin-Folder "Page title"` |
 | Plugin (docs folder) | `content/docs/<Plugin-Folder>/_category_.yaml` (name, pitch, thumbnail, Fab link, `featured`) | `new-doc` makes one with a new folder |
 | Page | `content/pages/<slug>.md` → `/<slug>` | |
-| Work entry (a studio, project or plugin) | `content/work/<slug>/index.md`: a picture or clip, one main link, a 50–100 word summary, and optional widgets (impact numbers, "What I built" tiles, code spotlight, milestones, a quote) | `npm run new-work -- "Project"` |
+| Work entry (a studio, project or plugin) | `content/work/<slug>/index.md`: a picture or clip, one main link, a 50–100 word summary, and optional widgets (impact numbers, "What I did" tiles, code spotlight, milestones, a quote) | `npm run new-work -- "Project"` |
 
 - **Drafts:** `draft: true` in the front matter shows a post or case study in `npm run dev` only.
 - **Images:** put them next to the Markdown and link them relatively (`![Alt](./img/shot.png)`).

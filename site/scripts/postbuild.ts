@@ -89,14 +89,22 @@ if (rewrites.length) lines.push('', '# Pages that share their name with a folder
 writeFileSync(join(dist, '_redirects'), `${lines.join('\n')}\n`);
 
 // --- 2. Links -----------------------------------------------------------------
+// Every file in the build, spelled exactly. Checked against this list rather
+// than the disk, so a link whose letter case is wrong fails here too: macOS
+// ignores case, but Netlify builds (and serves) on Linux, which doesn't.
+const files = new Set<string>();
+const walkAll = (dir: string) => {
+  for (const name of readdirSync(dir)) {
+    const p = join(dir, name);
+    if (statSync(p).isDirectory()) walkAll(p);
+    else files.add(`/${relative(dist, p).split('\\').join('/')}`);
+  }
+};
+walkAll(dist);
 const exists = (path: string) => {
   const clean = decodeURI(path.split('#')[0].split('?')[0]).replace(/\/$/, '') || '/';
-  if (clean === '/') return existsSync(join(dist, 'index.html'));
-  return (
-    existsSync(join(dist, `${clean.slice(1)}.html`)) ||
-    existsSync(join(dist, clean.slice(1), 'index.html')) ||
-    (existsSync(join(dist, clean.slice(1))) && statSync(join(dist, clean.slice(1))).isFile())
-  );
+  if (clean === '/') return files.has('/index.html');
+  return files.has(`${clean}.html`) || files.has(`${clean}/index.html`) || files.has(clean);
 };
 const broken = new Map<string, Set<string>>();
 for (const file of pages) {

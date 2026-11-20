@@ -15,7 +15,7 @@ tech: [C++, Async loading, Replication, Skeletal Merging]
 links:
   fab: https://www.fab.com/listings/616906a0-c73d-4e7a-9002-866a6d9751d5
   github: https://github.com/Elmarath/EasySkeletalMeshMergeAsync
-  docs: /docs/Easy-Skeletal-Mesh-Merge-Async
+  docs: /docs/easy-skeletal-mesh-merge-async
 features:
   - title: Background loading, one merge
     text: >-
