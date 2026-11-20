@@ -15,8 +15,8 @@ What I enjoy most is creating tools and robust system designs that make projects
 
 - Designing and implementing core gameplay systems for [The Freeblades](https://store.steampowered.com/app/3983160/The_Freeblades/), a co-op action-adventure RPG combat game in Unreal Engine 5, in a remote studio of 5 to 10 people.
 - Leading the game's technical development: developer tools, pipelines and gameplay systems, while keeping it above 60 FPS on target hardware.
-- Own gameplay AI, NPC AI dialogue, multiplayer combat and interaction abilities, inventory, in-game chat, save systems and more, in C++ and Blueprints.
-- Built the game's UI/UX on Unreal Engine's Common UI framework, extending it into a cross-platform, gamepad-friendly interface architecture.
+- Own gameplay AI (built with StateTree), the integration of the studio's dialogue tool into the game and its UX, multiplayer combat and interaction abilities, inventory, in-game chat, save systems and more, in C++ and Blueprints.
+- Built the game's UI/UX on Unreal Engine's Common UI framework and UI materials, extending it into a cross-platform, gamepad-friendly interface architecture. The team works in Perforce.
 - Coordinate design and engineering through organised Figma workflows, with clear pipelines for turning hundreds of UI designs into in-game UI.
 
 ### C++ Developer
@@ -24,7 +24,9 @@ What I enjoy most is creating tools and robust system designs that make projects
 [Archinord Software](https://www.archinord.com/en) · Türkiye, office · Jul 2024 – Jul 2025
 
 - Led the development of multiple [architectural visualisation projects](https://archinord.com/moduller/sunum) in Unreal Engine 5 and AWS, as part of a three-person team, helping the studio partner with 20+ construction companies within six months of its launch.
-- Architected a modular content delivery system, built on Game Features and custom delivery tools, so many visualisation projects could be deployed and updated independently across kiosk devices from a single Unreal Engine project. It streamlined maintenance, cut development costs and made the business easier to scale.
+- Architected the content delivery behind them: one core Unreal Engine project, with each of the 20+ clients' projects as its own Game Feature plugin, hosted on AWS S3 and delivered with an extended ChunkDownloader. Clients signed in with their company email, saw only their own projects, and got the latest version when they opened one, so their frequent changes (interiors especially) reached their customers sooner, and every improvement to the core reached all clients at once.
+- Wrote OnlineAttributeSheet, a plugin whose refreshers keep values in sync from the company website (or Google Sheets), in game and in the editor. Stored as `FName`s and converted on demand into Gameplay Tags, prices or levels through custom Blueprint nodes, they drove availability, pricing, each apartment's interior for virtual tours, sign-in and the points of interest around each development.
+- Worked with Game Features, World Partition, Mass, Cesium, MetaHumans, Common UI, UI materials and Plastic SCM.
 
 ### Lead Developer, indie game project
 
@@ -57,12 +59,12 @@ Each of these began as a system my own projects needed. The docs cover setup and
 
 | Area | Tools and technologies |
 | --- | --- |
-| Engine | Unreal Engine 5, Blueprints, Gameplay Ability System, StateTree, Common UI, MVVM, Mover 2.0, Gameplay Cameras, Game Features |
-| Specialities | Gameplay systems, network replication, software architecture, tools, UI/UX, shaders and VFX |
+| Engine | Unreal Engine 5, Blueprints, Gameplay Ability System, StateTree, Common UI, MVVM, Mover 2.0, Gameplay Cameras, Game Features, World Partition, Mass, MetaHumans, Cesium |
+| Specialities | Gameplay systems, network replication, software architecture, tools, UI/UX, UI materials, shaders and VFX |
 | Programming | C++, C#, Java, Python, JavaScript and Node.js, OOP |
 | Art and animation | Blender, Cascadeur |
 | Cloud and source control | AWS, Git, Perforce, Plastic SCM |
-| Workflow | Project management, Jira, Figma, Visual Studio, Rider, VS Code, Agile, remote work |
+| Workflow | Project management, Jira, Trello, Figma, Visual Studio, Rider, VS Code, Agile, remote work |
 
 ## Education
 
