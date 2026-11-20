@@ -24,12 +24,17 @@ function start(root: HTMLElement, signal: AbortSignal) {
   let paused = false;
   let onScreen = false;
   let timer: ReturnType<typeof setTimeout> | undefined;
+  /** The slide our own scroll is heading to; until it gets there, no scroll position counts as a swipe. */
+  let target: number | undefined;
   const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   const select = (i: number, { scroll = true } = {}) => {
     index = (i + slides.length) % slides.length;
     tabs.forEach((t, n) => t.setAttribute('aria-selected', String(n === index)));
-    if (scroll) track.scrollTo({ left: index * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+    if (scroll) {
+      target = index;
+      track.scrollTo({ left: index * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+    }
     reveal();
     schedule();
   };
@@ -74,10 +79,22 @@ function start(root: HTMLElement, signal: AbortSignal) {
   }, { signal });
 
   // A swipe: when the row settles, the list follows and the timer starts over.
+  // Only a swipe may change the slide this way. Our own scrolls (a click on the
+  // list, the timer) can settle part-way when one interrupts another, and a
+  // click-and-drag on wide screens can nudge the hidden row through text
+  // selection; both are put back on the slide that was picked.
   let settle: ReturnType<typeof setTimeout> | undefined;
+  const swipeable = () => getComputedStyle(track).overflowX !== 'hidden';
   const settled = () => {
     const i = Math.round(track.scrollLeft / track.clientWidth);
-    if (i !== index) select(i, { scroll: false });
+    if (target !== undefined) {
+      if (i === target) target = undefined;
+      else track.scrollTo({ left: target * track.clientWidth, behavior: reduceMotion ? 'auto' : 'smooth' });
+      return;
+    }
+    if (i === index) return;
+    if (swipeable()) select(i, { scroll: false });
+    else track.scrollTo({ left: index * track.clientWidth });
   };
   if ('onscrollend' in window) track.addEventListener('scrollend', settled, { signal });
   else
@@ -85,13 +102,24 @@ function start(root: HTMLElement, signal: AbortSignal) {
       clearTimeout(settle);
       settle = setTimeout(settled, 120);
     }, { passive: true, signal });
+  // A finger or a trackpad on the row: from here on the person is steering.
+  const takeOver = () => {
+    target = undefined;
+    clearTimeout(timer);
+    tabs.forEach((t) => t.classList.remove('running'));
+  };
+  track.addEventListener('touchstart', takeOver, { passive: true, signal });
+  track.addEventListener('wheel', (e) => { if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) takeOver(); }, { passive: true, signal });
   track.addEventListener('pointerdown', () => {
     clearTimeout(timer);
     tabs.forEach((t) => t.classList.remove('running'));
   }, { passive: true, signal });
 
   // Keep the slide in place when the window is resized.
-  const resize = new ResizeObserver(() => track.scrollTo({ left: index * track.clientWidth }));
+  const resize = new ResizeObserver(() => {
+    target = undefined;
+    track.scrollTo({ left: index * track.clientWidth });
+  });
   resize.observe(track);
   signal.addEventListener('abort', () => resize.disconnect());
   observe(signal, root, (entries) => {
