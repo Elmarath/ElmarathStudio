@@ -145,6 +145,8 @@ export const site = {
     '/blog/tags': '/blog',
     // Work entries that were renamed.
     '/work/tigerroll-studios': '/work/the-freeblades',
+    '/work/easy-skeletal-mesh-merge': '/work/fab-vendor',
+    '/work/nested-inventory-architecture': '/work/fab-vendor',
     '/docs/Ability-Queue-Task-System/UseCaseExample copy': '/docs/ability-queue-task-system/use-case-example',
     // Docusaurus template pages.
     '/helloReact': '/',

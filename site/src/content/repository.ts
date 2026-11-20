@@ -183,8 +183,8 @@ export interface CaseStudy {
 /** The Work page's groups, in order, by `kind:` (case-insensitive). Other kinds follow, as written. */
 export const workGroups: { kinds: string[]; title: string; blurb: string }[] = [
   { kinds: ['studio', 'professional', 'experience'], title: 'Studios', blurb: 'Where I\'ve worked, and what I built there.' },
-  { kinds: ['personal project', 'project', 'game'], title: 'Projects', blurb: 'Games and systems I build on my own.' },
-  { kinds: ['plugin'], title: 'Plugins', blurb: 'Unreal Engine tools, published with documentation.' },
+  { kinds: ['personal project', 'project', 'game', 'game jam'], title: 'Projects', blurb: 'Games and systems I build on my own, and with a team at game jams.' },
+  { kinds: ['plugin', 'fab vendor'], title: 'Plugins', blurb: 'Unreal Engine tools, published with documentation.' },
 ];
 
 export const pitch = (c: DocCategory) => c.summary ?? c.description ?? '';

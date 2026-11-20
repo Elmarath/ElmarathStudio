@@ -125,7 +125,7 @@ const side = study.timeline.length > 0 && !!study.quote;
     {
       (study.timeline.length > 0 || study.quote) && (
         <div class:list={['story', { side }]}>
-          {study.timeline.length > 0 && <Milestones timeline={study.timeline} />}
+          {study.timeline.length > 0 && <Milestones timeline={study.timeline} across={!side} />}
           {study.quote && (
             <section>
               {!side && <WidgetTitle eyebrow="In their words" title="What they said" />}

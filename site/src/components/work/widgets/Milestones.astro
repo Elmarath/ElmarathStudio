@@ -1,15 +1,17 @@
 ---
-// Milestones: what happened when, as a vertical timeline.
+// Milestones: what happened when. A vertical timeline beside a quote; on its own
+// (`across`) it runs left to right over the page's full width on wide screens.
 import type { WorkMilestone } from '../../../content/repository.ts';
 import WidgetTitle from './WidgetTitle.astro';
 
 interface Props {
   timeline: WorkMilestone[];
+  across?: boolean;
 }
-const { timeline } = Astro.props;
+const { timeline, across = false } = Astro.props;
 ---
 
-<section class="milestones">
+<section class:list={['milestones', { across }]}>
   <WidgetTitle eyebrow="Milestones" title="How it went" />
   <ol>
     {
@@ -31,4 +33,11 @@ const { timeline } = Astro.props;
   li:last-child::before { background: var(--accent); }
   .date { font-family: var(--mono); font-size: 12px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); }
   p { font-size: 15px; line-height: 1.6; color: var(--text); }
+
+  @media (min-width: 760px) {
+    .across ol { grid-auto-flow: column; grid-auto-columns: minmax(0, 1fr); gap: 28px; padding: 26px 0 0; }
+    .across ol::before { left: 0; right: 0; top: 5px; bottom: auto; width: auto; height: 1px; }
+    .across li::before { left: 0; top: -26px; }
+    .across li { align-content: start; padding-right: 8px; }
+  }
 </style>
