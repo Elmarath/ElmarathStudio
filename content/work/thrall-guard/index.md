@@ -12,7 +12,7 @@ summary: >-
   and levels. Its systems are modular by design, and many of them became Unreal Engine plugins that I
   publish on Fab, with over 4,500 sales so far. The devlog video shows how it all fits together.
 reel: https://youtu.be/FfebDCzKWy4
-tech: [C++, Gameplay Ability System, Common UI, MVVM, Mover 2.0, Gameplay Cameras, StateTree]
+tech: [C++, Multiplayer, Gameplay Ability System, Common UI, MVVM, Mover 2.0, Gameplay Cameras, StateTree]
 links:
   reel: https://youtu.be/FfebDCzKWy4
   devlog: /blog/how-i-create-my-game-thrall-guard
