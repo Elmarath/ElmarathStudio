@@ -18,8 +18,8 @@ interface Props {
 }
 const { study, layout = 'stack', headingLevel: H = 'h3' } = Astro.props;
 const link = mainLink(study);
-// Who it was for (when the entry is named after the project), and when.
-const meta = [study.company && study.company !== study.title ? study.company : study.location, study.period].filter(Boolean).join('  ·  ');
+// Who it was for (when the entry is named after the project), where, and when.
+const meta = [study.company !== study.title ? study.company : undefined, study.location, study.period].filter(Boolean).join('  ·  ');
 // "Solo developer: C++, Blueprint API and documentation" → "Solo developer" on the
 // card (the whole of it on the entry's page).
 const role = study.role?.split(/:\s*/)[0];
