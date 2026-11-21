@@ -61,10 +61,6 @@ features:
       designs to working in-game UI, while the game stays above 60 FPS on its target hardware.
     media: dungeon.jpg
     tags: [Tools, Figma, Performance]
-quote:
-  text: You have a technical mind and good mindset for creating game architecture.
-  author: Blake Handley
-  role: Technical Lead and founder, Tigerroll Studios
 order: 1
 ---
 
