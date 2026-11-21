@@ -27,9 +27,11 @@ interface Props {
 }
 
 const { title, description, image = site.shareImage, footer = true, noindex = false } = Astro.props;
-const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · Unreal Engine tools & devlog`;
-const summary = description ?? 'Unreal Engine plugins, documentation and devlogs by Denizhan Toprak.';
 const path = Astro.url.pathname.replace(/\.html$/, '').replace(/\/index$/, '') || '/';
+// Tabs and search results lead with the person; the plugin docs keep the Elmarath brand they're sold under.
+const brand = path === '/docs' || path.startsWith('/docs/') ? site.name : site.ownerName;
+const fullTitle = title ? `${title} · ${brand}` : `${site.ownerName} · ${site.role}, Unreal Engine`;
+const summary = description ?? `${site.ownerName}, ${site.role} in Unreal Engine: gameplay systems, plugins and devlogs.`;
 const canonical = new URL(path, site.url).href;
 const imageUrl = new URL(image, site.url).href;
 const themeIds = themes.map((t) => t.id);

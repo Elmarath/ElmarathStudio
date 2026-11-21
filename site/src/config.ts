@@ -66,7 +66,10 @@ export type IconName =
   | 'sparkles'
   | 'quote'
   | 'milestone'
-  | 'layers';
+  | 'layers'
+  | 'thumbs-up'
+  | 'thumbs-down'
+  | 'send';
 
 const email = 'toprakdenizhan19@gmail.com';
 
@@ -92,9 +95,9 @@ export const site = {
   // Home page hero. A non-breaking space keeps "Unreal Engine" together when the line wraps.
   heroTitle: 'Gameplay systems,\nbuilt for Unreal Engine.',
   heroSubtitle:
-    "I’m Denizhan, a C++ Gameplay Programmer specializing in Unreal Engine.\n" +
-    'I build gameplay systems, develop modular and production-ready plugins.\n' +
-    'Also I document my work to share the technical knowledge and experiences behind each project here!',
+    "I’m Denizhan, a C++ gameplay programmer working in Unreal Engine 5.\n" +
+    'I build gameplay systems for studios, my own games and the Unreal community.\n' +
+    'Here I document the thinking behind each project.',
 
   /**
    * The showreel next to the hero text: short, muted clips that play one after
@@ -107,6 +110,7 @@ export const site = {
    * `{ src, label }` to write it yourself.
    */
   heroVideos: [
+    { src: '/videos/the-freeblades.mp4', label: 'The Freeblades: gameplay' },
     '/videos/trace-trail.mp4',
     '/videos/easy-game-user-settings.mp4',
     '/videos/skeletal-mesh-merge.mp4',
@@ -121,7 +125,7 @@ export const site = {
    */
   showWork: true,
 
-  /** The call-to-action button at the right of the nav bar. */
+  /** The plugin store: in the footer, and on the docs. */
   storeLink: { label: 'Fab Store', url: 'https://www.fab.com/sellers/Elmarath' },
 
   /** Your CV. Links to `resumeUrl` open it in a viewer window; `/cv` shows it as a page. */

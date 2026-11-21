@@ -50,8 +50,9 @@ const [title1, title2] = site.heroTitle.split('\n');
         {site.heroSubtitle.split('\n').map((line, i) => (i === 0 ? line : [<br />, line]))}
       </p>
       <div class="button-row">
-        <a class="button button-filled" href="/docs"><Icon name="book" />Explore the docs</a>
-        <a class="button button-outlined" href="/blog">Read the blog</a>
+        <a class="button button-filled" href="/work"><Icon name="work" />See my work</a>
+        <a class="button button-outlined" href="/docs"><Icon name="book" />Plugin docs</a>
+        <a class="button button-outlined" href="#contact"><Icon name="mail" />Contact</a>
       </div>
     </div>
 
@@ -201,6 +202,7 @@ const [title1, title2] = site.heroTitle.split('\n');
   @media (max-width: 479px) {
     .side .button-row { display: grid; grid-template-columns: 1fr 1fr; width: 100%; }
     .side .button-row .button { padding: 0 12px; }
+    .side .button-row .button:first-child { grid-column: 1 / -1; }
   }
 
   /* The showreel, framed like an editor viewport. The frame is black, so

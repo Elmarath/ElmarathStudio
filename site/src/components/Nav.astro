@@ -1,5 +1,5 @@
 ---
-// The nav bar: logo, tabs, search, theme menu, store button; on phones a menu
+// The nav bar: logo, tabs, search, theme menu, CV button; on phones a menu
 // button opens a drawer. The menus are native popovers: no script needed to
 // open or close them.
 import { navItems, site, themes } from '../config.ts';
@@ -45,8 +45,8 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
         ))
       }
     </div>
-    <a class="button store" href={site.storeLink.url} target="_blank" rel="noopener">
-      <Icon name="store" />{site.storeLink.label}
+    <a class="button store" href={site.resumeUrl}>
+      <Icon name="doc" />Resume / CV
     </a>
     <button type="button" class="icon-button menu-button" popovertarget="nav-drawer" aria-label="Menu">
       <Icon name="menu" />
@@ -70,8 +70,8 @@ const isActive = (p: string) => (p === '/' ? path === '/' : path === p || path.s
       ))
     }
   </nav>
-  <a class="button button-filled" href={site.storeLink.url} target="_blank" rel="noopener">
-    <Icon name="store" />{site.storeLink.label}
+  <a class="button button-filled" href={site.resumeUrl}>
+    <Icon name="doc" />Resume / CV
   </a>
   <hr />
   <div class="socials">
