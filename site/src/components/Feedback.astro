@@ -4,7 +4,7 @@
 // Netlify dashboard), so there's no server of our own. A thumb sends the rating
 // at once; the comment that opens after it is optional and arrives as a second
 // entry marked `step: comment`. Nobody signs in and nothing personal is asked.
-// Without scripts the thumbs post the form the ordinary way.
+// It needs scripts: the thumbs fill in the rating field before sending.
 import Icon from './Icon.astro';
 
 interface Props {
@@ -23,6 +23,8 @@ const { form, page, title, question } = Astro.props;
   <input type="hidden" name="page" value={page} />
   <input type="hidden" name="title" value={title} />
   <input type="hidden" name="step" value="rating" />
+  {/* Netlify keeps only the fields it finds as inputs here, not button values: the rating goes in this one. */}
+  <input type="hidden" name="rating" value="" />
   <p class="trap" aria-hidden="true">
     <label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label>
   </p>
@@ -30,8 +32,8 @@ const { form, page, title, question } = Astro.props;
   <div class="ask" data-ask>
     <p class="question">{question}</p>
     <div class="thumbs">
-      <button type="submit" class="button button-outlined" name="rating" value="up"><Icon name="thumbs-up" />Yes</button>
-      <button type="submit" class="button button-outlined" name="rating" value="down"><Icon name="thumbs-down" />Not really</button>
+      <button type="submit" class="button button-outlined" data-rating value="up"><Icon name="thumbs-up" />Yes</button>
+      <button type="submit" class="button button-outlined" data-rating value="down"><Icon name="thumbs-down" />Not really</button>
     </div>
   </div>
 

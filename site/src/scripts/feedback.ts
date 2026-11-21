@@ -19,7 +19,7 @@ onPage((signal) => {
     const more = $('[data-more]');
     const done = $('[data-done]');
     const error = $('[data-error]');
-    const thumbs = [...form.querySelectorAll<HTMLButtonElement>('button[name="rating"]')];
+    const thumbs = [...form.querySelectorAll<HTMLButtonElement>('button[data-rating]')];
     let rating = '';
 
     form.addEventListener('submit', (e) => {
