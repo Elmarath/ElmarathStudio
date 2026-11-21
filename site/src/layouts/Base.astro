@@ -36,6 +36,8 @@ const canonical = new URL(path, site.url).href;
 const imageUrl = new URL(image, site.url).href;
 const themeIds = themes.map((t) => t.id);
 const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
+// With nothing picked yet, the site follows the OS: its first dark or first light theme.
+const osThemes = { dark: themes.find((t) => t.dark)?.id, light: themes.find((t) => !t.dark)?.id };
 ---
 
 <!doctype html>
@@ -48,10 +50,13 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
     <link rel="canonical" href={canonical} />
     {noindex && <meta name="robots" content="noindex" />}
 
-    <!-- The theme picked last time, before anything is painted (no flash of the
+    <meta name="theme-color" content={themes[0].background} />
+    <!-- The theme picked last time (or, until one is picked, the one matching the
+         OS's dark or light setting), before anything is painted (no flash of the
          other theme), and again on each page the client router swaps in (it
          replaces the <html> attributes with the new page's). -->
-    <script is:inline define:vars={{ themeIds, themeColors }}>
+    <script is:inline define:vars={{ themeIds, themeColors, osThemes }}>
+      const osLight = matchMedia('(prefers-color-scheme: light)');
       const applyTheme = () => {
         let id;
         try {
@@ -61,15 +66,16 @@ const themeColors = Object.fromEntries(themes.map((t) => [t.id, t.background]));
         } catch {}
         // Earlier names of the dark theme.
         if (id === 'unreal-dark') id = 'elmarath-dark';
-        if (!themeIds.includes(id)) id = themeIds[0];
+        if (!themeIds.includes(id)) id = (osLight.matches ? osThemes.light : osThemes.dark) || themeIds[0];
         document.documentElement.dataset.theme = id;
         document.querySelector('meta[name="theme-color"]')?.setAttribute('content', themeColors[id]);
       };
       window.__themeColors = themeColors;
       applyTheme();
       document.addEventListener('astro:after-swap', applyTheme);
+      // The OS switching while the page is open (e.g. macOS auto at sunset).
+      osLight.addEventListener('change', applyTheme);
     </script>
-    <meta name="theme-color" content={themes[0].background} />
     <!-- Moving between pages swaps the page in place (no reload): the nav bar
          and the docs sidebar stay put, and the content cross-fades. -->
     <ClientRouter />

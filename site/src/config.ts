@@ -200,7 +200,8 @@ export const footerColumns: { title: string; links: NavItem[] }[] = [
 ];
 
 /**
- * The themes in the theme menu. The first is the default. Colors live in
+ * The themes in the theme menu. Until a visitor picks one, the first dark or
+ * first light one is used, matching their OS setting. Colors live in
  * src/styles/themes.css under `[data-theme="<id>"]`; add a block there and an
  * entry here to make a new one.
  */
