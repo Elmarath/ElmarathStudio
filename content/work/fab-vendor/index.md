@@ -127,7 +127,7 @@ code:
 
     	OnMeshMergeCancelled.Broadcast();
     }
-order: 5
+order: 4
 ---
 
 ## How the plugins come about

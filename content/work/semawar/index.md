@@ -9,8 +9,8 @@ team: "6 people: 3 programmers, 3 artists"
 engine: Unity 2021.3
 video: gameplay.mp4
 summary: >-
-  Semawar is a local two-player capture-the-flag game in which a whirling semazen fights a tank. Yes,
-  really. We made it in 48 hours for Jamination 5, on the theme "Every input does two things". In a team
+  Semawar is a local two-player capture-the-flag game in which a whirling semazen fights a tank. We
+  made it in 48 hours for Jamination 5, on the theme "Every input does two things". In a team
   of six I came up with the spinning semazen, programmed his movement, input and projectiles, and spent
   our spare six hours on power-ups. As founder of Marmara University's game development club, I also
   brought the jam to our campus: over 50 people, sponsors and a building to jam in.
@@ -52,7 +52,7 @@ timeline:
   - { date: 27 May 2022, text: "Jamination 5 starts: 48 hours, theme \"Every input does two things\"" }
   - { date: Last 6 hours, text: "The game works, so naturally I add power-ups: speed, shot cooldown and size" }
   - { date: 29 May 2022, text: "Submitted to Jamination 5 and shown to our community and the online jam" }
-order: 4
+order: 5
 ---
 
 ## The idea

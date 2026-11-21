@@ -1,0 +1,60 @@
+---
+// A Work entry as a small card, for the home page's second row: the clip or
+// picture beside the name, role, when and where, and two lines of the summary.
+// Enough to show there's more on the Work page without competing with the big cards.
+import type { CaseStudy } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
+import WorkMedia from './WorkMedia.astro';
+
+interface Props {
+  study: CaseStudy;
+}
+const { study } = Astro.props;
+const meta = [study.company !== study.title ? study.company : undefined, study.period].filter(Boolean).join('  ·  ');
+const role = study.role?.split(/:\s*/)[0];
+---
+
+<article class="card interactive mini">
+  <div class="media zoom-media">
+    <WorkMedia study={study} width={240} />
+    <span class="badge">{study.workKind}</span>
+  </div>
+  <div class="body">
+    {meta && <p class="meta">{meta}</p>}
+    <h3 class="title"><a class="open" href={study.route}>{study.title}</a></h3>
+    {role && <p class="role"><Icon name="work" /><span class="visually-hidden">Role: </span>{role}</p>}
+    {study.summary && <p class="summary">{study.summary}</p>}
+  </div>
+  <span class="go" aria-hidden="true"><Icon name="arrow-right" /></span>
+</article>
+
+<style>
+  .mini {
+    position: relative;
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr) auto;
+    align-items: center;
+    gap: 18px;
+    padding: 12px 18px 12px 12px;
+    border-radius: var(--r-lg);
+    overflow: hidden;
+  }
+  .media { position: relative; width: 100%; aspect-ratio: 16 / 10; overflow: hidden; border-radius: var(--r-md); background: var(--surface-raised); }
+  .media > :global(*:first-child) { position: absolute; inset: 0; }
+  .media .badge { position: absolute; left: 8px; bottom: 8px; }
+  .body { display: grid; gap: 6px; min-width: 0; }
+  .meta { font-family: var(--mono); font-size: 11.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--text-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .title { font-family: var(--display); font-size: 18px; font-weight: 700; letter-spacing: -0.015em; line-height: 1.2; }
+  .open::after { content: ''; position: absolute; inset: 0; z-index: 0; }
+  .role { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 650; color: var(--accent); }
+  .role :global(.icon) { flex: none; font-size: 13px; }
+  .summary { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; font-size: 13.5px; line-height: 1.55; color: var(--text-2); }
+  .go { display: flex; font-size: 18px; color: var(--accent); transition: transform var(--fast); }
+  .mini:hover .go { transform: translateX(3px); }
+
+  @media (max-width: 520px) {
+    .mini { grid-template-columns: 112px minmax(0, 1fr); gap: 14px; padding: 10px 14px 10px 10px; }
+    .go { display: none; }
+    .summary { -webkit-line-clamp: 2; font-size: 13px; }
+  }
+</style>

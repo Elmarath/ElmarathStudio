@@ -1,24 +1,44 @@
 ---
-// Work on the home page, like the blog's latest posts: the first few entries
-// (lowest `order:`) as cards, two to a row on wide screens.
+// Work on the home page: the first few entries (lowest `order:`) as big cards,
+// two to a row on wide screens, then the next couple as small cards, so it's
+// clear there's more on the Work page.
 import { content } from '../../content/repository.ts';
+import Icon from '../Icon.astro';
 import SectionHeader from '../SectionHeader.astro';
 import WorkCard from '../work/WorkCard.astro';
+import WorkMiniCard from '../work/WorkMiniCard.astro';
 
 interface Props {
   count?: number;
+  more?: number;
 }
-const { count = 4 } = Astro.props;
-const work = content().work.slice(0, count);
+const { count = 4, more = 2 } = Astro.props;
+const all = content().work;
+const work = all.slice(0, count);
+const rest = all.slice(count, count + more);
 ---
 
 {
   work.length > 0 && (
     <section class="container section">
-      <SectionHeader eyebrow="Work" title="What I've built" actionLabel="All work" actionHref="/work" count={content().work.length} />
+      <SectionHeader eyebrow="Work" title="What I've built" actionLabel="All work" actionHref="/work" count={all.length} />
       <div class="grid" style="--min: 420px; --grid-gap: 20px">
         {work.map((s) => <WorkCard study={s} />)}
       </div>
+      {rest.length > 0 && (
+        <div class="grid more" style="--min: 420px; --grid-gap: 20px">
+          {rest.map((s) => <WorkMiniCard study={s} />)}
+        </div>
+      )}
+      <a class="button button-outlined all" href="/work">
+        See all work
+        <Icon name="arrow-right" />
+      </a>
     </section>
   )
 }
+
+<style>
+  .more { margin-top: 20px; }
+  .all { display: flex; width: fit-content; margin: 28px auto 0; }
+</style>
