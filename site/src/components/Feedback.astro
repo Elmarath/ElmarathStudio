@@ -1,10 +1,11 @@
 ---
 // "Was this useful?" at the end of a blog post or a docs page. It's a Netlify form: Netlify
 // finds it in the built page and keeps what's sent (site → Forms in the
-// Netlify dashboard), so there's no server of our own. A thumb sends the rating
-// at once; the comment that opens after it is optional and arrives as a second
-// entry marked `step: comment`. Nobody signs in and nothing personal is asked.
-// It needs scripts: the thumbs fill in the rating field before sending.
+// Netlify dashboard), so there's no server of our own. A thumb picks the rating
+// (it can be changed until it's sent) and opens an optional comment; Send makes
+// one entry with both. A rating left unsent goes on its own when the reader
+// leaves the page. Nobody signs in and nothing personal is asked. It needs
+// scripts: the thumbs fill in the rating field.
 import Icon from './Icon.astro';
 
 interface Props {
@@ -22,7 +23,6 @@ const { form, page, title, question } = Astro.props;
   <input type="hidden" name="form-name" value={form} />
   <input type="hidden" name="page" value={page} />
   <input type="hidden" name="title" value={title} />
-  <input type="hidden" name="step" value="rating" />
   {/* Netlify keeps only the fields it finds as inputs here, not button values: the rating goes in this one. */}
   <input type="hidden" name="rating" value="" />
   <p class="trap" aria-hidden="true">
@@ -32,15 +32,15 @@ const { form, page, title, question } = Astro.props;
   <div class="ask" data-ask>
     <p class="question">{question}</p>
     <div class="thumbs">
-      <button type="submit" class="button button-outlined" data-rating value="up"><Icon name="thumbs-up" />Yes</button>
-      <button type="submit" class="button button-outlined" data-rating value="down"><Icon name="thumbs-down" />Not really</button>
+      <button type="button" class="button button-outlined" data-rating value="up" aria-pressed="false"><Icon name="thumbs-up" />Yes</button>
+      <button type="button" class="button button-outlined" data-rating value="down" aria-pressed="false"><Icon name="thumbs-down" />Not really</button>
     </div>
   </div>
 
   <div class="more" data-more hidden>
-    <p class="question" data-thanks>Thanks! Anything you'd add? <span>(optional)</span></p>
+    <p class="question">Anything you'd add? <span>(optional)</span></p>
     <textarea name="comment" rows="3" maxlength="2000" placeholder="What worked, what was missing, what you'd like to see next…"></textarea>
-    <button type="button" class="button button-filled" data-send><Icon name="send" />Send</button>
+    <button type="submit" class="button button-filled" data-send><Icon name="send" />Send</button>
   </div>
 
   <p class="done" data-done hidden>Thanks, that helps.</p>
@@ -55,7 +55,7 @@ const { form, page, title, question } = Astro.props;
   .thumbs { display: flex; gap: 10px; }
   .thumbs .button[aria-pressed='true'] { border-color: var(--accent); color: var(--accent); }
   .more { display: grid; gap: 12px; }
-  .more[hidden], .done[hidden], .error[hidden] { display: none; }
+  .ask[hidden], .more[hidden], .done[hidden], .error[hidden] { display: none; }
   textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; resize: vertical; }
   textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
   .more .button { justify-self: start; }
