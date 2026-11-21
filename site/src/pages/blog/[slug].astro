@@ -4,7 +4,7 @@ import Base from '../../layouts/Base.astro';
 import Icon from '../../components/Icon.astro';
 import Prose from '../../components/Prose.astro';
 import PostCover from '../../components/cards/PostCover.astro';
-import PostFeedback from '../../components/blog/PostFeedback.astro';
+import Feedback from '../../components/Feedback.astro';
 import { render } from '../../content/markdown.ts';
 import { content, formatDate } from '../../content/repository.ts';
 import { slugify } from '../../content/text.ts';
@@ -56,7 +56,7 @@ const author = post.authors[0];
     }
     <Prose rendered={rendered} />
     <hr />
-    {!post.draft && <PostFeedback slug={post.slug} title={post.title} />}
+    {!post.draft && <Feedback form="post-feedback" page={post.route} title={post.title} question="Was this post useful?" />}
     {
       post.authors.map((a) => (
         <div class="author">

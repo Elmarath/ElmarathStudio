@@ -182,6 +182,7 @@ export const footerColumns: { title: string; links: NavItem[] }[] = [
   {
     title: 'Explore',
     links: [
+      { label: 'Work', path: '/work' },
       { label: 'Documentation', path: '/docs' },
       { label: 'Blog', path: '/blog' },
       { label: 'About me', path: '/about' },

@@ -1,22 +1,26 @@
 ---
-// "Was this post useful?" at the end of a post. It's a Netlify form: Netlify
+// "Was this useful?" at the end of a blog post or a docs page. It's a Netlify form: Netlify
 // finds it in the built page and keeps what's sent (site → Forms in the
 // Netlify dashboard), so there's no server of our own. A thumb sends the rating
 // at once; the comment that opens after it is optional and arrives as a second
 // entry marked `step: comment`. Nobody signs in and nothing personal is asked.
 // Without scripts the thumbs post the form the ordinary way.
-import Icon from '../Icon.astro';
+import Icon from './Icon.astro';
 
 interface Props {
-  slug: string;
+  /** The Netlify form it goes to: posts and docs are kept apart in the dashboard. */
+  form: 'post-feedback' | 'docs-feedback';
+  /** The page's path, e.g. /blog/crafting-in-the-freeblades. */
+  page: string;
   title: string;
+  question: string;
 }
-const { slug, title } = Astro.props;
+const { form, page, title, question } = Astro.props;
 ---
 
-<form class="feedback" name="post-feedback" method="POST" data-netlify="true" netlify-honeypot="company" data-feedback>
-  <input type="hidden" name="form-name" value="post-feedback" />
-  <input type="hidden" name="post" value={slug} />
+<form class="feedback" name={form} method="POST" data-netlify="true" netlify-honeypot="company" data-feedback>
+  <input type="hidden" name="form-name" value={form} />
+  <input type="hidden" name="page" value={page} />
   <input type="hidden" name="title" value={title} />
   <input type="hidden" name="step" value="rating" />
   <p class="trap" aria-hidden="true">
@@ -24,7 +28,7 @@ const { slug, title } = Astro.props;
   </p>
 
   <div class="ask" data-ask>
-    <p class="question">Was this post useful?</p>
+    <p class="question">{question}</p>
     <div class="thumbs">
       <button type="submit" class="button button-outlined" name="rating" value="up"><Icon name="thumbs-up" />Yes</button>
       <button type="submit" class="button button-outlined" name="rating" value="down"><Icon name="thumbs-down" />Not really</button>
@@ -33,7 +37,7 @@ const { slug, title } = Astro.props;
 
   <div class="more" data-more hidden>
     <p class="question" data-thanks>Thanks! Anything you'd add? <span>(optional)</span></p>
-    <textarea name="comment" rows="3" maxlength="2000" placeholder="What worked, what was missing, what you'd like to read next…"></textarea>
+    <textarea name="comment" rows="3" maxlength="2000" placeholder="What worked, what was missing, what you'd like to see next…"></textarea>
     <button type="button" class="button button-filled" data-send><Icon name="send" />Send</button>
   </div>
 

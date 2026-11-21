@@ -5,6 +5,7 @@ import Icon from '../../components/Icon.astro';
 import Prose from '../../components/Prose.astro';
 import Breadcrumbs from '../../components/docs/Breadcrumbs.astro';
 import Pager from '../../components/docs/Pager.astro';
+import Feedback from '../../components/Feedback.astro';
 import PluginThumbnail from '../../components/docs/PluginThumbnail.astro';
 import { site } from '../../config.ts';
 import { linkButtons, render } from '../../content/markdown.ts';
@@ -50,6 +51,12 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
           </a>
         )}
         <hr />
+        <Feedback
+          form="docs-feedback"
+          page={doc.route}
+          title={plugin && plugin.label !== doc.title ? `${plugin.label} · ${doc.title}` : doc.title}
+          question="Was this page helpful?"
+        />
         <Pager previous={previous} next={next} />
       </article>
     </Docs>

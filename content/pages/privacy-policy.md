@@ -6,10 +6,10 @@ sidebar_position: 9999
 
 ## This website
 
-The "Was this post useful?" box at the end of blog posts on elmarath.com sends your answer, the post
-it's about and any comment you choose to write. No name or email is asked for. These are stored with
-[Netlify](https://www.netlify.com/privacy/), which hosts the site, and read only by me to improve the
-blog.
+The "Was this useful?" box at the end of blog posts and documentation pages on elmarath.com sends
+your answer, the page it's about and any comment you choose to write. No name or email is asked for.
+These are stored with [Netlify](https://www.netlify.com/privacy/), which hosts the site, and read only
+by me to improve the blog and the docs.
 
 The rest of this page covers the game Hermods Ride.
 

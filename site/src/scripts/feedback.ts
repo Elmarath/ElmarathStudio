@@ -1,4 +1,4 @@
-// The "Was this post useful?" box (src/components/blog/PostFeedback.astro):
+// The "Was this useful?" box on posts and docs (src/components/Feedback.astro):
 // sends the rating to Netlify Forms as soon as a thumb is clicked, then offers
 // an optional comment. Netlify takes form posts to any page of the site; "/"
 // keeps it simple.
