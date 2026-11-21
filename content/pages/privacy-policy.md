@@ -4,6 +4,15 @@ sidebar_position: 9999
 
 # Privacy Policy for Hermods Ride
 
+## This website
+
+The "Was this post useful?" box at the end of blog posts on elmarath.com sends your answer, the post
+it's about and any comment you choose to write. No name or email is asked for. These are stored with
+[Netlify](https://www.netlify.com/privacy/), which hosts the site, and read only by me to improve the
+blog.
+
+The rest of this page covers the game Hermods Ride.
+
 **Last updated: April 4, 2026**
 
 Elmarath Studio ("we", "our", or "us") operates Hermods Ride, a game that uses Epic Online Services ("EOS") provided by Epic Games, Inc. ("Epic") for authentication, matchmaking, and multiplayer features. This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use Hermods Ride.

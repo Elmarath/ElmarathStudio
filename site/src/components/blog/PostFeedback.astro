@@ -1,0 +1,59 @@
+---
+// "Was this post useful?" at the end of a post. It's a Netlify form: Netlify
+// finds it in the built page and keeps what's sent (site → Forms in the
+// Netlify dashboard), so there's no server of our own. A thumb sends the rating
+// at once; the comment that opens after it is optional and arrives as a second
+// entry marked `step: comment`. Nobody signs in and nothing personal is asked.
+// Without scripts the thumbs post the form the ordinary way.
+import Icon from '../Icon.astro';
+
+interface Props {
+  slug: string;
+  title: string;
+}
+const { slug, title } = Astro.props;
+---
+
+<form class="feedback" name="post-feedback" method="POST" data-netlify="true" netlify-honeypot="company" data-feedback>
+  <input type="hidden" name="form-name" value="post-feedback" />
+  <input type="hidden" name="post" value={slug} />
+  <input type="hidden" name="title" value={title} />
+  <input type="hidden" name="step" value="rating" />
+  <p class="trap" aria-hidden="true">
+    <label>Leave this empty <input name="company" tabindex="-1" autocomplete="off" /></label>
+  </p>
+
+  <div class="ask" data-ask>
+    <p class="question">Was this post useful?</p>
+    <div class="thumbs">
+      <button type="submit" class="button button-outlined" name="rating" value="up"><Icon name="thumbs-up" />Yes</button>
+      <button type="submit" class="button button-outlined" name="rating" value="down"><Icon name="thumbs-down" />Not really</button>
+    </div>
+  </div>
+
+  <div class="more" data-more hidden>
+    <p class="question" data-thanks>Thanks! Anything you'd add? <span>(optional)</span></p>
+    <textarea name="comment" rows="3" maxlength="2000" placeholder="What worked, what was missing, what you'd like to read next…"></textarea>
+    <button type="button" class="button button-filled" data-send><Icon name="send" />Send</button>
+  </div>
+
+  <p class="done" data-done hidden>Thanks, that helps.</p>
+  <p class="error" data-error hidden>That didn't go through. Please try again in a moment.</p>
+</form>
+
+<style>
+  .feedback { display: grid; gap: 14px; margin: 8px 0 32px; padding: 20px 22px; border: 1px solid var(--border); border-radius: var(--r-lg); background: var(--surface); }
+  .ask { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 20px; }
+  .question { font-weight: 600; color: var(--text); }
+  .question span { font-weight: 400; color: var(--text-3); }
+  .thumbs { display: flex; gap: 10px; }
+  .thumbs .button[aria-pressed='true'] { border-color: var(--accent); color: var(--accent); }
+  .more { display: grid; gap: 12px; }
+  .more[hidden], .done[hidden], .error[hidden] { display: none; }
+  textarea { width: 100%; padding: 12px 14px; border: 1px solid var(--border-strong); border-radius: var(--r-md); background: var(--bg); color: var(--text); font: inherit; font-size: 15px; resize: vertical; }
+  textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .more .button { justify-self: start; }
+  .done { color: var(--accent); font-weight: 600; }
+  .error { color: var(--danger, #e5484d); font-size: 14px; }
+  .trap { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+</style>

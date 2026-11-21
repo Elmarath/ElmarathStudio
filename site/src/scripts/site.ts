@@ -5,6 +5,7 @@
 import { searchEntries, highlight, type IndexedEntry } from './search-core.ts';
 import { onPage } from './lifecycle.ts';
 import './loop-video.ts';
+import './feedback.ts';
 
 const $ = <T extends Element>(sel: string, root: ParentNode = document) => root.querySelector<T>(sel);
 const isMac = /Mac|iPhone|iPad/.test(navigator.platform);

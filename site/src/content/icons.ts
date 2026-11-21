@@ -11,6 +11,9 @@ const lucideDir = require.resolve('lucide-static/package.json').replace(/package
 /** Site icon name → Lucide icon file. */
 const lucide: Partial<Record<IconName, string>> = {
   mail: 'mail',
+  'thumbs-up': 'thumbs-up',
+  'thumbs-down': 'thumbs-down',
+  send: 'send',
   store: 'store',
   doc: 'file-text',
   book: 'book-open',
