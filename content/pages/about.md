@@ -15,7 +15,7 @@ What I enjoy most is creating tools and robust system designs that make projects
 
 - Designing and implementing core gameplay systems for [The Freeblades](https://store.steampowered.com/app/3983160/The_Freeblades/), a co-op action-adventure RPG combat game in Unreal Engine 5, in a remote studio of 5 to 10 people.
 - Leading the game's technical development: developer tools, pipelines and gameplay systems, while keeping it above 60 FPS on target hardware.
-- Own gameplay AI (built with StateTree), the integration of the studio's dialogue tool into the game and its UX, multiplayer combat and interaction abilities, inventory, in-game chat, save systems and more, in C++ and Blueprints.
+- Own gameplay AI (built with StateTree), the quest system, dialogue (how conversations play out, their panels and choices), crafting, boss and magic abilities, inventory, in-game chat, save systems and more, in C++ and Blueprints.
 - Built the game's UI/UX on Unreal Engine's Common UI framework and UI materials, extending it into a cross-platform, gamepad-friendly interface architecture. The team works in Perforce.
 - Coordinate design and engineering through organised Figma workflows, with clear pipelines for turning hundreds of UI designs into in-game UI.
 

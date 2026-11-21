@@ -21,6 +21,7 @@ import CodeSpotlight from './widgets/CodeSpotlight.astro';
 import Milestones from './widgets/Milestones.astro';
 import Quote from './widgets/Quote.astro';
 import WidgetTitle from './widgets/WidgetTitle.astro';
+import PostCard from '../cards/PostCard.astro';
 import { render, youtubeFacade } from '../../content/markdown.ts';
 import { content, type CaseStudy } from '../../content/repository.ts';
 import type { IconName } from '../../config.ts';
@@ -30,9 +31,13 @@ interface Props {
 }
 const { study } = Astro.props;
 const work = content().work;
-const index = work.indexOf(study);
+const index = work.findIndex((s) => s.route === study.route);
 const previous = index > 0 ? work[index - 1] : undefined;
 const next = work[index + 1];
+// Blog posts about this entry: tagged with its name, or linking to its page.
+const related = content().posts.filter(
+  (p) => p.tags.some((t) => t.toLowerCase() === study.title.toLowerCase()) || p.body.includes(`](${study.route})`),
+);
 const rendered = study.body.trim() ? await render(study.body, { sourcePath: study.assetPath }) : null;
 
 const where = [study.company && study.company !== study.title ? study.company : undefined, study.location].filter(Boolean).join(' · ');
@@ -146,6 +151,20 @@ const side = study.timeline.length > 0 && !!study.quote;
         </>
       )
     }
+  </div>
+
+  {
+    related.length > 0 && (
+      <section class="container reading related">
+        <WidgetTitle eyebrow="From the blog" title="Related posts" />
+        <div class="grid" style="--min: 300px">
+          {related.map((post) => <PostCard post={post} />)}
+        </div>
+      </section>
+    )
+  }
+
+  <div class="container reading">
     {
       (previous || next) && (
         <nav class="pager" aria-label="More work">
@@ -198,6 +217,7 @@ const side = study.timeline.length > 0 && !!study.quote;
   @media (min-width: 1000px) { .story.side { grid-template-columns: minmax(0, 6fr) minmax(0, 5fr); gap: 56px; align-items: center; } }
 
   .body { padding-top: 72px; }
+  .related { display: grid; gap: 24px; padding-top: 72px; }
   .pager { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 56px; }
   .pager .card { display: grid; gap: 4px; padding: 18px; }
   .pager .end { text-align: right; justify-items: end; }
