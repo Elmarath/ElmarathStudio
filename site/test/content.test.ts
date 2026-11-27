@@ -119,3 +119,17 @@ test('search ranks title over headings over text, and every word must match', ()
   assert.ok(b.score(['inventory']) > c.score(['inventory']));
   assert.equal(c.score(['inventory', 'missing']), 0);
 });
+
+test('the website editor covers every docs folder and edits bodies as plain Markdown', async () => {
+  const { parse } = await import('yaml');
+  const { cmsConfig } = await import('../src/content/cms.ts');
+  const config = parse(cmsConfig(repo.categories));
+  const folders = new Set(config.collections.map((c: { folder: string }) => c.folder));
+  for (const c of repo.categories) assert.ok(folders.has(c.assetDir), `no editor collection for ${c.assetDir}`);
+  for (const c of config.collections) {
+    assert.equal(c.extension, 'md');
+    const body = c.fields.find((f: { name: string }) => f.name === 'body');
+    assert.deepEqual(body.modes, ['raw'], `${c.name} must edit raw Markdown, or callouts and ::youtube get rewritten`);
+  }
+  assert.equal(new Set(config.collections.map((c: { name: string }) => c.name)).size, config.collections.length);
+});
