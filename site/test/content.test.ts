@@ -3,7 +3,7 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { FrontMatter, slugify } from '../src/content/text.ts';
+import { FrontMatter, plainText, slugify } from '../src/content/text.ts';
 import { preprocess, parseYoutube } from '../src/content/markdown-source.ts';
 import { content, resolveAsset } from '../src/content/repository.ts';
 import { legacyRoute } from '../src/scripts/legacy-core.ts';
@@ -58,6 +58,17 @@ test('markdown extensions: callouts, videos, alerts, fences', () => {
   assert.match(out, /data-youtube="xyz" data-start="12"/);
   assert.match(out, /data-directive="plugin-links"/);
   assert.deepEqual(parseYoutube('https://youtu.be/sX3nIh14bYM'), { videoId: 'sX3nIh14bYM', start: undefined });
+});
+
+test('TODO notes never reach the page', () => {
+  const source = 'Intro\n\n<!-- TODO: secret plan\n::youtube <link>\n-->\n\nOutro\n\n<!-- a normal comment -->';
+  const dropped = preprocess(source);
+  assert.doesNotMatch(dropped, /secret plan|youtube|todo-placeholder/);
+  assert.match(dropped, /Intro[\s\S]*Outro[\s\S]*<!-- a normal comment -->/);
+  const wip = preprocess(source, { todoPlaceholders: true });
+  assert.doesNotMatch(wip, /secret plan|youtube/);
+  assert.match(wip, /Intro\n+<p class="todo-placeholder"[^>]*>\.\.\.\.\.<\/p>\n+Outro/);
+  assert.equal(plainText('Before <!-- TODO: a -> b\nnote --> after'), 'Before after');
 });
 
 test('content loads: docs, posts and pages', () => {

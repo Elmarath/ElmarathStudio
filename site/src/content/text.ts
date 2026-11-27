@@ -34,6 +34,7 @@ export function humanize(input: string): string {
 /** Strips Markdown syntax to get readable text (for excerpts, search and the TOC). */
 export function plainText(markdown: string): string {
   let s = markdown;
+  s = s.replace(/<!--[\s\S]*?-->/g, ' ');
   s = s.replace(/```[\s\S]*?```/g, ' ');
   s = s.replace(/!\[([^\]]*)\]\([^)]*\)/g, '');
   s = s.replace(/\[([^\]]*)\]\([^)]*\)/g, '$1');

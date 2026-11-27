@@ -30,7 +30,7 @@ const next = index >= 0 ? repo.docPages[index + 1] : undefined;
 const plugin = doc ? rootCategory(doc) : undefined;
 let topCategory = category;
 while (topCategory?.parent) topCategory = topCategory.parent;
-const rendered = doc ? await render(doc.body, { sourcePath: doc.assetPath, links: plugin?.links ?? {} }) : undefined;
+const rendered = doc ? await render(doc.body, { sourcePath: doc.assetPath, links: plugin?.links ?? {}, wip: plugin?.wip }) : undefined;
 
 const firstSentence = (s: string) => {
   const end = s.search(/[.!?](\s|$)/);

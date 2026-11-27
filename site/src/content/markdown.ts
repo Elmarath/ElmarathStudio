@@ -41,6 +41,8 @@ interface Options {
   links?: Record<string, string>;
   /** The widest images are shown, in CSS pixels. */
   imageWidth?: number;
+  /** Work-in-progress docs: `<!-- TODO … -->` notes show as a "....." placeholder. */
+  wip?: boolean;
 }
 
 const calloutLook: Record<string, [IconName, string]> = {
@@ -257,7 +259,7 @@ const cache = new Map<string, Promise<Rendered>>();
 
 /** [markdown] (a file body) as HTML, with its headings. Cached per file. */
 export function render(markdown: string, options: Options): Promise<Rendered> {
-  const key = `${options.sourcePath}\u0000${options.links ? JSON.stringify(options.links) : ''}\u0000${markdown}`;
+  const key = `${options.sourcePath}\u0000${options.links ? JSON.stringify(options.links) : ''}\u0000${options.wip ? 'wip' : ''}\u0000${markdown}`;
   let hit = cache.get(key);
   if (!hit) {
     hit = (async () => {
@@ -285,7 +287,7 @@ export function render(markdown: string, options: Options): Promise<Rendered> {
         })
         .use(codeFrames)
         .use(rehypeStringify, { allowDangerousHtml: true })
-        .process(preprocess(markdown));
+        .process(preprocess(markdown, { todoPlaceholders: options.wip }));
       return { html: String(file), headings: state.headings, mermaid: state.mermaid };
     })();
     cache.set(key, hit);
