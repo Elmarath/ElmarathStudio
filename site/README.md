@@ -62,6 +62,43 @@ Nothing to register: drop a file in `../content` and it's on the site.
   case, dashes, renamed folders: `aliases:` in `_category_.yaml`). Pages that moved entirely go in
   `movedPages` in `src/config.ts`.
 
+## Editing on the website
+
+Open **[elmarath.com/admin](https://elmarath.com/admin)** to edit the docs (every plugin folder, plus
+the intro) and the pages in the browser. It's [Sveltia CMS](https://sveltiacms.app): saving makes a
+commit to `master` on GitHub, Netlify rebuilds, and the change is live a minute later. The Markdown in
+`content/` stays the only copy, so VS Code and the website editor can be used side by side (pull
+before editing locally).
+
+- **Bodies are edited as plain Markdown**, exactly as in VS Code, so callouts, `::youtube`,
+  `::video`, `::plugin-links` and code blocks stay as written. (The rich text mode is switched off:
+  it would rewrite them.) The preview beside the editor doesn't know the site's extras; check the page
+  itself after it's built.
+- **Images** you add go in the folder's `img/` and are linked as `img/name.png`, like the existing ones.
+- **Front matter** keys the editor doesn't show are kept. It does rewrite the front matter's formatting
+  (quotes, order of the keys it knows).
+- **New plugin folders** appear in the editor by themselves (the list is made at build time:
+  `src/content/cms.ts`). Blog posts and case studies aren't in it yet; they're still edited here.
+- **Visitors get nothing of it:** no page links to `/admin`, the editor's script loads only there,
+  and `/admin` is kept out of search engines (`robots.txt`, `netlify.toml`).
+- **Only you can save:** signing in needs write access to the GitHub repository.
+
+One-time setup, so "Sign In with GitHub" works on the live site:
+
+1. On GitHub, **Settings → Developer settings → OAuth Apps → New OAuth App**
+   (github.com/settings/applications/new): any name, homepage `https://elmarath.com`, and
+   **Authorization callback URL** `https://api.netlify.com/auth/done`. Copy the Client ID and generate
+   a Client Secret.
+2. In Netlify, **Project configuration → Security → OAuth** (not Identity) → **Install provider** →
+   GitHub, and paste the Client ID and Secret.
+
+Without that setup, "Sign In Using Access Token" works too: a fine-grained GitHub token limited to this
+repository with **Contents: read and write**.
+
+Locally, with no sign-in: run `npm run dev`, open `http://localhost:4321/admin` in Chrome or Edge,
+choose **Work with Local Repository** and pick the repository folder (the one holding `content/`).
+Edits are saved to your files; commit them as usual.
+
 ## Changing the site
 
 - **Names, links, menus, hero text, showreel clips, analytics, Work on/off:** `src/config.ts`.

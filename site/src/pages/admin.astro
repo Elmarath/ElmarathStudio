@@ -1,0 +1,20 @@
+---
+// The website editor (Sveltia CMS): edit the Markdown in content/ from the
+// browser, committed straight to GitHub. A page of its own, outside the site's
+// layout: nothing links here, and no other page loads any of it.
+// Signing in needs write access to the repository (see site/README.md).
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>Edit elmarath.com</title>
+    <link href="/admin/config.yml" type="application/yaml" rel="cms-config-url" />
+  </head>
+  <body>
+    <!-- Major version pinned (the editor's own advice), so updates within 5.x arrive by themselves. -->
+    <script is:inline src="https://unpkg.com/@sveltia/cms@^5/dist/sveltia-cms.js"></script>
+  </body>
+</html>
