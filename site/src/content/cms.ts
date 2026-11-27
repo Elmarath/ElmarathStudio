@@ -2,7 +2,7 @@
 // it can open, and where it commits them. Made at build time from the docs
 // tree, so a new plugin folder shows up in the editor without touching this.
 import { stringify } from 'yaml';
-import type { DocCategory } from './repository.ts';
+import type { DocCategory, DocPage } from './repository.ts';
 
 /** GitHub repository and branch the editor reads and commits to. */
 export const cmsRepo = { repo: 'Elmarath/ElmarathStudio', branch: 'master' };
@@ -43,11 +43,22 @@ const folder = (name: string, label: string, dir: string, fields: unknown[]) => 
   fields,
 });
 
+/** The editor's collection for a docs folder (none: the top of content/docs). */
+export const cmsCollection = (category?: DocCategory) =>
+  category ? `docs-${category.id.replace(/\//g, '-')}` : 'docs';
+
+/** Where the editor opens [doc] (or, for a folder, its list of pages). */
+export function editorUrl(doc: DocPage | DocCategory): string {
+  if (doc.kind === 'category') return `/admin#/collections/${cmsCollection(doc)}`;
+  const file = doc.assetPath.split('/').at(-1)!.replace(/\.md$/, '');
+  return `/admin#/collections/${cmsCollection(doc.category)}/entries/${encodeURIComponent(file)}`;
+}
+
 /** The editor's config.yml. [categories]: every docs folder, from the content repository. */
 export function cmsConfig(categories: DocCategory[]): string {
   const docs = [...categories]
     .sort((a, b) => a.assetDir.localeCompare(b.assetDir))
-    .map((c) => folder(`docs-${c.id.replace(/\//g, '-')}`, `Docs: ${c.label}`, c.assetDir, docFields));
+    .map((c) => folder(cmsCollection(c), `Docs: ${c.label}`, c.assetDir, docFields));
   return stringify(
     {
       backend: {

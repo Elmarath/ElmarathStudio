@@ -1,0 +1,35 @@
+---
+// "Edit" (a pencil) for the site's owner: opens this page in the website
+// editor (/admin). Hidden for everyone else: it shows only in a browser that's
+// signed in to the editor (src/scripts/site.ts), so visitors see no change.
+import Icon from '../Icon.astro';
+import { editorUrl } from '../../content/cms.ts';
+import type { DocCategory, DocPage } from '../../content/repository.ts';
+
+interface Props {
+  doc: DocPage | DocCategory;
+}
+---
+
+<a class="edit-page" href={editorUrl(Astro.props.doc)} data-editor-link data-astro-reload hidden>
+  <Icon name="edit" />Edit
+</a>
+
+<style>
+  .edit-page {
+    float: right;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    margin-left: 16px;
+    padding: 6px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    color: var(--text);
+    font-size: 14px;
+    font-weight: 600;
+    transition: border-color 150ms var(--ease), color 150ms var(--ease);
+  }
+  .edit-page[hidden] { display: none; }
+  .edit-page:hover { border-color: var(--accent); color: var(--accent); }
+</style>

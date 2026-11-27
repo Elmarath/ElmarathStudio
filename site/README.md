@@ -70,6 +70,9 @@ commit to `master` on GitHub, Netlify rebuilds, and the change is live a minute 
 `content/` stays the only copy, so VS Code and the website editor can be used side by side (pull
 before editing locally).
 
+- **The pencil "Edit" button** at the top right of every docs page opens that page in the editor.
+  Only you see it: it appears in a browser that's signed in to `/admin`, and is hidden for everyone
+  else (sign out of the editor and it's gone).
 - **Bodies are edited as plain Markdown**, exactly as in VS Code, so callouts, `::youtube`,
   `::video`, `::plugin-links` and code blocks stay as written. (The rich text mode is switched off:
   it would rewrite them.) The preview beside the editor doesn't know the site's extras; check the page
@@ -79,7 +82,7 @@ before editing locally).
   (quotes, order of the keys it knows).
 - **New plugin folders** appear in the editor by themselves (the list is made at build time:
   `src/content/cms.ts`). Blog posts and case studies aren't in it yet; they're still edited here.
-- **Visitors get nothing of it:** no page links to `/admin`, the editor's script loads only there,
+- **Visitors get nothing of it:** the Edit button stays hidden for them, the editor's script loads only on `/admin`,
   and `/admin` is kept out of search engines (`robots.txt`, `netlify.toml`).
 - **Only you can save:** signing in needs write access to the GitHub repository.
 
