@@ -157,3 +157,6 @@
 .youtube-poster:hover .youtube-play { background: #e62117; transform: scale(1.06); }
 
 .prose .unknown-directive { color: var(--warning); font-size: 13px; }
+
+/* Placeholder for content still to come on a work-in-progress doc. */
+.prose .todo-placeholder { color: var(--text-3); font-family: var(--mono); letter-spacing: 0.3em; user-select: none; }

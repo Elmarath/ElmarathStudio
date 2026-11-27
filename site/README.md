@@ -21,7 +21,7 @@ Nothing to register: drop a file in `../content` and it's on the site.
 | --- | --- | --- |
 | Blog post | `content/blog/2026-01-31-my-post.md` (or a folder with `index.md` and its images) | `npm run new-post -- "Title" --tags "Devlog"` |
 | Doc page | `content/docs/<Plugin-Folder>/My-Page.md` | `npm run new-doc -- Plugin-Folder "Page title"` |
-| Plugin (docs folder) | `content/docs/<Plugin-Folder>/_category_.yaml` (name, pitch, thumbnail, Fab link, `featured`) | `new-doc` makes one with a new folder |
+| Plugin (docs folder) | `content/docs/<Plugin-Folder>/_category_.yaml` (name, pitch, thumbnail, Fab link, `featured`, `wip: true` for a "Work in progress" tag) | `new-doc` makes one with a new folder |
 | Page | `content/pages/<slug>.md` → `/<slug>` | |
 | Work entry (a studio, project or plugin) | `content/work/<slug>/index.md`: a picture or clip, one main link, a 50–100 word summary, and optional widgets (impact numbers, "What I did" tiles, code spotlight, milestones, a quote) | `npm run new-work -- "Project"` |
 

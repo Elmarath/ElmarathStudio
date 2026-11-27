@@ -45,6 +45,7 @@ export type IconName =
   | 'puzzle'
   | 'grid'
   | 'edit'
+  | 'construction'
   | 'star'
   | 'note'
   | 'tip'

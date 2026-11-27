@@ -2,6 +2,7 @@
 // A docs folder (usually one plugin) with its thumbnail and pitch.
 import { allPages, pitch, type DocCategory } from '../../content/repository.ts';
 import PluginThumbnail from './PluginThumbnail.astro';
+import WipTag from './WipTag.astro';
 
 interface Props {
   category: DocCategory;
@@ -13,6 +14,7 @@ const pages = allPages(category).length;
 <a class="card plugin-card" href={category.route}>
   <PluginThumbnail category={category} size={88} />
   <div>
+    {category.wip && <WipTag />}
     <h3 class="title-md">{category.label}</h3>
     <p class="body-md pitch">{pitch(category)}</p>
     <p class="label-md count">{pages} {pages === 1 ? 'page' : 'pages'}</p>
@@ -21,6 +23,7 @@ const pages = allPages(category).length;
 
 <style>
   .plugin-card { display: flex; align-items: flex-start; gap: 16px; padding: 16px; }
+  .plugin-card :global(.wip-tag) { margin-bottom: 8px; }
   .pitch { margin-top: 6px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .count { margin-top: 8px; color: var(--text-3); }
 </style>

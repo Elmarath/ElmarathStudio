@@ -36,6 +36,7 @@ const lucide: Partial<Record<IconName, string>> = {
   puzzle: 'puzzle',
   grid: 'layout-grid',
   edit: 'pencil',
+  construction: 'construction',
   star: 'star',
   note: 'sticky-note',
   tip: 'lightbulb',

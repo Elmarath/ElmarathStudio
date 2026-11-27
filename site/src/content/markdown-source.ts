@@ -9,6 +9,8 @@
 // * `::video ./clip.mp4 Caption` → a silent clip that loops (made by `npm run video`)
 // * `::plugin-links` → the plugin's Fab / GitHub buttons
 // * `<!-- truncate -->` (the blog excerpt marker) and MDX imports are dropped
+// * `<!-- TODO … -->` notes never reach the page: dropped, or shown as a "....."
+//   placeholder on docs marked `wip: true`
 import { escapeHtml } from './text.ts';
 
 export interface Youtube {
@@ -33,6 +35,14 @@ const githubAlert = /^\s*>\s*\[!(NOTE|TIP|IMPORTANT|WARNING|CAUTION)\]\s*$/i;
 const directiveRe = /^::([a-zA-Z][\w-]*)\s*(.*)$/;
 const youtubeIframe = /<iframe[^>]+youtube(?:-nocookie)?\.com\/embed\/([\w-]+)([^"']*)/;
 const mdxImport = /^import\s+.+\s+from\s+['"].+['"];?\s*$/;
+const todoStart = /^\s*<!--\s*TODO\b/i;
+
+export interface PreprocessOptions {
+  /** Show each `<!-- TODO … -->` as a "....." placeholder instead of dropping it (work-in-progress docs). */
+  todoPlaceholders?: boolean;
+}
+
+const todoPlaceholder = '<p class="todo-placeholder" aria-label="Coming soon" title="Coming soon">.....</p>';
 
 /** A YouTube video from a link or id, with an optional `start=90` after it. */
 export function parseYoutube(args: string): Youtube | undefined {
@@ -71,11 +81,11 @@ const cleanTitle = (raw?: string) => {
 };
 
 /** Turns the site's extensions in [source] into Markdown the renderer understands. */
-export function preprocess(source: string): string {
-  return transform(source.replace(/\r\n/g, '\n').split('\n')).join('\n');
+export function preprocess(source: string, options: PreprocessOptions = {}): string {
+  return transform(source.replace(/\r\n/g, '\n').split('\n'), options).join('\n');
 }
 
-function transform(lines: string[]): string[] {
+function transform(lines: string[], options: PreprocessOptions): string[] {
   const out: string[] = [];
   let inFence = false;
   let fenceMarker = '';
@@ -99,6 +109,12 @@ function transform(lines: string[]): string[] {
     }
     if (line.trim() === '<!-- truncate -->' || mdxImport.test(line.trim())) continue;
 
+    if (todoStart.test(line)) {
+      while (!lines[i].includes('-->') && i + 1 < lines.length) i++;
+      if (options.todoPlaceholders) out.push('', todoPlaceholder, '');
+      continue;
+    }
+
     const admonition = admonitionStart.exec(line);
     if (admonition && admonitionTypes[admonition[1].toLowerCase()]) {
       const inner: string[] = [];
@@ -116,7 +132,7 @@ function transform(lines: string[]): string[] {
         }
         inner.push(l);
       }
-      out.push(...callout(admonitionTypes[admonition[1].toLowerCase()], cleanTitle(admonition[2]), transform(dedent(inner))));
+      out.push(...callout(admonitionTypes[admonition[1].toLowerCase()], cleanTitle(admonition[2]), transform(dedent(inner), options)));
       continue;
     }
 
@@ -127,7 +143,7 @@ function transform(lines: string[]): string[] {
         i++;
         inner.push(lines[i].trimStart().replace(/^>\s?/, ''));
       }
-      out.push(...callout(admonitionTypes[alert[1].toLowerCase()], undefined, transform(inner)));
+      out.push(...callout(admonitionTypes[alert[1].toLowerCase()], undefined, transform(inner, options)));
       continue;
     }
 

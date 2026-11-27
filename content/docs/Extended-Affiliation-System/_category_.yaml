@@ -1,0 +1,11 @@
+label: "Extended Affiliation System"
+position: 10
+summary: "Data-driven teams and attitudes: decide who is friendly, neutral or hostile with group assets instead of hard-coded team IDs."
+description: "Learn how to use the Extended Affiliation System!"
+thumbnail: thumbnail.png
+featured: false
+wip: true
+links:
+  # TODO: add the Fab link once the plugin is listed.
+  # fab: https://www.fab.com/listings/...
+  github: https://github.com/Elmarath/ExtendedAffiliationSystem
