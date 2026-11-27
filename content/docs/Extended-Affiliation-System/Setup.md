@@ -4,7 +4,7 @@ sidebar_position: 2
 
 # Setup
 
-Install the plugin from Fab, enable **Extended Affiliation System** in *Edit → Plugins* and restart the editor. Everything below is done in the editor and in Blueprints.
+Install the plugin from Fab (or get the source from [GitHub](https://github.com/Elmarath/ExtendedAffiliationSystem) and copy it into your project's `Plugins/` folder), enable **Extended Affiliation System** in *Edit → Plugins* and restart the editor. Everything below is done in the editor and in Blueprints.
 
 ---
 
