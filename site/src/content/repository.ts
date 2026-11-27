@@ -77,6 +77,8 @@ export interface DocCategory {
   thumbnail?: string;
   /** Listed first in the home page carousel. */
   featured: boolean;
+  /** `wip: true`: the docs are still being written; tagged "Work in progress". */
+  wip: boolean;
   /** External links such as `fab` and `github`. */
   links: Record<string, string>;
   /** Old folder names (`aliases:` in _category_.yaml); links using them still resolve. */
@@ -356,7 +358,7 @@ function parseDocs(files: Map<string, string>): DocCategory {
   const rootDir = 'content/docs';
   const root: DocCategory = {
     kind: 'category', id: '', label: 'Docs', position: 0, assetDir: rootDir,
-    featured: false, links: {}, aliases: [], children: [], route: '/docs',
+    featured: false, wip: false, links: {}, aliases: [], children: [], route: '/docs',
   };
   const byDir = new Map<string, DocCategory>([[rootDir, root]]);
   const meta = new Map<string, Record<string, unknown>>();
@@ -382,6 +384,7 @@ function parseDocs(files: Map<string, string>): DocCategory {
       summary: m.summary == null ? undefined : String(m.summary),
       thumbnail: thumbnail == null ? undefined : resolveAsset(`${dir}/_category_.yaml`, thumbnail),
       featured: m.featured === true,
+      wip: m.wip === true,
       links: Object.fromEntries(Object.entries(links).map(([k, v]) => [k, String(v)])),
       aliases: Array.isArray(m.aliases) ? m.aliases.map(String) : [],
       children: [],

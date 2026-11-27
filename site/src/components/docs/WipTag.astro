@@ -1,0 +1,26 @@
+---
+// "Work in progress" tag for a plugin whose docs are still being written (`wip: true` in _category_.yaml).
+import Icon from '../Icon.astro';
+---
+
+<span class="wip-tag" title="These docs are still being written"><Icon name="construction" />Work in progress</span>
+
+<style>
+  .wip-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    padding: 3px 9px;
+    border-radius: var(--r-sm);
+    background: color-mix(in srgb, var(--accent) 14%, transparent);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    line-height: 1.3;
+  }
+  .wip-tag :global(.icon) { font-size: 14px; }
+</style>

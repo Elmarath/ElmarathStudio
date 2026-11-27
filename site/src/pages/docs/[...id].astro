@@ -7,6 +7,7 @@ import Breadcrumbs from '../../components/docs/Breadcrumbs.astro';
 import Pager from '../../components/docs/Pager.astro';
 import Feedback from '../../components/Feedback.astro';
 import PluginThumbnail from '../../components/docs/PluginThumbnail.astro';
+import WipTag from '../../components/docs/WipTag.astro';
 import { site } from '../../config.ts';
 import { linkButtons, render } from '../../content/markdown.ts';
 import { allPages, content, pitch, rootCategory, type DocCategory, type DocPage } from '../../content/repository.ts';
@@ -27,6 +28,8 @@ const index = doc ? repo.docPages.indexOf(doc) : -1;
 const previous = index > 0 ? repo.docPages[index - 1] : undefined;
 const next = index >= 0 ? repo.docPages[index + 1] : undefined;
 const plugin = doc ? rootCategory(doc) : undefined;
+let topCategory = category;
+while (topCategory?.parent) topCategory = topCategory.parent;
 const rendered = doc ? await render(doc.body, { sourcePath: doc.assetPath, links: plugin?.links ?? {} }) : undefined;
 
 const firstSentence = (s: string) => {
@@ -42,6 +45,7 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
     <Docs title={doc.title} description={summary} headings={rendered.headings}>
       <article class="doc">
         <Breadcrumbs category={doc.category} current={doc.category?.indexPage === doc ? undefined : doc.title} />
+        {plugin?.wip && <WipTag />}
         <h1 class="display-sm fluid">{doc.title}</h1>
         {doc.description && <p class="body-lg description">{doc.description}</p>}
         <Prose rendered={rendered} />
@@ -70,6 +74,7 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
         <header>
           {category.thumbnail && <PluginThumbnail category={category} size={120} />}
           <div>
+            {topCategory?.wip && <WipTag />}
             <h1 class="display-sm fluid">{category.label}</h1>
             {pitch(category) && <p class="body-lg">{pitch(category)}</p>}
             {Object.keys(category.links).length > 0 && <Fragment set:html={linkButtons(category.links)} />}
@@ -97,6 +102,8 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
 <style>
   .doc { max-width: var(--reading); margin-inline: auto; }
   .doc h1 { margin-top: 16px; }
+  .doc > :global(.wip-tag) { margin-top: 16px; }
+  .doc > :global(.wip-tag) + h1 { margin-top: 8px; }
   .description { margin-top: 8px; font-size: 18px; }
   .doc :global(.prose) { margin-top: 32px; }
   .edit { display: inline-flex; align-items: center; gap: 6px; margin-top: 48px; color: var(--accent); font-size: 14px; font-weight: 600; }
