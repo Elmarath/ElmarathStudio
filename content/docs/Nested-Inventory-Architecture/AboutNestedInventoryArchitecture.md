@@ -7,7 +7,11 @@ sidebar_position: 1
 
 ::plugin-links
 
-**Nested Inventory Architecture** (abbreviated as **NIA**) will allow your players to create and interact with inventories intuitively and easily with the help of *Nested Inventory*, *Object Based*, *Section Based* approach with customizable architecture!
+**Nested Inventory Architecture** (abbreviated as **NIA**) will allow your players to create and interact with inventories intuitively and easily with the help of *Nested Inventory*, *Object Based*, *Section Based* approach with customizable architecture! 
+
+:::note
+This is are work in development project and it is subject to change.
+:::
 
 **Access the test build: [Here](https://drive.google.com/drive/folders/1xf5CE0BjK476kyd_Dy-Yawh19Dgx8Qao?usp=sharing)**
 
