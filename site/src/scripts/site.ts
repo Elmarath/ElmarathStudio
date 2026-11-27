@@ -12,6 +12,12 @@ const isMac = /Mac|iPhone|iPad/.test(navigator.platform);
 
 onPage(() => {
   for (const k of document.querySelectorAll('[data-shortcut]')) k.textContent = isMac ? '⌘ K' : 'Ctrl K';
+  // "Edit" on docs, only in a browser signed in to the website editor (/admin).
+  let editor = false;
+  try {
+    editor = localStorage.getItem('sveltia-cms.user') != null;
+  } catch {}
+  if (editor) for (const a of document.querySelectorAll<HTMLElement>('[data-editor-link]')) a.hidden = false;
 });
 
 // --- Theme ------------------------------------------------------------------

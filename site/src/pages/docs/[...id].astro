@@ -8,6 +8,7 @@ import Pager from '../../components/docs/Pager.astro';
 import Feedback from '../../components/Feedback.astro';
 import PluginThumbnail from '../../components/docs/PluginThumbnail.astro';
 import WipTag from '../../components/docs/WipTag.astro';
+import EditButton from '../../components/docs/EditButton.astro';
 import { site } from '../../config.ts';
 import { linkButtons, render } from '../../content/markdown.ts';
 import { allPages, content, pitch, rootCategory, type DocCategory, type DocPage } from '../../content/repository.ts';
@@ -44,6 +45,7 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
   doc && rendered && (
     <Docs title={doc.title} description={summary} headings={rendered.headings}>
       <article class="doc">
+        <EditButton doc={doc} />
         <Breadcrumbs category={doc.category} current={doc.category?.indexPage === doc ? undefined : doc.title} />
         {plugin?.wip && <WipTag />}
         <h1 class="display-sm fluid">{doc.title}</h1>
@@ -70,6 +72,7 @@ const summary = doc ? (doc.description ?? firstSentence(plainText(doc.body))) : 
   category && (
     <Docs title={category.label} description={summary}>
       <div class="category">
+        <EditButton doc={category} />
         <Breadcrumbs category={category.parent} />
         <header>
           {category.thumbnail && <PluginThumbnail category={category} size={120} />}
