@@ -133,3 +133,15 @@ test('the website editor covers every docs folder and edits bodies as plain Mark
   }
   assert.equal(new Set(config.collections.map((c: { name: string }) => c.name)).size, config.collections.length);
 });
+
+test('every doc page\'s Edit button opens an entry the editor has', async () => {
+  const { parse } = await import('yaml');
+  const { cmsConfig, editorUrl } = await import('../src/content/cms.ts');
+  const config = parse(cmsConfig(repo.categories));
+  const byName = new Map(config.collections.map((c: { name: string; folder: string }) => [c.name, c.folder]));
+  for (const doc of repo.docPages) {
+    const m = editorUrl(doc).match(/^\/admin#\/collections\/([^/]+)\/entries\/([^/]+)$/);
+    assert.ok(m, editorUrl(doc));
+    assert.equal(`${byName.get(m[1])}/${decodeURIComponent(m[2])}.md`, doc.assetPath);
+  }
+});
